@@ -1,11 +1,11 @@
-#Features
+# Features
 
 * Multi-threaded, will try to use all threads detected on the system.
 * Anti-aliasing at moment is done through super-sampling
 * Phong shading (ambient + difuse + specular lighting)
 * Animated light
 
-#TODO
+# TODO
 
 * Jitter randomized AA, with scatered sample points in space, time and lens settings, which should allow motion blur, lens effects and aliasing resistant AA (supersampling can still observe aliasing)
 * Support different objects (plane, box, donut)
@@ -22,6 +22,6 @@
 * Inverse square law to fade off the light with distance
 
 
-#Screenshots
+# Screenshots
 
 ![Screenshot of a sphere](/images/screenshot01.png)
