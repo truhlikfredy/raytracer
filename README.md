@@ -4,6 +4,7 @@
 * Anti-aliasing at moment is done through super-sampling
 * Phong shading (ambient + difuse + specular lighting)
 * Animated light
+* Scaling, can be rendered in low-res and then upscaled so the window is decent size
 
 # TODO
 
