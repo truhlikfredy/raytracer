@@ -1,0 +1,6 @@
+perf.*
+Debug/
+Release/
+.cproject
+.project
+.settings
