@@ -1,5 +1,6 @@
 # Features
 
+* Using C++11 features
 * Multi-threaded, will try to use all threads detected on the system.
 * Anti-aliasing at moment is done through super-sampling
 * Phong shading (ambient + difuse + specular lighting)
@@ -22,6 +23,11 @@
   *  Random 3D noise bump mapping
 * Inverse square law to fade off the light with distance
 
+# Dependancies
+
+* Tested on linux
+* Using SFML library for window creation and drawing the pixels
+* cmake for building
 
 # Screenshots
 
