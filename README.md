@@ -26,9 +26,17 @@
 # Dependancies
 
 * Tested on linux
-* Using SFML library for window creation and drawing the pixels
+* Using SFML library for window creation and drawing the pixels (sudo apt-get install libsfml-dev)
 * cmake for building
 
 # Screenshots
 
 ![Screenshot of a sphere](/images/screenshot01.png)
+
+# References
+
+## Anti-Aliasing
+
+https://graphics.pixar.com/library/MultiJitteredSampling/paper.pdf
+
+http://www.pbrt.org/chapters/pbrt_chapter7.pdf
