@@ -1,9 +1,10 @@
-//
-// Created by fredy on 23/12/17.
-//
+/*
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 08/01/2018
+ */
 
-#ifndef RAYCASTER_LIGHT_H
-#define RAYCASTER_LIGHT_H
+#ifndef RAYTRACER_LIGHT_H
+#define RAYTRACER_LIGHT_H
 
 #include "vector3.h"
 #include "color.h"
@@ -15,4 +16,4 @@ public:
 };
 
 
-#endif //RAYCASTER_LIGHT_H
+#endif //RAYTRACER_LIGHT_H

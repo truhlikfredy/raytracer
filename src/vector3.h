@@ -1,12 +1,10 @@
 /*
- * vector.h
- *
- *  Created on: 22 Dec 2017
- *      Author: fredy
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 08/01/2018
  */
 
-#ifndef RAYCASTER_VECTOR3_H_
-#define RAYCASTER_VECTOR3_H_
+#ifndef RAYTRACER_VECTOR3_H_
+#define RAYTRACER_VECTOR3_H_
 
 #include "triple.h"
 

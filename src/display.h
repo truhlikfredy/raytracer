@@ -1,9 +1,10 @@
-//
-// Created by fredy on 07/01/18.
-//
+/*
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 08/01/2018
+ */
 
-#ifndef RAYCASTER_DISPLAY_H
-#define RAYCASTER_DISPLAY_H
+#ifndef RAYTRACER_DISPLAY_H
+#define RAYTRACER_DISPLAY_H
 
 #define WIDTH  320
 #define HEIGHT 200
@@ -29,4 +30,4 @@ public:
   void convertToDisplayMem();
 };
 
-#endif //RAYCASTER_DISPLAY_H
+#endif //RAYTRACER_DISPLAY_H

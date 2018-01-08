@@ -1,9 +1,10 @@
-//
-// Created by fredy on 07/01/18.
-//
+/*
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 08/01/2018
+ */
 
-#ifndef RAYCASTER_SPHERE_H
-#define RAYCASTER_SPHERE_H
+#ifndef RAYTRACER_SPHERE_H
+#define RAYTRACER_SPHERE_H
 
 #include "vector3.h"
 #include "ray.h"
@@ -22,4 +23,4 @@ public:
 };
 
 
-#endif //RAYCASTER_SPHERE_H
+#endif //RAYTRACER_SPHERE_H

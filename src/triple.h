@@ -1,13 +1,12 @@
-//
-// Created by fredy on 05/01/18.
-//
+/*
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 08/01/2018
+ */
 
-#ifndef RAYCASTER_TRIPLE_H
-#define RAYCASTER_TRIPLE_H
+#ifndef RAYTRACER_TRIPLE_H
+#define RAYTRACER_TRIPLE_H
 
 class Triple {
-
-//protected:
 
 public:
   float x, y, z;
@@ -32,4 +31,4 @@ public:
 };
 
 
-#endif //RAYCASTER_TRIPLE_H
+#endif //RAYTRACER_TRIPLE_H

@@ -1,16 +1,13 @@
 /*
- * triple.cpp
- *
- *  Created on: 22 Dec 2017
- *      Author: fredy
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 08/01/2018
  */
-
-#include "triple.h"
 
 
 #include <float.h>
 #include <cmath>
 
+#include "triple.h"
 
 
 Triple::Triple() {

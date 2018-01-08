@@ -1,9 +1,10 @@
-//
-// Created by fredy on 07/01/18.
-//
+/*
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 08/01/2018
+ */
 
-#ifndef RAYCASTER_RAY_H
-#define RAYCASTER_RAY_H
+#ifndef RAYTRACER_RAY_H
+#define RAYTRACER_RAY_H
 
 #include "vector3.h"
 
@@ -15,4 +16,4 @@ struct Ray {
 };
 
 
-#endif //RAYCASTER_RAY_H
+#endif //RAYTRACER_RAY_H

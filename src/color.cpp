@@ -1,3 +1,8 @@
+/*
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 08/01/2018
+ */
+
 #include <math.h>
 #include "vector3.h"
 #include "color.h"

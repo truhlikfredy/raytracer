@@ -1,14 +1,12 @@
 /*
- * vector.cpp
- *
- *  Created on: 22 Dec 2017
- *      Author: fredy
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 08/01/2018
  */
 
 #include <float.h>
 #include <cmath>
-#include "vector3.h"
 
+#include "vector3.h"
 
 Vector3::Vector3(): Triple() {}
 

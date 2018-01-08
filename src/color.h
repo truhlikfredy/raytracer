@@ -1,9 +1,10 @@
-//
-// Created by fredy on 23/12/17.
-//
+/*
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 08/01/2018
+ */
 
-#ifndef RAYCASTER_COLOR_H
-#define RAYCASTER_COLOR_H
+#ifndef RAYTRACER_COLOR_H
+#define RAYTRACER_COLOR_H
 
 #include "triple.h"
 
@@ -19,4 +20,4 @@ public:
 
 
 
-#endif //RAYCASTER_COLOR_H
+#endif //RAYTRACER_COLOR_H

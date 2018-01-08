@@ -1,6 +1,7 @@
-//
-// Created by fredy on 23/12/17.
-//
+/*
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 08/01/2018
+ */
 
 #include "light.h"
 

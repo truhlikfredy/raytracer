@@ -1,9 +1,10 @@
-//
-// Created by fredy on 07/01/18.
-//
+/*
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 08/01/2018
+ */
 
-#ifndef RAYCASTER_RENDER_H
-#define RAYCASTER_RENDER_H
+#ifndef RAYTRACER_RENDER_H
+#define RAYTRACER_RENDER_H
 
 #define SEGMENTS 1  // how many partitions the screen should be split
 #define ANTI_ALIASING 2
@@ -48,4 +49,4 @@ public:
   void renderPartial(int frame, windowType window);
   void renderFull();
 };
-#endif //RAYCASTER_RENDER_H
+#endif //RAYTRACER_RENDER_H
