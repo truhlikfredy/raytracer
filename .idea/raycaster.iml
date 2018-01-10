@@ -2,23 +2,27 @@
 <module type="CPP_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src/ray.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/light.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/triple.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/types/color.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/types/color.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/types/vector3.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/types/vector3.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/types/triple.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/types/triple.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/utils/debounce.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/utils/debounce.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/frontend/display.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/frontend/display.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/render/render.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/render/sampler.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/render/ray.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/render/render.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/render/ray.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/render/sampler.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphere.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphere.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/omni.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/omni.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/raytracer.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/vector3.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/render.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/ray.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/color.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/vector3.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/display.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/color.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/triple.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/light.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/sphere.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/display.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/sphere.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/render.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
