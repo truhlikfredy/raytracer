@@ -3,13 +3,21 @@
  * date: 08/01/2018
  */
 
-#include "display.h"
+#include "frontend/display.h"
+#include "utils/debounce.h"
+
 
 int main() {
   Display *mainWindow = new Display();
 
   while (mainWindow->keepLooping()) {
-    mainWindow->loop();
+
+    // Toggle display for the sample patterns
+    if (Debounce::isKeyPressed(sf::Keyboard::S))  {
+      mainWindow->showSamplerPatterns ^= true; // invert the state
+    }
+
+    mainWindow->renderLoop();
   }
 
   return 0;
