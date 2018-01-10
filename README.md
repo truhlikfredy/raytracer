@@ -1,15 +1,18 @@
 # Features
 
-* Using C++11 features
-* Multi-threaded, will try to use all threads detected on the system.
-* Anti-aliasing at moment is done through super-sampling
+* Using C++11 features. Try new features, but not too new (14/17) so this can be ported to embedded if desired.
+* Multi-threaded, will try to use all threads detected on the system (but the load balancer is crude at the moment)
+* Randomized multi dimensional sampling in space and time (instead of aliasing it creates noise which is much more pleasing for the eyes, the lens, time jitter is not implemented)
 * Phong shading (ambient + difuse + specular lighting)
 * Animated light
 * Scaling, can be rendered in low-res and then upscaled so the window is decent size
 
-# TODO
+# TODO (More precisely a wish list)
 
-* Jitter randomized AA, with scatered sample points in space, time and lens settings, which should allow motion blur, lens effects and aliasing resistant AA (supersampling can still observe aliasing)
+* Instead of calculating the scene for given time, do calculate the scene per each ray, this will allow for each ray to be in different time (motion blur) and even subpixels in a single pixel be sampled from slightly different time. Allowing easy multi dimensional sampling.
+* Private methods
+* Sampler using scatered sample points in lens as well. Lens effects and aliasing resistant AA (supersampling can still observe aliasing)
+* Display test pattern of the jitter results
 * Support different objects (plane, box, donut)
 * Support multiple lights and objects in the scene
 * Shadows
@@ -22,6 +25,7 @@
   *  Checkerboard
   *  Random 3D noise bump mapping
 * Inverse square law to fade off the light with distance
+* Film grain: smooth, animated, weighted (shadows are more grainy)
 
 # Dependancies
 
