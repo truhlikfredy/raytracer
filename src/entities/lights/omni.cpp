@@ -3,7 +3,7 @@
  * date: 08/01/2018
  */
 
-#include "light.h"
+#include "omni.h"
 
 Light::Light(Vector3 source, Color colorInit): Vector3(source) {
   color = colorInit;

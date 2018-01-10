@@ -6,7 +6,7 @@
 #ifndef RAYTRACER_RAY_H
 #define RAYTRACER_RAY_H
 
-#include "vector3.h"
+#include "../types/vector3.h"
 
 struct Ray {
   Vector3 source;

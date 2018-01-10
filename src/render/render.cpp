@@ -7,7 +7,8 @@
 #include <thread>
 #include <vector>
 #include "render.h"
-#include "sphere.h"
+#include "../entities/objects/sphere.h"
+
 
 Render::Render(int widthInit, int heightInit) {
   width = widthInit;
@@ -56,25 +57,28 @@ Color Render::calculateShadeOfTheRay(Ray ray, Light light) {
   return color;
 }
 
-void Render::renderPartial(int frame, windowType window) {
+void Render::renderPartial(float frame, windowType window) {
   const int zoom=20;
   const float lightRotate = (M_PI * frame) / 11;
+  Sampler sampler(ANTI_ALIASING, 1, 0.1f, 0, frame);
 
   Light light(Vector3(1.0*width  * cosf(lightRotate),
                       0.6*height * (sinf(lightRotate)-0.5), -180), Color(0.2f, 0.7f, 0.3f));
 
+
   for (int y = window.yStart; y < window.yEnd; y++) {
     for (int x = window.xStart; x < window.xEnd; x++) {
-      for (float aay = 0.33f; aay <1.0f; aay+= 0.33f) {
-        for (float aax = 0.33f; aax < 1.0f; aax += 0.33f) {
-          Ray rayForThisPixel(Vector3(0, 0, 0),
-                              ~Vector3(x + aax - width / 2.0f, y + aay - height / 2.0f, zoom));
-          Color shade = calculateShadeOfTheRay(rayForThisPixel, light);
-          shade = ~shade;
+      sampler.nextPixel();
+      while (sampler.isNext()) {
+        sampleTuple sample = sampler.getNextSample();
 
-          dynamicPixels[x + (y * width)].color = dynamicPixels[x + (y * width)].color + shade;
-          dynamicPixels[x + (y * width)].count++;
-        }
+        Ray rayForThisPixel(Vector3(0, 0, 0),
+                            ~Vector3(x + sample.spaceX - width / 2.0f, y + sample.spaceY - height / 2.0f, zoom));
+        Color shade = calculateShadeOfTheRay(rayForThisPixel, light);
+        shade = ~shade;
+
+        dynamicPixels[x + (y * width)].color = dynamicPixels[x + (y * width)].color + shade;
+        dynamicPixels[x + (y * width)].count++;
       }
     }
   }
@@ -87,19 +91,17 @@ void Render::clearDynamicPixels() {
   }
 }
 
-void Render::renderFull() {
-  static int frame = 0.0f;
+void Render::renderFull(float frame) {
   std::vector<std::thread> workers;
 
   clearDynamicPixels();
 
   for (int segment = 0; segment < SEGMENTS; segment++) {
     for (int thread = 0; thread < threadsMax; thread++) {
-      workers.emplace_back([this, thread] {
+      workers.emplace_back([this, frame, thread] {
         this->renderPartial(frame, this->getThreadWindow(thread));
       });
     }
     for (auto& worker: workers) worker.join();
   }
-  frame++;
 }

@@ -11,7 +11,7 @@
 #define SCALE 3.0  // display the window bigger than it really is (render low-res while having large window)
 
 #include <SFML/Graphics.hpp>
-#include "render.h"
+#include "../render/render.h"
 
 class Display {
 private:
@@ -21,10 +21,13 @@ private:
   sf::Sprite       sprite;
   sf::RenderWindow window;
 
+  void displaySamplerPattern(int width, int height, float frame);
+
 public:
+  bool showSamplerPatterns;
   Display();
 
-  void loop();
+  void renderLoop();
   bool keepLooping();
   void clearDisplayMem();
   void convertToDisplayMem();

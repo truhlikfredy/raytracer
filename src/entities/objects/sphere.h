@@ -6,8 +6,8 @@
 #ifndef RAYTRACER_SPHERE_H
 #define RAYTRACER_SPHERE_H
 
-#include "vector3.h"
-#include "ray.h"
+#include "../../types/vector3.h"
+#include "../../render/ray.h"
 
 class Sphere {
   Vector3 center;

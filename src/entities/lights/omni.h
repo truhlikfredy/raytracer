@@ -3,11 +3,11 @@
  * date: 08/01/2018
  */
 
-#ifndef RAYTRACER_LIGHT_H
-#define RAYTRACER_LIGHT_H
+#ifndef RAYTRACER_LIGHT_OMNI_H
+#define RAYTRACER_LIGHT_OMNI_H
 
-#include "vector3.h"
-#include "color.h"
+#include "../../types/vector3.h"
+#include "../../types/color.h"
 
 class Light: public Vector3 {
 public:
@@ -16,4 +16,4 @@ public:
 };
 
 
-#endif //RAYTRACER_LIGHT_H
+#endif //RAYTRACER_LIGHT_OMNI_H

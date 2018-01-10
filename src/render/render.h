@@ -7,11 +7,10 @@
 #define RAYTRACER_RENDER_H
 
 #define SEGMENTS 1  // how many partitions the screen should be split
-#define ANTI_ALIASING 2
+#define ANTI_ALIASING 3
 
-#include "color.h"
+#include "../entities/lights/omni.h"
 #include "ray.h"
-#include "light.h"
 
 
 //#include <tuple>
@@ -24,7 +23,8 @@ struct windowType {
   unsigned int yEnd;
 };
 
-#include "color.h"
+#include "../types/color.h"
+#include "sampler.h"
 
 
 struct DynamicPixel {
@@ -38,15 +38,20 @@ private:
   unsigned int width;
   unsigned int height;
 
+  windowType getThreadWindow(int thread);
+
+  Color calculateShadeOfTheRay(Ray ray, Light light);
+
+  void renderPartial(float frame, windowType window);
+
+  void clearDynamicPixels();
+
 public:
   unsigned int threadsMax = 1;
   DynamicPixel* dynamicPixels;
 
   Render(int width, int height);
-  void clearDynamicPixels();
-  windowType getThreadWindow(int thread);
-  Color calculateShadeOfTheRay(Ray ray, Light light);
-  void renderPartial(int frame, windowType window);
-  void renderFull();
+
+  void renderFull(float frame);
 };
 #endif //RAYTRACER_RENDER_H
