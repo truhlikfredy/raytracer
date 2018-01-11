@@ -6,7 +6,7 @@
 #include <cmath>
 #include "sphere.h"
 
-Sphere::Sphere(Vector3 centerInt, float radiusInit) {
+Sphere::Sphere(Vector3 centerInt, float radiusInit, std::function<Color(Vector3 point)> material): Object(material) {
   center = centerInt;
   radius = radiusInit;
 }
