@@ -13,7 +13,7 @@ set(SOURCE_FILES
         src/entities/lights/omni.h
         src/raytracer.cpp
         src/types/vector3.cpp
-        src/types/vector3.h src/types/triple.cpp src/types/triple.h src/entities/objects/sphere.h src/entities/objects/sphere.cpp src/render/ray.h src/render/ray.cpp src/frontend/display.cpp src/frontend/display.h src/render/render.cpp src/render/render.h src/render/sampler.cpp src/render/sampler.h src/utils/debounce.cpp src/utils/debounce.h src/entities/objects/object.h)
+        src/types/vector3.h src/types/triple.cpp src/types/triple.h src/entities/objects/sphere.h src/entities/objects/sphere.cpp src/render/ray.h src/render/ray.cpp src/frontend/display.cpp src/frontend/display.h src/render/render.cpp src/render/render.h src/render/sampler.cpp src/render/sampler.h src/utils/debounce.cpp src/utils/debounce.h src/entities/objects/object.h src/scene/plain.h src/entities/objects/object.cpp)
 
 add_executable(raytracer ${SOURCE_FILES} src/types/triple.cpp src/types/triple.h)
 
