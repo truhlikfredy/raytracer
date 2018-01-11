@@ -17,11 +17,11 @@
 
 Sampler::Sampler(unsigned int spaceInt, unsigned int timeInt, float shutterInit, unsigned int overlapInit,
                  unsigned int patternInit) {
-  this->space   = spaceInt;
-  this->time    = timeInt;
-  this->shutter = shutterInit;
-  this->overlap = overlapInit;
-  this->pattern = patternInit;
+  this->space   = spaceInt;      // How many samples in space dimension (this value gets squared)
+  this->time    = timeInt;       // How many samples in time dimension
+  this->shutter = shutterInit;   // Speed of the shutter of the camer
+  this->overlap = overlapInit;   // How much the dimensions overlap
+  this->pattern = patternInit;   // Initial seed value
   this->index   = 0;
 
   // when overlap is 1 or more multiply all, when it's 0 count only to space squared
@@ -29,17 +29,26 @@ Sampler::Sampler(unsigned int spaceInt, unsigned int timeInt, float shutterInit,
 }
 
 
+/**
+ * Change the seed a bit and start for new pixel
+ */
 void Sampler::nextPixel() {
   this->index = 0;
   this->pattern++;
 }
 
 
+/**
+ * Did all samples got iterated yet
+ */
 bool Sampler::isNext() {
   return index < maximum;
 }
 
 
+/**
+ * Calculate new pixel and time coordinates for a new ray to sample
+ */
 sampleTuple Sampler::getNextSample() {
   sampleTuple ret;
 
@@ -61,7 +70,9 @@ sampleTuple Sampler::getNextSample() {
   return ret;
 }
 
-
+/**
+ * Decide on the resulting sample, where sample < width*height
+ */
 std::pair<float, float> Sampler::multiJitter(unsigned int sample, unsigned int width, unsigned int height,
                                              unsigned int pattern) {
 
@@ -74,12 +85,20 @@ std::pair<float, float> Sampler::multiJitter(unsigned int sample, unsigned int w
           (sample / width + (staticX + jitterY) / width) / height};
 }
 
-
+/**
+ * pseudoShuffle is meant to be used to map between two different dimensions, e.g. space dimension has 9 entries and
+ * time dimension has 9 entries but the index of space dimension will get shuffled before it is used as time
+ * dimension index. This will avoid situations where the very first row of space dimension subpixel would be
+ * sampling the very first samples in time dimension and so on...
+ */
 unsigned int Sampler::pseudoShuffle(unsigned int index, unsigned int maximum) {
   return ((index ^ 0x16) % maximum);
 }
 
 
+/**
+ * Permutate between the pattern combinations.
+ */
 unsigned int Sampler::permute(unsigned int input, unsigned int maximum, unsigned int pattern) {
   unsigned w = maximum - 1;
   w |= w >> 1;
@@ -111,8 +130,10 @@ unsigned int Sampler::permute(unsigned int input, unsigned int maximum, unsigned
 }
 
 
+/**
+ * Get pseudorandom number between 0 and maximum with a specific pattern (seed)
+ */
 float Sampler::randomFloat(unsigned int maximum, unsigned int pattern) {
-  // get pseudorandom number between 0 and maximum with a specific pattern
   maximum ^= pattern;
   maximum ^= maximum >> 17;
   maximum ^= maximum >> 10;
