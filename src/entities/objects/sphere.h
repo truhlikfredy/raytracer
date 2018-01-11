@@ -6,10 +6,9 @@
 #ifndef RAYTRACER_SPHERE_H
 #define RAYTRACER_SPHERE_H
 
-#include "../../types/vector3.h"
-#include "../../render/ray.h"
+#include "object.h"
 
-class Sphere {
+class Sphere: Object {
   Vector3 center;
   float   radius;
 
