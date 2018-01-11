@@ -16,6 +16,10 @@ struct sampleTuple {
   float time;
 };
 
+struct sample2D {
+  float spaceX;
+  float spaceY;
+};
 
 class Sampler {
 
@@ -34,8 +38,8 @@ private:
 
   float randomFloat(unsigned int maximum, unsigned int pattern);
 
-  std::pair<float, float> multiJitter(unsigned int sample, unsigned int width, unsigned int height,
-                                      unsigned int pattern);
+  sample2D multiJitter(unsigned int sample, unsigned int width, unsigned int height,
+                       unsigned int pattern);
 
 public:
   Sampler(unsigned int spaceInt, unsigned int timeInt, float shutterInit, unsigned int overlapInit,

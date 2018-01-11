@@ -53,17 +53,17 @@ sampleTuple Sampler::getNextSample() {
   sampleTuple ret;
 
   if (time == 1) {
-    const std::pair<float, float> spaceSample = multiJitter(index, space, space, pattern);
-    ret.spaceX = spaceSample.first;
-    ret.spaceY = spaceSample.second;
+    const sample2D spaceSample = multiJitter(index, space, space, pattern);
+    ret.spaceX = spaceSample.spaceX;
+    ret.spaceY = spaceSample.spaceY;
     ret.time   = 1.0f;
   }
   else {
-    const std::pair<float, float> spaceSample = multiJitter(index, space, space, pattern);
-    const std::pair<float, float> timeSample  = multiJitter(pseudoShuffle(index, time), time, 1, pattern);
-    ret.spaceX = spaceSample.first;
-    ret.spaceY = spaceSample.second;
-    ret.time   = timeSample.first * shutter;
+    const sample2D spaceSample = multiJitter(index, space, space, pattern);
+    const sample2D timeSample  = multiJitter(pseudoShuffle(index, time), time, 1, pattern);
+    ret.spaceX = spaceSample.spaceX;
+    ret.spaceY = spaceSample.spaceY;
+    ret.time   = timeSample.spaceX * shutter;
   }
 
   index++;
@@ -73,7 +73,7 @@ sampleTuple Sampler::getNextSample() {
 /**
  * Decide on the resulting sample, where sample < width*height
  */
-std::pair<float, float> Sampler::multiJitter(unsigned int sample, unsigned int width, unsigned int height,
+sample2D Sampler::multiJitter(unsigned int sample, unsigned int width, unsigned int height,
                                              unsigned int pattern) {
 
   const int staticX = permute(sample % width, width,  pattern * 0xa511e9b3);
