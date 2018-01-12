@@ -21,10 +21,12 @@
       <sourceFolder url="file://$MODULE_DIR$/src/render/sampler.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/omni.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/omni.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphere.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/object.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphere.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/object.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/materials.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/materials.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphere.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/object.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphere.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/raytracer.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
     </content>

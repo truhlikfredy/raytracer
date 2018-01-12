@@ -6,12 +6,13 @@
 #include <cmath>
 #include "sphere.h"
 
-Sphere::Sphere(Vector3 centerInt, float radiusInit, std::function<Color(Vector3 point)> material): Object(material) {
-  center = centerInt;
+Sphere::Sphere(Vector3 centerInt, float radiusInit, std::function<materialStatic(Vector3 point)> materialInit):
+  Object(centerInt, materialInit) {
+
   radius = radiusInit;
 }
 
-  // Get normalized normal vector from sphere's surface point
+// Get normalized normal vector from sphere's surface point
 Vector3 Sphere::operator ^ (Vector3 pointOnSurface) {
   return ~Vector3(pointOnSurface - this->center);
 }

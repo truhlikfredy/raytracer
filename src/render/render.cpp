@@ -8,6 +8,7 @@
 #include <vector>
 #include "render.h"
 #include "../entities/objects/sphere.h"
+#include "../entities/objects/materials.h"
 
 
 Render::Render(int widthInit, int heightInit) {
@@ -33,10 +34,19 @@ windowType Render::getThreadWindow(int thread) {
 }
 
 Color Render::calculateShadeOfTheRay(Ray ray, Light light) {
-  Sphere  sphere(Vector3(0, 0, 100), 25, [](Vector3 point) { return Color(0.0f, 0.25f, 0.1f); });
-  Sphere  sphere2(Vector3(15, 10, 60), 7, [](Vector3 point) { return Color(0.0f, 0.05f, 0.3f); });
+  Sphere  sphere(Vector3(0, 0, 100), 25, [](Vector3 point) {
+    if ((int)point.x/5 % 2 ^ (int)point.y/5 % 2 ^ (int)point.z/5 % 2) {
+      return Materials::red;
+    }
+    else {
+      return Materials::mirror;
+    }
+  });
+  Sphere  sphere2(Vector3(15, 10, 60), 7, [](Vector3 point) { return Materials::mirror; });
   Color   color;
   Vector3 hitPoint;
+
+  // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
 
   if (sphere.detectHit(ray, hitPoint)) {
     // The ray hit the sphere, let's find the bounce angle and shade it
@@ -47,12 +57,14 @@ Color Render::calculateShadeOfTheRay(Ray ray, Light light) {
     float   diffuse      = fmaxf(0, hitLight % hitNormal); // how similar are they?
     float   specular     = fmaxf(0, hitLight % hitReflected);
 
+    materialStatic hitMaterial = sphere.material(hitPoint);
+
     // diffuse = similarity (dot product) of hitLight and hitNormal
     // https://youtu.be/KDHuWxy53uM
     // And use the diffuse / specular only when they are positive
     // shadeOfTheRay = specular + diffuse + ambient
     // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-    color = Color(light.color * powf(specular, 10) + light.color * diffuse + sphere.material(hitPoint));
+    color = Color(light.color * powf(specular, 10) + light.color * diffuse + hitMaterial.ambient);
   }
   if (sphere2.detectHit(ray, hitPoint)) {
     // The ray hit the sphere, let's find the bounce angle and shade it
@@ -63,12 +75,14 @@ Color Render::calculateShadeOfTheRay(Ray ray, Light light) {
     float   diffuse      = fmaxf(0, hitLight % hitNormal); // how similar are they?
     float   specular     = fmaxf(0, hitLight % hitReflected);
 
+    materialStatic hitMaterial = sphere2.material(hitPoint);
+
     // diffuse = similarity (dot product) of hitLight and hitNormal
     // https://youtu.be/KDHuWxy53uM
     // And use the diffuse / specular only when they are positive
     // shadeOfTheRay = specular + diffuse + ambient
     // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-    color = Color(light.color * powf(specular, 10) + light.color * diffuse + sphere2.material(hitPoint));
+    color = Color(light.color * powf(specular, 10) + light.color * diffuse + hitMaterial.ambient);
   }
   return color;
 }

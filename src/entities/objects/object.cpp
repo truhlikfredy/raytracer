@@ -1,11 +1,18 @@
-//
-// Created by fredy on 11/01/18.
-//
+/*
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 11/01/2018
+ */
 
 #include "object.h"
 
-Object::Object(std::function<Color(Vector3 point)> material): material(material) {
+Object::Object(Vector3 centerInit, std::function<materialStatic(Vector3 point)> materialInit):
+  center(centerInit), material(materialInit) {
 
 }
 
-//Color getColorAt(Vector3 point)
+uv Object::toUv(Vector3 point) {
+  return {
+    .u = point.x,
+    .v = point.y,
+  };
+}

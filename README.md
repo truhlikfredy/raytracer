@@ -6,6 +6,8 @@
 * Phong shading (ambient + difuse + specular lighting)
 * Animated light
 * Scaling, can be rendered in low-res and then upscaled so the window is decent size
+* Using well known predefined materials
+* Allow for objects to pass a function as material generator (allows change properties of the material depending on coordinates and other variables)
 
 # TODO (More precisely a wish list)
 
@@ -44,3 +46,11 @@
 https://graphics.pixar.com/library/MultiJitteredSampling/paper.pdf
 
 http://www.pbrt.org/chapters/pbrt_chapter7.pdf
+
+## Shading and Coloring
+
+https://globe3d.sourceforge.io/g3d_html/gl-materials__ads.htm
+
+https://stackoverflow.com/questions/24132774/trouble-with-phong-shading
+
+https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
