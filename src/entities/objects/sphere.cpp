@@ -6,7 +6,7 @@
 #include <cmath>
 #include "sphere.h"
 
-Sphere::Sphere(Vector3 centerInt, float radiusInit, std::function<materialStatic(Vector3 point)> materialInit):
+Sphere::Sphere(Vector3 centerInt, float radiusInit, std::function<materialStatic(Vector3 point, float frame)> materialInit):
   Object(centerInt, materialInit) {
 
   radius = radiusInit;

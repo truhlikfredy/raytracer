@@ -33,8 +33,8 @@ windowType Render::getThreadWindow(int thread) {
   };
 }
 
-Color Render::calculateShadeOfTheRay(Ray ray, Light light) {
-  Sphere  sphere(Vector3(0, 0, 100), 25, [](Vector3 point) {
+Color Render::calculateShadeOfTheRay(Ray ray, Light light, float frame) {
+  Sphere  sphere(Vector3(0, 0, 100), 25, [](Vector3 point, float frame) {
 //    if ((int)point.x/5 % 2 ^ (int)point.y/5 % 2 ^ (int)point.z/5 % 2) {
 //      return Materials::red;
 //    }
@@ -42,14 +42,14 @@ Color Render::calculateShadeOfTheRay(Ray ray, Light light) {
 //      return Materials::mirror;
 //    }
     return materialStatic{
-      .ambient = Color(0.0f, 0.0f, 0.2f),
-      .diffuse = Color((sinf(point.x/2+point.y+point.z)+0.2)*0.5),
+      .ambient = Color(0.0f, 0.0f, 0.0f),
+      .diffuse = Color((sinf(point.x/2+point.y+point.z + frame/5)+0.2)*0.5),
       .specular = Color(0.2f),
       .emission = Color(0.0),
       .shininess = point.z
     };
   });
-  Sphere  sphere2(Vector3(15, 10, 60), 7, [](Vector3 point) { return Materials::mirror; });
+  Sphere  sphere2(Vector3(15, 10, 60), 7, [](Vector3 point, float frame) { return Materials::mirror; });
   Color   color;
   Vector3 hitPoint;
 
@@ -64,7 +64,7 @@ Color Render::calculateShadeOfTheRay(Ray ray, Light light) {
     float   diffuse      = fmaxf(0, hitLight % hitNormal); // how similar are they?
     float   specular     = fmaxf(0, hitLight % hitReflected);
 
-    materialStatic hitMaterial = sphere.material(hitPoint);
+    materialStatic hitMaterial = sphere.material(hitPoint, frame);
 
     // diffuse = similarity (dot product) of hitLight and hitNormal
     // https://youtu.be/KDHuWxy53uM
@@ -82,7 +82,7 @@ Color Render::calculateShadeOfTheRay(Ray ray, Light light) {
     float   diffuse      = fmaxf(0, hitLight % hitNormal); // how similar are they?
     float   specular     = fmaxf(0, hitLight % hitReflected);
 
-    materialStatic hitMaterial = sphere2.material(hitPoint);
+    materialStatic hitMaterial = sphere2.material(hitPoint, frame);
 
     // diffuse = similarity (dot product) of hitLight and hitNormal
     // https://youtu.be/KDHuWxy53uM
@@ -111,7 +111,7 @@ void Render::renderPartial(float frame, windowType window) {
 
         Ray rayForThisPixel(Vector3(0, 0, 0),
                             ~Vector3(x + sample.spaceX - width / 2.0f, y + sample.spaceY - height / 2.0f, width * 1.0f));
-        Color shade = calculateShadeOfTheRay(rayForThisPixel, light);
+        Color shade = calculateShadeOfTheRay(rayForThisPixel, light, frame);
         shade = ~shade;
 
         dynamicPixels[x + (y * width)].color = dynamicPixels[x + (y * width)].color + shade;

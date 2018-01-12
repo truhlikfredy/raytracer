@@ -15,9 +15,9 @@ class Object {
 
 public:
   Vector3 center;
-  std::function<materialStatic(Vector3 point)> material;
+  std::function<materialStatic(Vector3 point, float frame)> material;
 
-  Object(Vector3 center, std::function<materialStatic(Vector3 point)> materialInit);
+  Object(Vector3 center, std::function<materialStatic(Vector3 point, float frame)> materialInit);
 
   uv toUv(Vector3 point);
 

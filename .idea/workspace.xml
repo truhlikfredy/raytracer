@@ -5,7 +5,7 @@
   </component>
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/src/frontend/display.h" />
-    <bookmark url="file://$PROJECT_DIR$/src/render/render.cpp" line="44" />
+    <bookmark url="file://$PROJECT_DIR$/src/render/render.cpp" line="51" />
   </component>
   <component name="BuildServerSettings">
     <option name="LOGIN" value="" />
@@ -44,15 +44,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f8968a0b-82e1-4221-bcce-b654fbc2a009" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/raycaster.iml" afterPath="$PROJECT_DIR$/.idea/raycaster.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/entities/objects/materials.h" afterPath="$PROJECT_DIR$/src/entities/objects/materials.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/entities/objects/object.cpp" afterPath="$PROJECT_DIR$/src/entities/objects/object.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/entities/objects/object.h" afterPath="$PROJECT_DIR$/src/entities/objects/object.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/entities/objects/sphere.cpp" afterPath="$PROJECT_DIR$/src/entities/objects/sphere.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/entities/objects/sphere.h" afterPath="$PROJECT_DIR$/src/entities/objects/sphere.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/render/render.cpp" afterPath="$PROJECT_DIR$/src/render/render.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/render/render.h" afterPath="$PROJECT_DIR$/src/render/render.h" />
     </list>
     <ignored path="raycaster.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -78,8 +77,8 @@
       <file leaf-file-name="object.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/entities/objects/object.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="30" column="39" selection-start-line="30" selection-start-column="39" selection-end-line="30" selection-end-column="39" />
+            <state relative-caret-position="241">
+              <caret line="17" column="57" selection-start-line="17" selection-start-column="57" selection-end-line="17" selection-end-column="57" />
               <folding>
                 <element signature="e#126#147#0" expanded="true" />
               </folding>
@@ -90,8 +89,8 @@
       <file leaf-file-name="materials.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/entities/objects/materials.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="22" column="10" selection-start-line="22" selection-start-column="10" selection-end-line="22" selection-end-column="10" />
+            <state relative-caret-position="480">
+              <caret line="32" column="42" selection-start-line="32" selection-start-column="42" selection-end-line="32" selection-end-column="42" />
               <folding>
                 <element signature="e#130#151#0" expanded="true" />
               </folding>
@@ -112,18 +111,18 @@
       <file leaf-file-name="object.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/entities/objects/object.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="17" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
+            <state relative-caret-position="120">
+              <caret line="8" column="28" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="render.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="render.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/render/render.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="32" column="4" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="4" />
+            <state relative-caret-position="45">
+              <caret line="45" column="64" selection-start-line="45" selection-start-column="64" selection-end-line="45" selection-end-column="64" />
               <folding>
                 <element signature="e#71#87#0" expanded="true" />
               </folding>
@@ -131,11 +130,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="render.h" pinned="false" current-in-tab="true">
+      <file leaf-file-name="color.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/types/color.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="13" column="7" selection-start-line="13" selection-start-column="7" selection-end-line="13" selection-end-column="7" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="render.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/render/render.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="23" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
+            <state relative-caret-position="295">
+              <caret line="42" column="64" selection-start-line="42" selection-start-column="64" selection-end-line="42" selection-end-column="64" />
               <folding>
                 <element signature="e#221#257#0" expanded="true" />
                 <element signature="e#462#489#0" expanded="true" />
@@ -160,8 +169,8 @@
       <file leaf-file-name="sphere.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/entities/objects/sphere.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="120">
+              <caret line="8" column="107" selection-start-line="8" selection-start-column="107" selection-end-line="8" selection-end-column="107" />
               <folding>
                 <element signature="e#71#87#0" expanded="true" />
               </folding>
@@ -173,21 +182,8 @@
         <entry file="file://$PROJECT_DIR$/src/entities/objects/sphere.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="210">
-              <caret line="14" column="74" selection-start-line="14" selection-start-column="74" selection-end-line="14" selection-end-column="74" />
+              <caret line="14" column="88" selection-start-line="14" selection-start-column="88" selection-end-line="14" selection-end-column="101" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sampler.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/render/sampler.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="115">
-              <caret line="22" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-              <folding>
-                <marker date="1515712265097" expanded="true" signature="310:345" placeholder="{...}" />
-                <marker date="1515712265097" expanded="true" signature="362:1107" placeholder="{...}" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -242,15 +238,15 @@
         <option value="$PROJECT_DIR$/src/render/sampler.h" />
         <option value="$PROJECT_DIR$/src/render/sampler.cpp" />
         <option value="$PROJECT_DIR$/src/entities/objects/material.h" />
-        <option value="$PROJECT_DIR$/src/entities/objects/sphere.h" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/entities/objects/materials.cpp" />
-        <option value="$PROJECT_DIR$/src/render/render.cpp" />
         <option value="$PROJECT_DIR$/src/entities/objects/materials.h" />
-        <option value="$PROJECT_DIR$/src/entities/objects/object.cpp" />
-        <option value="$PROJECT_DIR$/src/entities/objects/sphere.cpp" />
-        <option value="$PROJECT_DIR$/src/entities/objects/object.h" />
         <option value="$PROJECT_DIR$/src/render/render.h" />
+        <option value="$PROJECT_DIR$/src/entities/objects/sphere.h" />
+        <option value="$PROJECT_DIR$/src/entities/objects/sphere.cpp" />
+        <option value="$PROJECT_DIR$/src/entities/objects/object.cpp" />
+        <option value="$PROJECT_DIR$/src/entities/objects/object.h" />
+        <option value="$PROJECT_DIR$/src/render/render.cpp" />
       </list>
     </option>
   </component>
@@ -826,16 +822,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/types/color.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="3" selection-end-column="3" />
-          <folding>
-            <element signature="e#71#88#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/utils/debounce.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
@@ -958,14 +944,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/entities/objects/sphere.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="74" selection-start-line="14" selection-start-column="74" selection-end-line="14" selection-end-column="74" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -977,30 +955,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/entities/objects/materials.h">
+    <entry file="file://$PROJECT_DIR$/src/types/color.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="10" selection-start-line="22" selection-start-column="10" selection-end-line="22" selection-end-column="10" />
+        <state relative-caret-position="165">
+          <caret line="13" column="7" selection-start-line="13" selection-start-column="7" selection-end-line="13" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/render/render.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="42" column="64" selection-start-line="42" selection-start-column="64" selection-end-line="42" selection-end-column="64" />
           <folding>
-            <element signature="e#130#151#0" expanded="true" />
+            <element signature="e#221#257#0" expanded="true" />
+            <element signature="e#462#489#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/entities/objects/object.h">
+    <entry file="file://$PROJECT_DIR$/src/entities/objects/sphere.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="39" selection-start-line="30" selection-start-column="39" selection-end-line="30" selection-end-column="39" />
-          <folding>
-            <element signature="e#126#147#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="210">
+          <caret line="14" column="88" selection-start-line="14" selection-start-column="88" selection-end-line="14" selection-end-column="101" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/entities/objects/sphere.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="120">
+          <caret line="8" column="107" selection-start-line="8" selection-start-column="107" selection-end-line="8" selection-end-column="107" />
           <folding>
             <element signature="e#71#87#0" expanded="true" />
           </folding>
@@ -1015,31 +1000,40 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/entities/objects/materials.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="32" column="42" selection-start-line="32" selection-start-column="42" selection-end-line="32" selection-end-column="42" />
+          <folding>
+            <element signature="e#130#151#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/entities/objects/object.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="17" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
+        <state relative-caret-position="120">
+          <caret line="8" column="28" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/entities/objects/object.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="241">
+          <caret line="17" column="57" selection-start-line="17" selection-start-column="57" selection-end-line="17" selection-end-column="57" />
+          <folding>
+            <element signature="e#126#147#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/render/render.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" column="4" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="4" />
+        <state relative-caret-position="45">
+          <caret line="45" column="64" selection-start-line="45" selection-start-column="64" selection-end-line="45" selection-end-column="64" />
           <folding>
             <element signature="e#71#87#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/render/render.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="23" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
-          <folding>
-            <element signature="e#221#257#0" expanded="true" />
-            <element signature="e#462#489#0" expanded="true" />
           </folding>
         </state>
       </provider>

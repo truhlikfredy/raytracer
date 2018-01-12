@@ -30,4 +30,6 @@ public:
   static materialStatic mirror;
 };
 
+// Allow dynamic materials made on the fly
+
 #endif //RAYTRACER_MATERIAL_H

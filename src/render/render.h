@@ -40,7 +40,7 @@ private:
 
   windowType getThreadWindow(int thread);
 
-  Color calculateShadeOfTheRay(Ray ray, Light light);
+  Color calculateShadeOfTheRay(Ray ray, Light light, float frame);
 
   void renderPartial(float frame, windowType window);
 

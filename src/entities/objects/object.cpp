@@ -5,7 +5,7 @@
 
 #include "object.h"
 
-Object::Object(Vector3 centerInit, std::function<materialStatic(Vector3 point)> materialInit):
+Object::Object(Vector3 centerInit, std::function<materialStatic(Vector3 point, float frame)> materialInit):
   center(centerInit), material(materialInit) {
 
 }
