@@ -35,12 +35,19 @@ windowType Render::getThreadWindow(int thread) {
 
 Color Render::calculateShadeOfTheRay(Ray ray, Light light) {
   Sphere  sphere(Vector3(0, 0, 100), 25, [](Vector3 point) {
-    if ((int)point.x/5 % 2 ^ (int)point.y/5 % 2 ^ (int)point.z/5 % 2) {
-      return Materials::red;
-    }
-    else {
-      return Materials::mirror;
-    }
+//    if ((int)point.x/5 % 2 ^ (int)point.y/5 % 2 ^ (int)point.z/5 % 2) {
+//      return Materials::red;
+//    }
+//    else {
+//      return Materials::mirror;
+//    }
+    return materialStatic{
+      .ambient = Color(0.0f, 0.0f, 0.2f),
+      .diffuse = Color((sinf(point.x/2+point.y+point.z)+0.2)*0.5),
+      .specular = Color(0.2f),
+      .emission = Color(0.0),
+      .shininess = point.z
+    };
   });
   Sphere  sphere2(Vector3(15, 10, 60), 7, [](Vector3 point) { return Materials::mirror; });
   Color   color;
@@ -64,7 +71,7 @@ Color Render::calculateShadeOfTheRay(Ray ray, Light light) {
     // And use the diffuse / specular only when they are positive
     // shadeOfTheRay = specular + diffuse + ambient
     // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-    color = Color(light.color * powf(specular, 10) + light.color * diffuse + hitMaterial.ambient);
+    color = Color(light.color * powf(specular, 10) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
   }
   if (sphere2.detectHit(ray, hitPoint)) {
     // The ray hit the sphere, let's find the bounce angle and shade it
@@ -82,7 +89,7 @@ Color Render::calculateShadeOfTheRay(Ray ray, Light light) {
     // And use the diffuse / specular only when they are positive
     // shadeOfTheRay = specular + diffuse + ambient
     // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-    color = Color(light.color * powf(specular, 10) + light.color * diffuse + hitMaterial.ambient);
+    color = Color(light.color * powf(specular, 10) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
   }
   return color;
 }
