@@ -8,7 +8,6 @@
 #include <vector>
 #include "render.h"
 #include "../entities/objects/sphere.h"
-#include "../entities/objects/materials.h"
 
 
 Render::Render(int widthInit, int heightInit) {
@@ -33,74 +32,53 @@ windowType Render::getThreadWindow(int thread) {
   };
 }
 
-Color Render::calculateShadeOfTheRay(Ray ray, Light light, float frame) {
-  Sphere  sphere(Vector3(0, 0, 100), 25, [](Vector3 point, float frame) {
-//    if ((int)point.x/5 % 2 ^ (int)point.y/5 % 2 ^ (int)point.z/5 % 2) {
-//      return Materials::red;
-//    }
-//    else {
-//      return Materials::mirror;
-//    }
-    return materialStatic{
-      .ambient = Color(0.0f, 0.0f, 0.0f),
-      .diffuse = Color((sinf(point.x/2+point.y+point.z + frame/5)+0.2)*0.5),
-      .specular = Color(0.2f),
-      .emission = Color(0.0),
-      .shininess = point.z
-    };
-  });
-  Sphere  sphere2(Vector3(15, 10, 60), 7, [](Vector3 point, float frame) { return Materials::mirror; });
+
+
+Color Render::rayStart(Ray ray, LightOmni light, float frame) {
+  Scene staticScene = Scene();
+  scene.evaluate(staticScene, frame);
+
+  Sphere  sphere2(Vector3(15, 10, 60), 7, [](Vector3 point, float frame) { return Materials::red; });
   Color   color;
   Vector3 hitPoint;
 
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
 
-  if (sphere.detectHit(ray, hitPoint)) {
-    // The ray hit the sphere, let's find the bounce angle and shade it
-    // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
-    Vector3 hitNormal    = sphere ^ hitPoint;
-    Vector3 hitReflected = ray.direction - (hitNormal * 2 *(ray.direction % hitNormal));
-    Vector3 hitLight     = ~Vector3(light - hitPoint);
-    float   diffuse      = fmaxf(0, hitLight % hitNormal); // how similar are they?
-    float   specular     = fmaxf(0, hitLight % hitReflected);
+  for (auto &object: staticScene.objects) {
+    if (object.detectHit(ray, hitPoint)) {
+      // The ray hit the sphere, let's find the bounce angle and shade it
+      // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
+      Vector3 hitNormal    = object ^ hitPoint;
+      Vector3 hitReflected = ray.direction - (hitNormal * 2 *(ray.direction % hitNormal));
+      Vector3 hitLight     = ~Vector3(light - hitPoint);
+      float   diffuse      = fmaxf(0, hitLight % hitNormal); // how similar are they?
+      float   specular     = fmaxf(0, hitLight % hitReflected);
 
-    materialStatic hitMaterial = sphere.material(hitPoint, frame);
+      MaterialStatic hitMaterial = object.materialFn(hitPoint, frame);
 
-    // diffuse = similarity (dot product) of hitLight and hitNormal
-    // https://youtu.be/KDHuWxy53uM
-    // And use the diffuse / specular only when they are positive
-    // shadeOfTheRay = specular + diffuse + ambient
-    // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-    color = Color(light.color * powf(specular, 10) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
+      // diffuse = similarity (dot product) of hitLight and hitNormal
+      // https://youtu.be/KDHuWxy53uM
+      // And use the diffuse / specular only when they are positive
+      // shadeOfTheRay = specular + diffuse + ambient
+      // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
+      color = Color(light.color * powf(specular, 10) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
+    }
   }
-  if (sphere2.detectHit(ray, hitPoint)) {
-    // The ray hit the sphere, let's find the bounce angle and shade it
-    // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
-    Vector3 hitNormal    = sphere2 ^ hitPoint;
-    Vector3 hitReflected = ray.direction - (hitNormal * 2 *(ray.direction % hitNormal));
-    Vector3 hitLight     = ~Vector3(light - hitPoint);
-    float   diffuse      = fmaxf(0, hitLight % hitNormal); // how similar are they?
-    float   specular     = fmaxf(0, hitLight % hitReflected);
 
-    materialStatic hitMaterial = sphere2.material(hitPoint, frame);
-
-    // diffuse = similarity (dot product) of hitLight and hitNormal
-    // https://youtu.be/KDHuWxy53uM
-    // And use the diffuse / specular only when they are positive
-    // shadeOfTheRay = specular + diffuse + ambient
-    // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-    color = Color(light.color * powf(specular, 10) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
-  }
   return color;
 }
 
 void Render::renderPartial(float frame, windowType window) {
   const int zoom=2;
-  const float lightRotate = (M_PI * frame) / 11;
   Sampler sampler(ANTI_ALIASING, 1, 0.1f, 0, frame);
 
-  Light light(Vector3(1.0*width  * cosf(lightRotate),
-                      0.6*height * (sinf(lightRotate)-0.5), 20), Color(0.2f, 0.7f, 0.3f));
+  LightOmni light([this](float frame) {
+    const float lightRotate = (M_PI * frame) / 11;
+    Vector3 center(1.0*this->width  * cosf(lightRotate),0.6*this->height * (sinf(lightRotate)-0.5), 20);
+    Color   color(0.0f,0.7f,0.0f);
+
+    return LightOmni(center, color);
+  });
 
 
   for (int y = window.yStart; y < window.yEnd; y++) {
@@ -111,7 +89,7 @@ void Render::renderPartial(float frame, windowType window) {
 
         Ray rayForThisPixel(Vector3(0, 0, 0),
                             ~Vector3(x + sample.spaceX - width / 2.0f, y + sample.spaceY - height / 2.0f, width * 1.0f));
-        Color shade = calculateShadeOfTheRay(rayForThisPixel, light, frame);
+        Color shade = rayStart(rayForThisPixel, light, frame);
         shade = ~shade;
 
         dynamicPixels[x + (y * width)].color = dynamicPixels[x + (y * width)].color + shade;
@@ -128,7 +106,8 @@ void Render::clearDynamicPixels() {
   }
 }
 
-void Render::renderFull(float frame) {
+void Render::renderFull(Scene sceneInit, float frame) {
+  scene = sceneInit;
   std::vector<std::thread> workers;
 
   clearDynamicPixels();

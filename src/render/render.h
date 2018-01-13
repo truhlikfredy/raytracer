@@ -25,6 +25,7 @@ struct windowType {
 
 #include "../types/color.h"
 #include "sampler.h"
+#include "../scenes/scene.h"
 
 
 struct DynamicPixel {
@@ -37,10 +38,13 @@ class Render {
 private:
   unsigned int width;
   unsigned int height;
+  Scene        scene;
 
   windowType getThreadWindow(int thread);
 
-  Color calculateShadeOfTheRay(Ray ray, Light light, float frame);
+  Color rayFollow(Ray ray, LightOmni light);
+
+  Color rayStart(Ray ray, LightOmni light, float frame);
 
   void renderPartial(float frame, windowType window);
 
@@ -52,6 +56,6 @@ public:
 
   Render(int width, int height);
 
-  void renderFull(float frame);
+  void renderFull(Scene sceneInit, float frame);
 };
 #endif //RAYTRACER_RENDER_H

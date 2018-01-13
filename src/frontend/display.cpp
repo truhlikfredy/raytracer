@@ -54,7 +54,7 @@ void Display::displaySamplerPattern(int width, int height, float frame) {
 }
 
 
-void Display::renderLoop() {
+void Display::renderLoop(Scene scene) {
   static float frame = 0;
   sf::Event event;
 
@@ -63,7 +63,7 @@ void Display::renderLoop() {
   }
 
   clearDisplayMem();
-  render->renderFull(frame);
+  render->renderFull(scene, frame);
   convertToDisplayMem();
   if (showSamplerPatterns) {
     displaySamplerPattern(ANTI_ALIASING, ANTI_ALIASING, frame);

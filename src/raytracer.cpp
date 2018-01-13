@@ -5,10 +5,12 @@
 
 #include "frontend/display.h"
 #include "utils/debounce.h"
-
+#include "scenes/plain.h"
 
 int main() {
   Display *mainWindow = new Display();
+
+  Scene scene = Plain();
 
   while (mainWindow->keepLooping()) {
 
@@ -17,7 +19,7 @@ int main() {
       mainWindow->showSamplerPatterns ^= true; // invert the state
     }
 
-    mainWindow->renderLoop();
+    mainWindow->renderLoop(scene);
   }
 
   return 0;

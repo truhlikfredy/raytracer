@@ -12,6 +12,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "../render/render.h"
+#include "../scenes/scene.h"
 
 class Display {
 private:
@@ -27,7 +28,7 @@ public:
   bool showSamplerPatterns;
   Display();
 
-  void renderLoop();
+  void renderLoop(Scene scene);
   bool keepLooping();
   void clearDisplayMem();
   void convertToDisplayMem();

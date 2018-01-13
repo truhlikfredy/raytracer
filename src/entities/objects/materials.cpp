@@ -9,7 +9,7 @@
 
 #include "materials.h"
 
-materialStatic Materials::red = {
+MaterialStatic Materials::red = {
   .ambient   = Color(0.0f),
   .diffuse   = Color(1.0f, 0.0f, 0.0f),
   .specular  = Color(0.0225f),
@@ -17,7 +17,7 @@ materialStatic Materials::red = {
   .shininess = 12.8f
 };
 
-materialStatic Materials::mirror = {
+MaterialStatic Materials::mirror = {
   .ambient   = Color(0.1f),
   .diffuse   = Color(0.1f),
   .specular  = Color(0.8f),

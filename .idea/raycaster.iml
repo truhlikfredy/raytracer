@@ -8,7 +8,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/types/vector3.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/types/triple.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/types/triple.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/scene/plain.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/utils/debounce.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/utils/debounce.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/frontend/display.cpp" isTestSource="false" />
@@ -21,12 +20,18 @@
       <sourceFolder url="file://$MODULE_DIR$/src/render/sampler.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/omni.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/omni.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/entity.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/entity.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/object.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/materials.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/materials.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphere.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/object.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphere.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/scenes/scene.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/scenes/scene.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/scenes/plain.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/scenes/plain.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/raytracer.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
     </content>

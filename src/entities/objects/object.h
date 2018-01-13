@@ -10,21 +10,26 @@
 #include "materials.h"
 #include "../../render/ray.h"
 #include "../../types/color.h"
+#include "../entity.h"
 
-class Object {
+class Object: public Entity {
 
 public:
-  Vector3 center;
-  std::function<materialStatic(Vector3 point, float frame)> material;
+  std::function<MaterialStatic(Vector3 point, float frame)> materialFn;
+  MaterialStatic materialStatic;
 
-  Object(Vector3 center, std::function<materialStatic(Vector3 point, float frame)> materialInit);
+  Object(std::function<Object(float frame)> propertiesFnInit);
+
+  //Object(Vector3 centerInit, Materials materialInit);
+  Object(Vector3 centerInit, std::function<MaterialStatic(Vector3 point, float frame)> materialFnInit);
+
+  Object(Vector3 centerInit, MaterialStatic materialStaticInit);
 
   uv toUv(Vector3 point);
 
-  virtual bool detectHit(Ray ray, Vector3 &hitPoint) = 0;
+  bool detectHit(Ray ray, Vector3 &hitPoint);
 
-  virtual Vector3 operator ^ (Vector3 pointOnSurface) = 0;
-
+  Vector3 operator ^ (Vector3 pointOnSurface);
 
 };
 

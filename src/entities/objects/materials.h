@@ -10,7 +10,7 @@
 #include "../../types/vector3.h"
 #include "../../types/color.h"
 
-struct materialStatic {
+struct MaterialStatic {
   Color ambient;
   Color diffuse;
   Color specular;
@@ -26,8 +26,8 @@ struct uv {
 class Materials {
 
 public:
-  static materialStatic red;
-  static materialStatic mirror;
+  static MaterialStatic red;
+  static MaterialStatic mirror;
 };
 
 // Allow dynamic materials made on the fly

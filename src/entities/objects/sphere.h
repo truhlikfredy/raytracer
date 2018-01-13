@@ -12,7 +12,15 @@ class Sphere: public Object {
   float   radius;
 
 public:
-  Sphere(Vector3 centerInt, float radiusInit, std::function<materialStatic(Vector3 point, float frame)> colorInit);
+
+  Sphere(std::function<Sphere(float frame)> propertiesFnInit);
+
+  Sphere(Vector3 centerInit, float radiusInit, std::function<Sphere(float frame)> propertiesFnInit);
+
+  Sphere(Vector3 centerInt, float radiusInit, std::function<MaterialStatic(Vector3 point, float frame)> materialFnInit);
+
+
+  //Sphere(Vector3 centerInt, float radiusInit, Materials materialInit);
 
   // Get normalized normal vector from sphere's surface point
   Vector3 operator ^ (Vector3 pointOnSurface);

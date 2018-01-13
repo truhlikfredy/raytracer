@@ -7,7 +7,7 @@
 * Animated light
 * Scaling, can be rendered in low-res and then upscaled so the window is decent size
 * Using well known predefined materials
-* Allow for objects to pass a function as material generator (allows change properties of the material depending on coordinates and other variables)
+* Allow for objects to pass a function as materialFn generator (allows change properties of the materialFn depending on coordinates and other variables)
 
 # TODO (More precisely a wish list)
 
