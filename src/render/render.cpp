@@ -34,13 +34,18 @@ windowType Render::getThreadWindow(int thread) {
 
 
 
-Color Render::rayStart(Ray ray, LightOmni light, float frame) {
+Color Render::rayStart(Ray ray, float frame) {
   Scene staticScene = Scene();
   scene.evaluate(staticScene, frame);
 
   Sphere  sphere2(Vector3(15, 10, 60), 7, [](Vector3 point, float frame) { return Materials::red; });
   Color   color;
   Vector3 hitPoint;
+
+  Entity* item = &staticScene.lights.front();
+
+  LightOmni* light = (LightOmni*)(item);
+
 
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
 
@@ -50,7 +55,7 @@ Color Render::rayStart(Ray ray, LightOmni light, float frame) {
       // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
       Vector3 hitNormal    = object ^ hitPoint;
       Vector3 hitReflected = ray.direction - (hitNormal * 2 *(ray.direction % hitNormal));
-      Vector3 hitLight     = ~Vector3(light - hitPoint);
+      Vector3 hitLight     = ~Vector3(*light - hitPoint);
       float   diffuse      = fmaxf(0, hitLight % hitNormal); // how similar are they?
       float   specular     = fmaxf(0, hitLight % hitReflected);
 
@@ -61,7 +66,7 @@ Color Render::rayStart(Ray ray, LightOmni light, float frame) {
       // And use the diffuse / specular only when they are positive
       // shadeOfTheRay = specular + diffuse + ambient
       // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-      color = Color(light.color * powf(specular, 10) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
+      color = Color(light->color * powf(specular, 10) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
     }
   }
 
@@ -72,15 +77,6 @@ void Render::renderPartial(float frame, windowType window) {
   const int zoom=2;
   Sampler sampler(ANTI_ALIASING, 1, 0.1f, 0, frame);
 
-  LightOmni light([this](float frame) {
-    const float lightRotate = (M_PI * frame) / 11;
-    Vector3 center(1.0*this->width  * cosf(lightRotate),0.6*this->height * (sinf(lightRotate)-0.5), 20);
-    Color   color(0.0f,0.7f,0.0f);
-
-    return LightOmni(center, color);
-  });
-
-
   for (int y = window.yStart; y < window.yEnd; y++) {
     for (int x = window.xStart; x < window.xEnd; x++) {
       sampler.nextPixel();
@@ -89,7 +85,7 @@ void Render::renderPartial(float frame, windowType window) {
 
         Ray rayForThisPixel(Vector3(0, 0, 0),
                             ~Vector3(x + sample.spaceX - width / 2.0f, y + sample.spaceY - height / 2.0f, width * 1.0f));
-        Color shade = rayStart(rayForThisPixel, light, frame);
+        Color shade = rayStart(rayForThisPixel, frame);
         shade = ~shade;
 
         dynamicPixels[x + (y * width)].color = dynamicPixels[x + (y * width)].color + shade;

@@ -1,6 +1,7 @@
-//
-// Created by fredy on 11/01/18.
-//
+/*
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 13/01/2018
+ */
 
 #ifndef RAYTRACER_SCENE_PLAIN_H
 #define RAYTRACER_SCENE_PLAIN_H

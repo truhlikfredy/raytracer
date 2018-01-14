@@ -15,7 +15,7 @@ public:
 
   Sphere(std::function<Sphere(float frame)> propertiesFnInit);
 
-  Sphere(Vector3 centerInit, float radiusInit, std::function<Sphere(float frame)> propertiesFnInit);
+  // Sphere(Vector3 centerInit, float radiusInit, std::function<Sphere(float frame)> propertiesFnInit);
 
   Sphere(Vector3 centerInt, float radiusInit, std::function<MaterialStatic(Vector3 point, float frame)> materialFnInit);
 

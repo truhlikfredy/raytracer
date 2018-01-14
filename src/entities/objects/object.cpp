@@ -5,8 +5,7 @@
 
 #include "object.h"
 
-Object::Object(std::function<Object(float frame)> propertiesFnInit): Entity(propertiesFnInit), materialFn(nullptr) {
-}
+ Object::Object(std::function<Object(float frame)> propertiesFnInit): Entity(propertiesFnInit), materialFn(nullptr) {
 
 Object::Object(Vector3 centerInit,
                std::function<MaterialStatic(Vector3 point, float frame)> materialFnInit):
@@ -20,9 +19,9 @@ Object::Object(Vector3 centerInit, MaterialStatic materialStaticInit):
 }
 
 
-bool Object::detectHit(Ray ray, Vector3 &hitPoint) {
+/*bool Object::detectHit(Ray ray, Vector3 &hitPoint) {
   return false;
-}
+}*/
 
 Vector3 Object::operator ^ (Vector3 pointOnSurface) {
   return pointOnSurface;

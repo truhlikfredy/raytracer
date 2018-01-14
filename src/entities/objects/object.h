@@ -18,7 +18,7 @@ public:
   std::function<MaterialStatic(Vector3 point, float frame)> materialFn;
   MaterialStatic materialStatic;
 
-  Object(std::function<Object(float frame)> propertiesFnInit);
+  virtual Object(std::function<Entity(float frame)> propertiesFnInit);
 
   //Object(Vector3 centerInit, Materials materialInit);
   Object(Vector3 centerInit, std::function<MaterialStatic(Vector3 point, float frame)> materialFnInit);
@@ -27,7 +27,7 @@ public:
 
   uv toUv(Vector3 point);
 
-  bool detectHit(Ray ray, Vector3 &hitPoint);
+  virtual bool detectHit(Ray ray, Vector3 &hitPoint) = 0;
 
   Vector3 operator ^ (Vector3 pointOnSurface);
 

@@ -42,9 +42,9 @@ private:
 
   windowType getThreadWindow(int thread);
 
-  Color rayFollow(Ray ray, LightOmni light);
+  Color rayFollow(Ray ray);
 
-  Color rayStart(Ray ray, LightOmni light, float frame);
+  Color rayStart(Ray ray, float frame);
 
   void renderPartial(float frame, windowType window);
 
