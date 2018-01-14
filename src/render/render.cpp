@@ -11,6 +11,7 @@
 
 
 Render::Render(int widthInit, int heightInit) {
+  scene = nullptr;
   width = widthInit;
   height = heightInit;
   dynamicPixels = new DynamicPixel[widthInit * heightInit];
@@ -35,8 +36,13 @@ windowType Render::getThreadWindow(int thread) {
 
 
 Color Render::rayStart(Ray ray, float frame) {
-  Scene staticScene = Scene();
-  scene.evaluate(&staticScene, frame);
+//  Scene staticScene = Scene();
+//  scene.evaluate(&staticScene, frame);
+  //LightOmni *lithts;
+  //scene->evaluateLights()
+
+  Sphere *objects = new Sphere[scene->nObjects];
+  scene->evaluateObjects(objects, frame);
 
   //Sphere  sphere2(Vector3(15, 10, 60), 7, [](Vector3 point, float frame) { return Materials::red; });
   Color   color;
@@ -49,22 +55,23 @@ Color Render::rayStart(Ray ray, float frame) {
 
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
 
-  for (Entity &item: staticScene.objects) {
+  for (int i = 0; i< scene->nObjects; i++){
+    Sphere object = objects[i];
     //Object* object = (Object*)(&item);
-    Entity* it = &item;
+    //Entity* it = &item;
 
-    Sphere *object = static_cast<Sphere *>(it);
+    //Sphere *object = static_cast<Sphere *>(it);
 
-    if (object->detectHit(ray, hitPoint)) {
+    if (object.detectHit(ray, hitPoint)) {
       // The ray hit the sphere, let's find the bounce angle and shade it
       // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
-      Vector3 hitNormal    = *object ^ hitPoint;
+      Vector3 hitNormal    = object ^ hitPoint;
       Vector3 hitReflected = ray.direction - (hitNormal * 2 *(ray.direction % hitNormal));
       Vector3 hitLight     = ~Vector3(light - hitPoint);
       float   diffuse      = fmaxf(0, hitLight % hitNormal); // how similar are they?
       float   specular     = fmaxf(0, hitLight % hitReflected);
 
-      MaterialStatic hitMaterial = object->materialFn(hitPoint, frame);
+      MaterialStatic hitMaterial = object.materialFn(hitPoint, frame);
 
       // diffuse = similarity (dot product) of hitLight and hitNormal
       // https://youtu.be/KDHuWxy53uM
@@ -108,7 +115,7 @@ void Render::clearDynamicPixels() {
   }
 }
 
-void Render::renderFull(Scene sceneInit, float frame) {
+void Render::renderFull(Scene *sceneInit, float frame) {
   scene = sceneInit;
   std::vector<std::thread> workers;
 

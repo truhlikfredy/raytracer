@@ -6,28 +6,40 @@
 #include "scene.h"
 #include "../entities/objects/sphere.h"
 
-void Scene::evaluate(Scene *staticScene, float frameInit) {
-  frame = frameInit;
+Scene::Scene(int nlightsInit, int nobjectsInit): nLights(nlightsInit), nObjects(nobjectsInit) {
+  this->lights = new LightOmni[nlightsInit];
+  this->objects = new SphereGen[nobjectsInit];
 
-  for (auto &light: lights) {
-    if (light.evaluateFn) {
-      staticScene->lights.push_back(light.evaluateFn(frame));
-    }
-    else {
-      staticScene->lights.push_back(light);
-    }
-  }
+  // mem leak, need destructor
+};
 
-  for (auto &object: objects) {
-    if (object.evaluateFn) {
-      Entity* it = &object;
-      Sphere *object = static_cast<Sphere *>(it);
+void Scene::evaluateLights(LightOmni* result, float frame) {
+//  result = new LightOmni[nLights];
+//  for (int i = 0; i<nLights; i ++) {
+//    LightOmni light = lights[i].evaluateFn(frame);
+//    result[i] = light;
+//  }
+}
 
-      Sphere result = object->evaluateFn(frame);
-      staticScene->objects.push_back(result);
-    }
-    else {
-      staticScene->objects.push_back(object);
-    }
+
+void Scene::evaluateObjects(Sphere* result, float frame) {
+  for (int i = 0; i<nObjects; i ++) {
+    Sphere sphere = objects[i].evaluateFn(frame);
+    result[i] = sphere;
   }
 }
+
+
+//  for (auto &object: objects) {
+//    if (object.evaluateFn) {
+//      Entity* it = &object;
+//      Sphere *object = static_cast<Sphere *>(it);
+//
+//      Sphere result = object->evaluateFn(frame);
+//      staticScene->objects.push_back(result);
+//    }
+//    else {
+//      staticScene->objects.push_back(object);
+//    }
+//  }
+//}

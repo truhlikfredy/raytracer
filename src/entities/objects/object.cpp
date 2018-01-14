@@ -18,6 +18,8 @@ Object::Object(Vector3 centerInit, MaterialStatic materialStaticInit):
   center = centerInit;
 }
 
+Object::Object() {
+}
 
 /*bool Object::detectHit(Ray ray, Vector3 &hitPoint) {
   return false;

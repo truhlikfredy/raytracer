@@ -23,6 +23,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/entities/entity.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/entity.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/object.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphereGen.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphereGen.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/materials.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/materials.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphere.cpp" isTestSource="false" />

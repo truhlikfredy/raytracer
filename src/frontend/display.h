@@ -28,7 +28,7 @@ public:
   bool showSamplerPatterns;
   Display();
 
-  void renderLoop(Scene scene);
+  void renderLoop(Scene *scene);
   bool keepLooping();
   void clearDisplayMem();
   void convertToDisplayMem();

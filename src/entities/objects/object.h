@@ -25,6 +25,8 @@ public:
 
   Object(Vector3 centerInit, MaterialStatic materialStaticInit);
 
+  Object();
+
   uv toUv(Vector3 point);
 
   virtual bool detectHit(Ray ray, Vector3 &hitPoint) = 0;

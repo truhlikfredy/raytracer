@@ -14,6 +14,10 @@ Sphere::Sphere(Vector3 centerInt, float radiusInit, std::function<MaterialStatic
   radius = radiusInit;
 }
 
+Sphere::Sphere():Object() {
+
+}
+
 // Get normalized normal vector from sphere's surface point
 Vector3 Sphere::operator ^ (Vector3 pointOnSurface) {
   return ~Vector3(pointOnSurface - this->center);

@@ -14,6 +14,7 @@ class LightOmni: public Vector3, public Entity {
 public:
   LightOmni(std::function<LightOmni(float frame)> propertiesInit);
   LightOmni(Vector3 centerInit, Color colorInit);
+  LightOmni();
   Color color;
 };
 

@@ -38,7 +38,7 @@ class Render {
 private:
   unsigned int width;
   unsigned int height;
-  Scene        scene;
+  Scene        *scene;
 
   windowType getThreadWindow(int thread);
 
@@ -56,6 +56,6 @@ public:
 
   Render(int width, int height);
 
-  void renderFull(Scene sceneInit, float frame);
+  void renderFull(Scene *sceneInit, float frame);
 };
 #endif //RAYTRACER_RENDER_H

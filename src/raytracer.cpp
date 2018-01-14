@@ -19,7 +19,7 @@ int main() {
       mainWindow->showSamplerPatterns ^= true; // invert the state
     }
 
-    mainWindow->renderLoop(scene);
+    mainWindow->renderLoop(&scene);
   }
 
   return 0;

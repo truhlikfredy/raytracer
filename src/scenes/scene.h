@@ -9,15 +9,20 @@
 #include <vector>
 #include "../entities/entity.h"
 #include "../entities/objects/object.h"
+#include "../entities/objects/sphereGen.h"
+#include "../entities/lights/omni.h"
 
 class Scene {
 public:
   float frame;
+  int nLights;
+  int nObjects;
+  LightOmni* lights;
+  SphereGen* objects;
 
-  std::vector<Entity> lights;
-  std::vector<Entity> objects;
-
-  void evaluate(Scene *staticScene, float frameInit);
+  Scene(int nlightsInit, int nObjectsInit);
+  void evaluateLights(LightOmni* result, float frame);
+  void evaluateObjects(Sphere* result, float frame);
 
 };
 

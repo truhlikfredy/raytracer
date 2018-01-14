@@ -19,6 +19,7 @@ public:
 
   Sphere(Vector3 centerInt, float radiusInit, std::function<MaterialStatic(Vector3 point, float frame)> materialFnInit);
 
+  Sphere();
 
   bool detectHit(Ray ray, Vector3 &hitPoint);
 
