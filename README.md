@@ -10,6 +10,8 @@
 * Scaling, can be rendered in low-res and then upscaled so the window is decent size
 * Using well known predefined materials
 * Allow for objects to pass a function as materialFn generator (allows change properties of the materialFn depending on coordinates and other variables)
+* Travis build on each commit
+* Can capture screenshots by pressing C key
 
 # TODO (More precisely a wish list)
 

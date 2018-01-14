@@ -18,7 +18,6 @@ class Display {
 private:
   Render           *render;
   sf::Uint8*       pixels;
-  sf::Texture      texture;
   sf::Sprite       sprite;
   sf::RenderWindow window;
 
@@ -26,6 +25,7 @@ private:
 
 public:
   bool showSamplerPatterns;
+  sf::Texture      texture;
   Display();
 
   void renderLoop(Scene *scene);
