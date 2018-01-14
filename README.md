@@ -37,7 +37,9 @@
 
 # Screenshots
 
-![Screenshot of a sphere](/images/screenshot01.png)
+![Two balls with dynamic materials](/images/screenshot02.png)
+
+![Screenshot of a sphere under extreme lens settings](/images/screenshot01.png)
 
 # References
 
