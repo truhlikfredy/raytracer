@@ -88,7 +88,7 @@ Color Render::rayStart(Ray ray, Sphere* objects, LightOmni* lights, float frame)
 
 void Render::renderPartialWindow(float frame, windowType window) {
   const int zoom=2;
-  Sampler sampler(ANTI_ALIASING, 1, 0.1f, 0, frame);
+  Sampler sampler(ANTI_ALIASING, ANTI_ALIASING * ANTI_ALIASING, 0.5f, 0, frame);
 
   Sphere    *objects = new Sphere[scene->nObjects];
   LightOmni *lights  = new LightOmni[scene->nLights];
@@ -102,7 +102,7 @@ void Render::renderPartialWindow(float frame, windowType window) {
 
         Ray rayForThisPixel(Vector3(0, 0, 0),
                             ~Vector3(x + sample.spaceX - width / 2.0f, y + sample.spaceY - height / 2.0f, width * 1.0f));
-        Color shade = rayStart(rayForThisPixel, objects, lights, frame);
+        Color shade = rayStart(rayForThisPixel, objects, lights, frame + sample.time);
         shade = ~shade;
 
         dynamicPixels[x + (y * width)].color = dynamicPixels[x + (y * width)].color + shade;

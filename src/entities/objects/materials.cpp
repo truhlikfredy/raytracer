@@ -10,7 +10,7 @@
 #include "materials.h"
 
 MaterialStatic Materials::red = {
-  .ambient   = Color(0.0f),
+  .ambient   = Color(0.1f, 0.0f, 0.0f),
   .diffuse   = Color(1.0f, 0.0f, 0.0f),
   .specular  = Color(0.0225f),
   .emission  = Color(0.0f),

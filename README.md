@@ -39,6 +39,8 @@
 
 ![Two balls with dynamic materials](/images/screenshot02.png)
 
+![First working motion blur](/images/screenshot03.png)
+
 ![Screenshot of a sphere under extreme lens settings](/images/screenshot01.png)
 
 # References

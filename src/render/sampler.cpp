@@ -93,6 +93,7 @@ sample2D Sampler::multiJitter(unsigned int sample, unsigned int width, unsigned 
  */
 unsigned int Sampler::pseudoShuffle(unsigned int index, unsigned int maximum) {
   return ((index ^ 0x16) % maximum);
+//  return (index % maximum);
 }
 
 
