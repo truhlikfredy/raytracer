@@ -8,10 +8,9 @@
 
 #include <functional>
 #include "../types/vector3.h"
+#include "../render/ray.h"
 
 class Entity {
-private:
-  float frame;
 
 public:
   Vector3 center;
@@ -21,6 +20,9 @@ public:
   Entity(std::function<Entity(float frame)> evaluateFnInit);
 
   Entity();
+
+  virtual ~Entity() = default;
+
 };
 
 #endif //RAYTRACER_ENTITY_H

@@ -12,3 +12,4 @@ LightOmni::LightOmni(Vector3 centerInit, Color colorInit): color(colorInit), Ent
   center = centerInit;
 }
 
+

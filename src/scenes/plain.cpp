@@ -10,7 +10,7 @@
 
 Plain::Plain(): Scene() {
 
-  lights.push_back(LightOmni([](float frame) {
+  lights.push_back(Entity([](float frame) {
     const float lightRotate = (M_PI * frame) / 11;
     Vector3 center(320  * cosf(lightRotate), 0.6*200 * (sinf(lightRotate)-0.5), 20);
     Color   color(0.0f,0.7f,0.0f);
@@ -18,7 +18,7 @@ Plain::Plain(): Scene() {
     return LightOmni(center, color);
   }));
 
-  objects.push_back(Sphere([](float frame) {
+  objects.push_back(Entity([](float frame) {
     return Sphere(Vector3(0.0f, 0.0f, 100.0f), 25.0f, [](Vector3 point, float frame) {
       return MaterialStatic{
         .ambient = Color(0.0f, 0.0f, 0.0f),

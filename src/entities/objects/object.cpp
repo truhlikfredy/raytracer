@@ -5,7 +5,7 @@
 
 #include "object.h"
 
- Object::Object(std::function<Object(float frame)> propertiesFnInit): Entity(propertiesFnInit), materialFn(nullptr) {
+// Object::Object(std::function<Object(float frame)> propertiesFnInit): Entity(propertiesFnInit), materialFn(nullptr) {
 
 Object::Object(Vector3 centerInit,
                std::function<MaterialStatic(Vector3 point, float frame)> materialFnInit):
@@ -23,9 +23,9 @@ Object::Object(Vector3 centerInit, MaterialStatic materialStaticInit):
   return false;
 }*/
 
-Vector3 Object::operator ^ (Vector3 pointOnSurface) {
-  return pointOnSurface;
-}
+//Vector3 Object::operator ^ (Vector3 pointOnSurface) {
+//  return pointOnSurface;
+//}
 
 uv Object::toUv(Vector3 point) {
   return {

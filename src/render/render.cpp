@@ -14,7 +14,7 @@ Render::Render(int widthInit, int heightInit) {
   width = widthInit;
   height = heightInit;
   dynamicPixels = new DynamicPixel[widthInit * heightInit];
-  threadsMax = std::thread::hardware_concurrency();
+  //threadsMax = std::thread::hardware_concurrency();
 }
 
 
@@ -36,37 +36,42 @@ windowType Render::getThreadWindow(int thread) {
 
 Color Render::rayStart(Ray ray, float frame) {
   Scene staticScene = Scene();
-  scene.evaluate(staticScene, frame);
+  scene.evaluate(&staticScene, frame);
 
-  Sphere  sphere2(Vector3(15, 10, 60), 7, [](Vector3 point, float frame) { return Materials::red; });
+  //Sphere  sphere2(Vector3(15, 10, 60), 7, [](Vector3 point, float frame) { return Materials::red; });
   Color   color;
   Vector3 hitPoint;
 
-  Entity* item = &staticScene.lights.front();
+//  Entity* item = &staticScene.lights.front();
 
-  LightOmni* light = (LightOmni*)(item);
+  LightOmni light = LightOmni(Vector3(50,50,50),Color(0.7f));
 
 
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
 
-  for (auto &object: staticScene.objects) {
-    if (object.detectHit(ray, hitPoint)) {
+  for (Entity &item: staticScene.objects) {
+    //Object* object = (Object*)(&item);
+    Entity* it = &item;
+
+    Sphere *object = static_cast<Sphere *>(it);
+
+    if (object->detectHit(ray, hitPoint)) {
       // The ray hit the sphere, let's find the bounce angle and shade it
       // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
-      Vector3 hitNormal    = object ^ hitPoint;
+      Vector3 hitNormal    = *object ^ hitPoint;
       Vector3 hitReflected = ray.direction - (hitNormal * 2 *(ray.direction % hitNormal));
-      Vector3 hitLight     = ~Vector3(*light - hitPoint);
+      Vector3 hitLight     = ~Vector3(light - hitPoint);
       float   diffuse      = fmaxf(0, hitLight % hitNormal); // how similar are they?
       float   specular     = fmaxf(0, hitLight % hitReflected);
 
-      MaterialStatic hitMaterial = object.materialFn(hitPoint, frame);
+      MaterialStatic hitMaterial = object->materialFn(hitPoint, frame);
 
       // diffuse = similarity (dot product) of hitLight and hitNormal
       // https://youtu.be/KDHuWxy53uM
       // And use the diffuse / specular only when they are positive
       // shadeOfTheRay = specular + diffuse + ambient
       // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-      color = Color(light->color * powf(specular, 10) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
+      color = Color(light.color * powf(specular, 10) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
     }
   }
 
@@ -77,6 +82,7 @@ void Render::renderPartial(float frame, windowType window) {
   const int zoom=2;
   Sampler sampler(ANTI_ALIASING, 1, 0.1f, 0, frame);
 
+  printf("%f \r\n",frame);
   for (int y = window.yStart; y < window.yEnd; y++) {
     for (int x = window.xStart; x < window.xEnd; x++) {
       sampler.nextPixel();

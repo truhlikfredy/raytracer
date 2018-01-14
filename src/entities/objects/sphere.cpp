@@ -6,11 +6,12 @@
 #include <cmath>
 #include "sphere.h"
 
-Sphere::Sphere(std::function<Sphere(float frame)> propertiesFnInit): Object(propertiesFnInit) {
-}
+//Sphere::Sphere(std::function<Sphere(float frame)> propertiesFnInit): Object(propertiesFnInit) {
+//}
 
 Sphere::Sphere(Vector3 centerInt, float radiusInit, std::function<MaterialStatic(Vector3 point, float frame)> materialFnInit):
-  Object(centerInt, materialFnInit), radius(radiusInit) {
+  Object(centerInt, materialFnInit) {
+  radius = radiusInit;
 }
 
 // Get normalized normal vector from sphere's surface point

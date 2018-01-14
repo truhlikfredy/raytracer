@@ -9,23 +9,28 @@
 #include "object.h"
 
 class Sphere: public Object {
-  float   radius;
 
 public:
+  float   radius;
 
-  Sphere(std::function<Sphere(float frame)> propertiesFnInit);
+  // Sphere(std::function<Sphere(float frame)> propertiesFnInit);
 
   // Sphere(Vector3 centerInit, float radiusInit, std::function<Sphere(float frame)> propertiesFnInit);
 
   Sphere(Vector3 centerInt, float radiusInit, std::function<MaterialStatic(Vector3 point, float frame)> materialFnInit);
 
 
+  bool detectHit(Ray ray, Vector3 &hitPoint);
+
+  Vector3 operator ^ (Vector3 pointOnSurface);
+
+
   //Sphere(Vector3 centerInt, float radiusInit, Materials materialInit);
 
   // Get normalized normal vector from sphere's surface point
-  Vector3 operator ^ (Vector3 pointOnSurface);
+  // Vector3 operator ^ (Vector3 pointOnSurface);
 
-  bool detectHit(Ray ray, Vector3 &hitPoint);
+  // bool detectHit(Ray ray, Vector3 &hitPoint);
 
 };
 

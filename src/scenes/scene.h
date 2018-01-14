@@ -15,9 +15,9 @@ public:
   float frame;
 
   std::vector<Entity> lights;
-  std::vector<Object> objects;
+  std::vector<Entity> objects;
 
-  void evaluate(Scene staticScene, float frameInit);
+  void evaluate(Scene *staticScene, float frameInit);
 
 };
 
