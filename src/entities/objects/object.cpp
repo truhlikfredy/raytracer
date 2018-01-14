@@ -21,14 +21,6 @@ Object::Object(Vector3 centerInit, MaterialStatic materialStaticInit):
 Object::Object() {
 }
 
-/*bool Object::detectHit(Ray ray, Vector3 &hitPoint) {
-  return false;
-}*/
-
-//Vector3 Object::operator ^ (Vector3 pointOnSurface) {
-//  return pointOnSurface;
-//}
-
 uv Object::toUv(Vector3 point) {
   return {
     .u = point.x,

@@ -15,13 +15,14 @@
 
 class Scene {
 public:
-  float frame;
   int nLights;
   int nObjects;
   LightOmniGen* lights;
   SphereGen*    objects;
 
   Scene(int nlightsInit, int nObjectsInit);
+  ~Scene();
+
   void evaluateLights(LightOmni* result, float frame);
   void evaluateObjects(Sphere* result, float frame);
 

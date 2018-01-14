@@ -37,21 +37,13 @@ windowType Render::getThreadWindow(int thread) {
 
 
 Color Render::rayStart(Ray ray, Sphere* objects, LightOmni* lights, float frame) {
-//  Scene staticScene = Scene();
-//  scene.evaluate(&staticScene, frame);
-  //LightOmni *lithts;
-  //scene->evaluateLights()
-
   scene->evaluateLights(lights, frame);
   scene->evaluateObjects(objects, frame);
 
-  //Sphere  sphere2(Vector3(15, 10, 60), 7, [](Vector3 point, float frame) { return Materials::red; });
   Color   color;
   Vector3 hitPoint;
-
 //  Entity* item = &staticScene.lights.front();
 
-  //LightOmni light = LightOmni(Vector3(350,250,0),Color(0.0f, 0.2f, 0.7f));
   LightOmni light = lights[0];
 
 

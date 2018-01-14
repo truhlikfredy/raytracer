@@ -51,8 +51,11 @@ bool Sampler::isNext() {
  */
 sampleTuple Sampler::getNextSample() {
   sampleTuple ret;
-
-  if (time == 1) {
+  if (space == 1 ) {
+    ret.spaceX = 0.0f;
+    ret.spaceY = 0.0f;
+    ret.time   = 0.0f;
+  } else if (time == 1) {
     const sample2D spaceSample = multiJitter(index, space, space, pattern);
     ret.spaceX = spaceSample.spaceX;
     ret.spaceY = spaceSample.spaceY;
