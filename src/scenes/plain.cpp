@@ -25,7 +25,9 @@ Plain::Plain(): Scene(1, 2) {
       [](Vector3 point, float frame) {
         return MaterialStatic{
           .ambient = Color(0.0f, 0.025f, 0.0f),
-          .diffuse = Color((sinf(point.x / 2 + point.y + point.z + frame / 5) + 0.2) * 0.5),
+          .diffuse = Color((sinf(point.x / 2 + point.y + point.z + frame / 5) + 0.3) * 0.5,
+                           (sinf(point.x / 4 + point.y /2 + point.z + frame / 10) + 0.4) * 0.7,
+                           (sinf(point.x / 8 + point.y + point.z / 4 + frame / 20) + 0.2) * 0.3),
           .specular = Color(0.2f),
           .emission = Color(0.0),
           .shininess = point.z
