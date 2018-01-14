@@ -3,7 +3,7 @@
  * date: 08/01/2018
  */
 
-#include "omni.h"
+#include "lightOmni.h"
 
 LightOmni::LightOmni(std::function<Entity(float frame)> propertiesInit): Entity(propertiesInit) {
 }

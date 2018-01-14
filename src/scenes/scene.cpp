@@ -5,20 +5,20 @@
 
 #include "scene.h"
 #include "../entities/objects/sphere.h"
+#include "../entities/lights/lightOmniGen.h"
 
 Scene::Scene(int nlightsInit, int nobjectsInit): nLights(nlightsInit), nObjects(nobjectsInit) {
-  this->lights = new LightOmni[nlightsInit];
+  this->lights = new LightOmniGen[nlightsInit];
   this->objects = new SphereGen[nobjectsInit];
 
   // mem leak, need destructor
 };
 
 void Scene::evaluateLights(LightOmni* result, float frame) {
-//  result = new LightOmni[nLights];
-//  for (int i = 0; i<nLights; i ++) {
-//    LightOmni light = lights[i].evaluateFn(frame);
-//    result[i] = light;
-//  }
+  for (int i = 0; i<nLights; i ++) {
+    LightOmni light = lights[i].evaluateFn(frame);
+    result[i] = light;
+  }
 }
 
 

@@ -10,15 +10,16 @@
 #include "../entities/entity.h"
 #include "../entities/objects/object.h"
 #include "../entities/objects/sphereGen.h"
-#include "../entities/lights/omni.h"
+#include "../entities/lights/lightOmni.h"
+#include "../entities/lights/lightOmniGen.h"
 
 class Scene {
 public:
   float frame;
   int nLights;
   int nObjects;
-  LightOmni* lights;
-  SphereGen* objects;
+  LightOmniGen* lights;
+  SphereGen*    objects;
 
   Scene(int nlightsInit, int nObjectsInit);
   void evaluateLights(LightOmni* result, float frame);

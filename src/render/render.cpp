@@ -35,12 +35,13 @@ windowType Render::getThreadWindow(int thread) {
 
 
 
-Color Render::rayStart(Ray ray, Sphere* objects, float frame) {
+Color Render::rayStart(Ray ray, Sphere* objects, LightOmni* lights, float frame) {
 //  Scene staticScene = Scene();
 //  scene.evaluate(&staticScene, frame);
   //LightOmni *lithts;
   //scene->evaluateLights()
 
+  scene->evaluateLights(lights, frame);
   scene->evaluateObjects(objects, frame);
 
   //Sphere  sphere2(Vector3(15, 10, 60), 7, [](Vector3 point, float frame) { return Materials::red; });
@@ -49,7 +50,8 @@ Color Render::rayStart(Ray ray, Sphere* objects, float frame) {
 
 //  Entity* item = &staticScene.lights.front();
 
-  LightOmni light = LightOmni(Vector3(350,250,0),Color(0.0f, 0.2f, 0.7f));
+  //LightOmni light = LightOmni(Vector3(350,250,0),Color(0.0f, 0.2f, 0.7f));
+  LightOmni light = lights[0];
 
 
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
@@ -88,7 +90,8 @@ void Render::renderPartialWindow(float frame, windowType window) {
   const int zoom=2;
   Sampler sampler(ANTI_ALIASING, 1, 0.1f, 0, frame);
 
-  Sphere *objects = new Sphere[scene->nObjects];
+  Sphere    *objects = new Sphere[scene->nObjects];
+  LightOmni *lights  = new LightOmni[scene->nLights];
 
   // printf("%f \r\n",frame);
   for (int y = window.yStart; y < window.yEnd; y++) {
@@ -99,7 +102,7 @@ void Render::renderPartialWindow(float frame, windowType window) {
 
         Ray rayForThisPixel(Vector3(0, 0, 0),
                             ~Vector3(x + sample.spaceX - width / 2.0f, y + sample.spaceY - height / 2.0f, width * 1.0f));
-        Color shade = rayStart(rayForThisPixel, objects, frame);
+        Color shade = rayStart(rayForThisPixel, objects, lights, frame);
         shade = ~shade;
 
         dynamicPixels[x + (y * width)].color = dynamicPixels[x + (y * width)].color + shade;

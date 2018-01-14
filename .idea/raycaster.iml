@@ -18,17 +18,19 @@
       <sourceFolder url="file://$MODULE_DIR$/src/render/render.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/render/ray.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/render/sampler.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/omni.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/omni.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/entities/entity.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/entity.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/lightOmniGen.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/lightOmniGen.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/lightOmni.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/lightOmni.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/entity.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/object.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/object.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphereGen.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphereGen.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/materials.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/materials.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphere.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/object.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphereGen.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/objects/sphere.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/scenes/scene.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/scenes/scene.cpp" isTestSource="false" />

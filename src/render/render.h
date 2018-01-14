@@ -9,7 +9,7 @@
 #define SEGMENTS 1  // how many partitions the screen should be split
 #define ANTI_ALIASING 2
 
-#include "../entities/lights/omni.h"
+#include "../entities/lights/lightOmni.h"
 #include "ray.h"
 
 
@@ -42,9 +42,9 @@ private:
 
   windowType getThreadWindow(int thread);
 
-  Color rayFollow(Ray ray, Sphere* objects);
+  Color rayFollow(Ray ray, Sphere* objects, LightOmni* lights);
 
-  Color rayStart(Ray ray, Sphere* objects, float frame);
+  Color rayStart(Ray ray, Sphere* objects, LightOmni* lights, float frame);
 
   void renderPartialWindow(float frame, windowType window);
 

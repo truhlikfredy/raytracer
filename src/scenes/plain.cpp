@@ -5,11 +5,18 @@
 
 #include <cmath>
 #include "plain.h"
-#include "../entities/lights/omni.h"
+#include "../entities/lights/lightOmni.h"
 #include "../entities/objects/sphere.h"
 
 Plain::Plain(): Scene(1, 2) {
 
+  lights[0] = LightOmniGen([](float frame) {
+    const float lightRotate = (M_PI * frame) / 11;
+    Vector3 center(320  * cosf(lightRotate), 0.6*200 * (sinf(lightRotate)-0.5), 20);
+    Color   color(0.0f,0.2f,0.8f);
+
+    return LightOmni(center, color);
+  });
 
 //  lights.push_back(Entity([](float frame) {
 //    const float lightRotate = (M_PI * frame) / 11;
