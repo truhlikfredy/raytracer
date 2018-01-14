@@ -8,7 +8,7 @@
 
 #define WIDTH  320
 #define HEIGHT 200
-#define SCALE 3.0  // display the window bigger than it really is (render low-res while having large window)
+#define SCALE 4.0  // display the window bigger than it really is (render low-res while having large window)
 
 #include <SFML/Graphics.hpp>
 #include "../render/render.h"

@@ -12,6 +12,7 @@
 * Allow for objects to pass a function as materialFn generator (allows change properties of the materialFn depending on coordinates and other variables)
 * Travis build on each commit
 * Can capture screenshots by pressing C key
+* Shadows
 
 # TODO (More precisely a wish list)
 
@@ -20,7 +21,6 @@
 * Improve test pattern of the jitter results
 * Support different objects (plane, box, donut)
 * Support multiple lights and objects in the scene
-* Shadows
   *  Soft shadows
 * Spot light
 * Depth of field effect
@@ -44,6 +44,8 @@
 ![Two balls with dynamic materials](/images/screenshot02.png)
 
 ![First working motion blur](/images/screenshot03.png)
+
+![Shadows](/images/screenshot04.png)
 
 ![Screenshot of a sphere under extreme lens settings](/images/screenshot01.png)
 

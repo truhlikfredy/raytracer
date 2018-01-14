@@ -40,16 +40,23 @@ Color Render::rayStart(Ray ray, Sphere* objects, LightOmni* lights, float frame)
   scene->evaluateLights(lights, frame);
   scene->evaluateObjects(objects, frame);
 
+  return rayFollow(ray, objects, lights, frame, 1);
+}
+
+Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* lights, float frame, int iteration) {
   Color   color;
   Vector3 hitPoint;
+
+  if (iteration > MAX_BOUNCES) {
+    return Color(0.0f);
+  }
+
 //  Entity* item = &staticScene.lights.front();
 
   LightOmni light = lights[0];
-
-
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
   float smallestHitDistance = FLT_MAX;  // set it to maximum at first
-  int smallestObject = 0;
+  //int smallestObject = 0;
 
   for (int i = 0; i< scene->nObjects; i++){
     Sphere object = objects[i];
@@ -64,31 +71,47 @@ Color Render::rayStart(Ray ray, Sphere* objects, LightOmni* lights, float frame)
       if (smallestHitDistance > hitDistance) {
         // It's the shortest hit yet, let's calculate it's color by shading it depending on the bounce angle
         smallestHitDistance = hitDistance;
-      // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
-      Vector3 hitNormal    = object ^ hitPoint;
-      Vector3 hitReflected = ray.direction - (hitNormal * 2 *(ray.direction % hitNormal));
-      Vector3 hitLight     = ~Vector3(light.center - hitPoint);
-      float   diffuse      = fmaxf(0, hitLight % hitNormal); // how similar are they?
-      float   specular     = fmaxf(0, hitLight % hitReflected);
+        // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
+        Vector3 hitNormal    = object ^ hitPoint;
+        Vector3 hitReflected = ray.direction - (hitNormal * 2 *(ray.direction % hitNormal));
+        Vector3 hitLight     = ~Vector3(light.center - hitPoint);
+        Vector3 hitLight2     = ~Vector3(hitPoint - light.center);
 
-      MaterialStatic hitMaterial = object.materialFn(hitPoint, frame);
+        MaterialStatic hitMaterial = object.materialFn(hitPoint, frame);
 
-      // diffuse = similarity (dot product) of hitLight and hitNormal
-      // https://youtu.be/KDHuWxy53uM
-      // And use the diffuse / specular only when they are positive
-      // shadeOfTheRay = specular + diffuse + ambient
-      // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
+        float   diffuse      = fmaxf(0, hitLight % hitNormal); // how similar are they?
+        float   specular     = fmaxf(0, hitLight % hitReflected);
+
+
+        // diffuse = similarity (dot product) of hitLight and hitNormal
+        // https://youtu.be/KDHuWxy53uM
+        // And use the diffuse / specular only when they are positive
+        // shadeOfTheRay = specular + diffuse + ambient
+        // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
         color = Color(light.color * powf(specular, 10) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
+
+        for (int j = 0; j< scene->nObjects; j++) {
+          // test all objects if they are casting shadow from this light
+          if (j != i) {  // can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
+            Sphere shadow = objects[j];
+            if (shadow.detectHit(Ray(hitPoint, hitLight)) != -1) {
+              color = Color(hitMaterial.ambient);
+              break;
+            }
+          }
+        }
+
       }
     }
   }
 
   return color;
+
 }
 
 void Render::renderPartialWindow(float frame, windowType window) {
   const int zoom=2;
-  Sampler sampler(ANTI_ALIASING, ANTI_ALIASING * ANTI_ALIASING, 0.5f, 0, frame);
+  Sampler sampler(ANTI_ALIASING, ANTI_ALIASING * ANTI_ALIASING, 0.25f, 0, frame);
 
   Sphere    *objects = new Sphere[scene->nObjects];
   LightOmni *lights  = new LightOmni[scene->nLights];
