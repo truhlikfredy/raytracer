@@ -6,6 +6,7 @@
 #include <cmath>
 #include <thread>
 #include <vector>
+#include <float.h>
 #include "render.h"
 #include "../entities/objects/sphere.h"
 
@@ -55,6 +56,8 @@ Color Render::rayStart(Ray ray, Sphere* objects, LightOmni* lights, float frame)
 
 
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
+  float smallestHitDistance = FLT_MAX;  // set it to maximum at first
+  int smallestObject = 0;
 
   for (int i = 0; i< scene->nObjects; i++){
     Sphere object = objects[i];
@@ -62,9 +65,13 @@ Color Render::rayStart(Ray ray, Sphere* objects, LightOmni* lights, float frame)
     //Entity* it = &item;
 
     //Sphere *object = static_cast<Sphere *>(it);
+    float hitDistance = object.detectHit(ray, hitPoint);
 
-    if (object.detectHit(ray, hitPoint)) {
-      // The ray hit the sphere, let's find the bounce angle and shade it
+    if (hitDistance != -1.0f) {
+      // The ray hit the sphere
+      if (smallestHitDistance > hitDistance) {
+        // It's the shortest hit yet, let's calculate it's color by shading it depending on the bounce angle
+        smallestHitDistance = hitDistance;
       // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
       Vector3 hitNormal    = object ^ hitPoint;
       Vector3 hitReflected = ray.direction - (hitNormal * 2 *(ray.direction % hitNormal));
@@ -79,7 +86,8 @@ Color Render::rayStart(Ray ray, Sphere* objects, LightOmni* lights, float frame)
       // And use the diffuse / specular only when they are positive
       // shadeOfTheRay = specular + diffuse + ambient
       // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-      color = Color(light.color * powf(specular, 10) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
+        color = Color(light.color * powf(specular, 10) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
+      }
     }
   }
 

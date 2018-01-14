@@ -30,7 +30,7 @@
   *  Checkerboard
   *  Random 3D noise bump mapping
   *  Results of lamba functions
-* Inverse square law to fade off the light with distance
+* Inverse square law to fade off the light with hitDistance
 * Film grain: smooth, animated, weighted (shadows are more grainy)
 
 # Dependancies

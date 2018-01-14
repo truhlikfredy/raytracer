@@ -17,6 +17,9 @@ class Object: public Entity {
 public:
   std::function<MaterialStatic(Vector3 point, float frame)> materialFn;
   MaterialStatic materialStatic;
+  // when hit was detected store the following:
+  // float hitDistance; // distance from ray origin
+  // Color hitColor;    // calculated color for that hit point
 
   //virtual Object(std::function<Entity(float frame)> propertiesFnInit);
 
@@ -29,7 +32,7 @@ public:
 
   uv toUv(Vector3 point);
 
-  virtual bool detectHit(Ray ray, Vector3 &hitPoint) = 0;
+  virtual float detectHit(Ray ray, Vector3 &hitPoint) = 0;
 
   virtual Vector3 operator ^ (Vector3 pointOnSurface) = 0;
 

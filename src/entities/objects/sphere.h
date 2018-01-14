@@ -21,7 +21,7 @@ public:
 
   Sphere();
 
-  bool detectHit(Ray ray, Vector3 &hitPoint);
+  float detectHit(Ray ray, Vector3 &hitPoint);
 
   Vector3 operator ^ (Vector3 pointOnSurface);
 

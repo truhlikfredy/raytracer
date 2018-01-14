@@ -36,7 +36,7 @@ Plain::Plain(): Scene(1, 2) {
 
 
   objects[1] =  SphereGen([](float frame) {
-    return Sphere(Vector3(sinf(frame/2)*15, sin(frame) * 2 + 9, 60), sin(frame/5) * 5 + 7, [](Vector3 point, float frame) {
+    return Sphere(Vector3(sinf(frame/2)*15, sin(frame) * 2 + 9, sin(frame/5) * 25 + 65), 7, [](Vector3 point, float frame) {
       return Materials::red;
     });
   });
