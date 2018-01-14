@@ -63,7 +63,7 @@ void Display::renderLoop(Scene *scene) {
   }
 
   clearDisplayMem();
-  render->renderFull(scene, frame);
+  render->renderFullWindow(scene, frame);
   convertToDisplayMem();
   if (showSamplerPatterns) {
     displaySamplerPattern(ANTI_ALIASING, ANTI_ALIASING, frame);

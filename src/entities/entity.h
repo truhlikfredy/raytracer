@@ -17,6 +17,8 @@ public:
 
   std::function<Entity(float frame)> evaluateFn;
 
+  Entity(Vector3 centerInit);
+
   Entity(std::function<Entity(float frame)> evaluateFnInit);
 
   Entity();

@@ -42,11 +42,11 @@ private:
 
   windowType getThreadWindow(int thread);
 
-  Color rayFollow(Ray ray);
+  Color rayFollow(Ray ray, Sphere* objects);
 
-  Color rayStart(Ray ray, float frame);
+  Color rayStart(Ray ray, Sphere* objects, float frame);
 
-  void renderPartial(float frame, windowType window);
+  void renderPartialWindow(float frame, windowType window);
 
   void clearDynamicPixels();
 
@@ -56,6 +56,6 @@ public:
 
   Render(int width, int height);
 
-  void renderFull(Scene *sceneInit, float frame);
+  void renderFullWindow(Scene *sceneInit, float frame);
 };
 #endif //RAYTRACER_RENDER_H

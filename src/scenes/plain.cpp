@@ -8,7 +8,7 @@
 #include "../entities/lights/omni.h"
 #include "../entities/objects/sphere.h"
 
-Plain::Plain(): Scene(1, 1) {
+Plain::Plain(): Scene(1, 2) {
 
 
 //  lights.push_back(Entity([](float frame) {
@@ -23,7 +23,13 @@ Plain::Plain(): Scene(1, 1) {
 
     std::function<MaterialStatic(Vector3 point, float frame)> materiaFn =
       [](Vector3 point, float frame) {
-        return Materials::red;
+        return MaterialStatic{
+          .ambient = Color(0.0f, 0.0f, 0.0f),
+          .diffuse = Color((sinf(point.x / 2 + point.y + point.z + frame / 5) + 0.2) * 0.5),
+          .specular = Color(0.2f),
+          .emission = Color(0.0),
+          .shininess = point.z
+        };
       };
 
 
@@ -41,6 +47,12 @@ Plain::Plain(): Scene(1, 1) {
 //      };
 //    });
 
+  });
+
+  objects[1] =  SphereGen([](float frame) {
+    return Sphere(Vector3(15, 10, 60), 7, [](Vector3 point, float frame) {
+      return Materials::red;
+    });
   });
 
 //    checkerboard attempt

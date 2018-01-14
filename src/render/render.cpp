@@ -15,7 +15,7 @@ Render::Render(int widthInit, int heightInit) {
   width = widthInit;
   height = heightInit;
   dynamicPixels = new DynamicPixel[widthInit * heightInit];
-  //threadsMax = std::thread::hardware_concurrency();
+  threadsMax = std::thread::hardware_concurrency();
 }
 
 
@@ -35,13 +35,12 @@ windowType Render::getThreadWindow(int thread) {
 
 
 
-Color Render::rayStart(Ray ray, float frame) {
+Color Render::rayStart(Ray ray, Sphere* objects, float frame) {
 //  Scene staticScene = Scene();
 //  scene.evaluate(&staticScene, frame);
   //LightOmni *lithts;
   //scene->evaluateLights()
 
-  Sphere *objects = new Sphere[scene->nObjects];
   scene->evaluateObjects(objects, frame);
 
   //Sphere  sphere2(Vector3(15, 10, 60), 7, [](Vector3 point, float frame) { return Materials::red; });
@@ -50,7 +49,7 @@ Color Render::rayStart(Ray ray, float frame) {
 
 //  Entity* item = &staticScene.lights.front();
 
-  LightOmni light = LightOmni(Vector3(50,50,50),Color(0.7f));
+  LightOmni light = LightOmni(Vector3(350,250,0),Color(0.0f, 0.2f, 0.7f));
 
 
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
@@ -67,7 +66,7 @@ Color Render::rayStart(Ray ray, float frame) {
       // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
       Vector3 hitNormal    = object ^ hitPoint;
       Vector3 hitReflected = ray.direction - (hitNormal * 2 *(ray.direction % hitNormal));
-      Vector3 hitLight     = ~Vector3(light - hitPoint);
+      Vector3 hitLight     = ~Vector3(light.center - hitPoint);
       float   diffuse      = fmaxf(0, hitLight % hitNormal); // how similar are they?
       float   specular     = fmaxf(0, hitLight % hitReflected);
 
@@ -85,11 +84,13 @@ Color Render::rayStart(Ray ray, float frame) {
   return color;
 }
 
-void Render::renderPartial(float frame, windowType window) {
+void Render::renderPartialWindow(float frame, windowType window) {
   const int zoom=2;
   Sampler sampler(ANTI_ALIASING, 1, 0.1f, 0, frame);
 
-  printf("%f \r\n",frame);
+  Sphere *objects = new Sphere[scene->nObjects];
+
+  // printf("%f \r\n",frame);
   for (int y = window.yStart; y < window.yEnd; y++) {
     for (int x = window.xStart; x < window.xEnd; x++) {
       sampler.nextPixel();
@@ -98,7 +99,7 @@ void Render::renderPartial(float frame, windowType window) {
 
         Ray rayForThisPixel(Vector3(0, 0, 0),
                             ~Vector3(x + sample.spaceX - width / 2.0f, y + sample.spaceY - height / 2.0f, width * 1.0f));
-        Color shade = rayStart(rayForThisPixel, frame);
+        Color shade = rayStart(rayForThisPixel, objects, frame);
         shade = ~shade;
 
         dynamicPixels[x + (y * width)].color = dynamicPixels[x + (y * width)].color + shade;
@@ -106,6 +107,8 @@ void Render::renderPartial(float frame, windowType window) {
       }
     }
   }
+
+  delete[] objects;
 }
 
 void Render::clearDynamicPixels() {
@@ -115,7 +118,7 @@ void Render::clearDynamicPixels() {
   }
 }
 
-void Render::renderFull(Scene *sceneInit, float frame) {
+void Render::renderFullWindow(Scene *sceneInit, float frame) {
   scene = sceneInit;
   std::vector<std::thread> workers;
 
@@ -124,7 +127,7 @@ void Render::renderFull(Scene *sceneInit, float frame) {
   for (int segment = 0; segment < SEGMENTS; segment++) {
     for (int thread = 0; thread < threadsMax; thread++) {
       workers.emplace_back([this, frame, thread] {
-        this->renderPartial(frame, this->getThreadWindow(thread));
+        this->renderPartialWindow(frame, this->getThreadWindow(thread));
       });
     }
     for (auto& worker: workers) worker.join();

@@ -5,11 +5,10 @@
 
 #include "omni.h"
 
-LightOmni::LightOmni(std::function<LightOmni(float frame)> propertiesInit): Entity(propertiesInit) {
+LightOmni::LightOmni(std::function<Entity(float frame)> propertiesInit): Entity(propertiesInit) {
 }
 
-LightOmni::LightOmni(Vector3 centerInit, Color colorInit): color(colorInit), Entity(nullptr) {
-  center = centerInit;
+LightOmni::LightOmni(Vector3 centerInit, Color colorInit): color(colorInit), Entity(centerInit) {
 }
 
 LightOmni::LightOmni() {
