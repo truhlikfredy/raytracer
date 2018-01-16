@@ -51,7 +51,14 @@
 
 # References
 
-## Anti-Aliasing
+## Raytracing
+
+https://steveharveynz.wordpress.com/category/programming/c-raytracer/
+
+
+## Anti-Aliasing, motion blur, lens effects
+
+https://steveharveynz.wordpress.com/2012/12/21/ray-tracer-part-5-depth-of-field/
 
 https://graphics.pixar.com/library/MultiJitteredSampling/paper.pdf
 
