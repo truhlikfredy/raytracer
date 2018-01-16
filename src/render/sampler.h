@@ -14,11 +14,13 @@ struct sampleTuple {
   float spaceX;
   float spaceY;
   float time;
+  float lensX;
+  float lensY;
 };
 
 struct sample2D {
-  float spaceX;
-  float spaceY;
+  float x;
+  float y;
 };
 
 class Sampler {
@@ -30,6 +32,7 @@ private:
   unsigned int overlap;
   unsigned int space;
   unsigned int time;
+  float apeture;
   float shutter;
 
   unsigned int pseudoShuffle(unsigned int index, unsigned int maximum);
@@ -43,7 +46,7 @@ private:
 
 public:
   Sampler(unsigned int spaceInt, unsigned int timeInt, float shutterInit, unsigned int overlapInit,
-          unsigned int patternInit);
+          unsigned int patternInit, float apetureInit);
 
   void nextPixel();
 

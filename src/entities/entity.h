@@ -15,6 +15,8 @@ class Entity {
 public:
   Vector3 center;
 
+// TODO : enabled/disabled bool
+
   std::function<Entity(float frame)> evaluateFn;
 
   Entity(Vector3 centerInit);

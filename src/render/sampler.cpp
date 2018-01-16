@@ -16,13 +16,14 @@
 
 
 Sampler::Sampler(unsigned int spaceInt, unsigned int timeInt, float shutterInit, unsigned int overlapInit,
-                 unsigned int patternInit) {
+                 unsigned int patternInit, float apetureInit) {
   this->space   = spaceInt;      // How many samples in space dimension (this value gets squared)
   this->time    = timeInt;       // How many samples in time dimension
   this->shutter = shutterInit;   // Speed of the shutter of the camer
   this->overlap = overlapInit;   // How much the dimensions overlap
   this->pattern = patternInit;   // Initial seed value
   this->index   = 0;
+  this->apeture = apetureInit;
 
   // when overlap is 1 or more multiply all, when it's 0 count only to space squared
   this->maximum       = (overlap) ? (space * space * time * overlap) : (space * space);
@@ -34,7 +35,7 @@ Sampler::Sampler(unsigned int spaceInt, unsigned int timeInt, float shutterInit,
  */
 void Sampler::nextPixel() {
   this->index = 0;
-  this->pattern++;
+  this->pattern+=space+3;
 }
 
 
@@ -51,23 +52,41 @@ bool Sampler::isNext() {
  */
 sampleTuple Sampler::getNextSample() {
   sampleTuple ret;
+  ret.spaceX = 0.0f;
+  ret.spaceY = 0.0f;
+  ret.time   = 0.0f;
+  ret.lensX  = 0.0f;
+  ret.lensY  = 0.0f;
+
+
   if (space == 1 ) {
-    ret.spaceX = 0.0f;
-    ret.spaceY = 0.0f;
-    ret.time   = 0.0f;
-  } else if (time == 1) {
-    const sample2D spaceSample = multiJitter(index, space, space, pattern);
-    ret.spaceX = spaceSample.spaceX;
-    ret.spaceY = spaceSample.spaceY;
-    ret.time   = 1.0f;
+    index++;
+    return ret;
   }
-  else {
-    const sample2D spaceSample = multiJitter(index, space, space, pattern);
-    const sample2D timeSample  = multiJitter(pseudoShuffle(index, time), time, 1, pattern);
-    ret.spaceX = spaceSample.spaceX;
-    ret.spaceY = spaceSample.spaceY;
-    ret.time   = timeSample.spaceX * shutter;
+
+  const sample2D spaceSample = multiJitter(index, space, space, pattern);
+  ret.spaceX = spaceSample.x;
+  ret.spaceY = spaceSample.y;
+
+  if (time == 1) {
+    index++;
+    return ret;
   }
+
+  const sample2D timeSample  = multiJitter(pseudoShuffle(index, time), time, 1, pattern);
+  ret.time   = timeSample.x * shutter;
+
+  if (apeture == 0.0f) {
+    index++;
+    return ret;
+  }
+
+  const sample2D lensSample = multiJitter(index, space, space, pattern);
+  ret.lensX = lensSample.x * apeture;
+  ret.lensY = lensSample.y * apeture;
+  // the lens is sampled in a asqaure instead of circle/aperture shape, proper implementation
+  // of the lens shape is not worth the overhead it will cause and not noticable quality gain,
+  // still it needs magnitude more rays and the sampling strategy will not save from that
 
   index++;
   return ret;
