@@ -22,3 +22,13 @@ Vector3 Vector3::operator~() {
   const float magnitude = sqrt(x * x + y * y + z * z);
   return Vector3(x / magnitude, y / magnitude, z / magnitude);
 }
+
+Vector3 Vector3::operator&(Vector3 secondVector) {
+  return Vector3( (x * secondVector.z) - (z * secondVector.y),
+                  (z * secondVector.x) - (x * secondVector.z),
+                  (x * secondVector.y) - (y * secondVector.x));
+}
+
+float Vector3::lenght() {
+  return sqrt(x * x + y * y + z * z);
+}

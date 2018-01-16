@@ -12,7 +12,7 @@ Plain::Plain(): Scene(1, 2) {
 
 
   lights[0] = LightOmniGen([](float frame) {
-    const float lightRotate = (M_PI * frame) / 11;
+    const float lightRotate = (M_PI * frame) / 31;
     Vector3 center(320 * cosf(lightRotate), 0.6 * 200 * (sinf(lightRotate) - 0.5), 20);
     Color color(0.0f, 0.2f, 0.8f);
 
@@ -38,7 +38,7 @@ Plain::Plain(): Scene(1, 2) {
 
 
   objects[1] = SphereGen([](float frame) {
-    return Sphere(Vector3(sinf(frame / 2) * 15, sin(frame) * 2 + 9, sin(frame / 5) * 25 + 65), 7,
+    return Sphere(Vector3(sinf(frame / 8) * 15, sin(frame / 4) * 2 + 9, sin(frame / 20) * 45 + 65), 10,
                   [](Vector3 point, float frame) {
                     return Materials::red;
                   });

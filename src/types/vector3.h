@@ -20,6 +20,10 @@ public:
   float operator%(Vector3 secondVector);
 
   Vector3 operator~();
+
+  Vector3 operator&(Vector3 secondVector);
+
+  float lenght();
 };
 
 #endif /* VECTOR_H_ */

@@ -111,7 +111,7 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* lights, float frame
 
 void Render::renderPartialWindow(float frame, windowType window) {
   const int zoom=2;
-  Sampler sampler(ANTI_ALIASING, ANTI_ALIASING * ANTI_ALIASING, 0.25f, 0, frame);
+  Sampler sampler(ANTI_ALIASING, ANTI_ALIASING * ANTI_ALIASING, 0.0f, 0, frame);
 
   Sphere    *objects = new Sphere[scene->nObjects];
   LightOmni *lights  = new LightOmni[scene->nLights];
@@ -123,8 +123,37 @@ void Render::renderPartialWindow(float frame, windowType window) {
       while (sampler.isNext()) {
         sampleTuple sample = sampler.getNextSample();
 
-        Ray rayForThisPixel(Vector3(0, 0, 0),
-                            ~Vector3(x + sample.spaceX - width / 2.0f, y + sample.spaceY - height / 2.0f, width * 1.0f));
+        const float apeture = 1.0;
+
+        Vector3 start = Vector3(static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * apeture, static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * apeture, 0.0f);
+//        Vector3 start = Vector3(0.0f, 0.0f, 0.0f);
+        Vector3 lookAt = Vector3(0.0f,0.0f,20.0f);
+         float focalDistance = Vector3(lookAt - start).lenght();
+        float halfWidth = focalDistance * tanf((90.0f/180)*3.14/2);
+        Vector3 up(0.0f, 1.0f, 0.0f);
+        Vector3 down(0.0f, -1.0f, 0.0f);
+        Vector3 right = (~Vector3(lookAt & down))*10.5;
+        Vector3 up2 = (~Vector3(lookAt & right))*10.5;
+        Vector3 U = Vector3(lookAt & up);
+        Vector3 V = ~Vector3(U & lookAt);
+        U = ~U;
+        float aspectRatio = (float)height/width;
+        float viewPlaneHalfHeight = aspectRatio * halfWidth;
+        Vector3 viewBottomLeft = lookAt - V*viewPlaneHalfHeight - U*halfWidth;
+        Vector3 xInc = (U * 2 * halfWidth) / width;
+        Vector3 yInc = (U * 2 * viewPlaneHalfHeight) / height;
+        Vector3 dest2 = viewBottomLeft + xInc * x + yInc * y;
+
+        float recenterX = ( x + sample.spaceX - width/2.0f) / ( 2.0 * width) * 5;
+        float recenterY = ( y + sample.spaceY - height/2.0f) / ( 2.0 * height) * 5;
+
+        Vector3 dest3 = ~Vector3((right * recenterX) + (up2 * recenterY) + lookAt - start);
+
+
+        Vector3 dest  = ~Vector3(x + sample.spaceX - width / 2.0f, y + sample.spaceY - height / 2.0f, 90);
+
+        Ray rayForThisPixel(start,dest3);
+//        Ray rayForThisPixel(start,~Vector3(dest3-start));
         Color shade = rayStart(rayForThisPixel, objects, lights, frame + sample.time);
         shade = ~shade;
 
