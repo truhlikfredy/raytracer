@@ -26,8 +26,16 @@ struct uv {
 class Materials {
 
 public:
+  // colors
   static MaterialStatic red;
+  static MaterialStatic yellow;
+  static MaterialStatic white;
+  static MaterialStatic green;
+
+  // materials
   static MaterialStatic mirror;
+  static MaterialStatic brass;
+  static MaterialStatic pollishedCopper;
 };
 
 // Allow dynamic materials made on the fly
