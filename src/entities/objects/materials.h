@@ -16,6 +16,7 @@ struct MaterialStatic {
   Color specular;
   Color emission;
   float shininess;
+  // TODO: castShadows bool, transparency, reflectancy, indexOfRefraction
 };
 
 struct uv {
