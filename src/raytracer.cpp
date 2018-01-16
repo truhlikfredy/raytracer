@@ -6,13 +6,14 @@
 #include <time.h>
 #include "frontend/display.h"
 #include "utils/debounce.h"
-#include "scenes/plain.h"
+//#include "scenes/plain.h"
+#include "scenes/dof.h"
 
 int main() {
   Display *mainWindow = new Display();
   bool quitRequested = false;
 
-  Scene scene = Plain();
+  Scene scene = Dof();
 
   while (mainWindow->keepLooping() && !quitRequested) {
 
