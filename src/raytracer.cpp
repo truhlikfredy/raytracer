@@ -6,14 +6,15 @@
 #include <time.h>
 #include "frontend/display.h"
 #include "utils/debounce.h"
-//#include "scenes/plain.h"
+#include "scenes/plain.h"
 #include "scenes/dof.h"
+#include "scenes/mandelbrot.h"
 
 int main() {
   Display *mainWindow = new Display();
   bool quitRequested = false;
 
-  Scene scene = Dof();
+  Scene scene = Mandelbrot();
 
   while (mainWindow->keepLooping() && !quitRequested) {
 
