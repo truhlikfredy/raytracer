@@ -13,6 +13,7 @@
 * Travis build on each commit
 * Can capture screenshots by pressing C key
 * Shadows
+* Mandelbrot fractal as a texture/material with different "shine" properties in different sections
 
 # TODO (More precisely a wish list)
 
@@ -48,6 +49,10 @@
 ![Shadows](/images/screenshot04.png)
 
 ![Depth of field example](/images/screenshot05.png)
+
+![fractal with different shiny properties](/images/screenshot06.png)
+
+![fractal with different shiny properties](/images/screenshot07.png)
 
 ![Screenshot of a sphere under extreme lens settings](/images/screenshot01.png)
 
