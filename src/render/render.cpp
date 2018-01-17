@@ -110,7 +110,7 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* lights, float frame
 }
 
 void Render::renderPartialWindow(float frame, windowType window) {
-  Sampler sampler(ANTI_ALIASING, ANTI_ALIASING * ANTI_ALIASING, 0.0f, 0, frame, 4.0f);
+  Sampler sampler(ANTI_ALIASING, ANTI_ALIASING * ANTI_ALIASING, 0.0f, 0, frame, 0.0f);
 
   Sphere    *objects = new Sphere[scene->nObjects];
   LightOmni *lights  = new LightOmni[scene->nLights];
@@ -122,7 +122,7 @@ void Render::renderPartialWindow(float frame, windowType window) {
       while (sampler.isNext()) {
         sampleTuple sample = sampler.getNextSample();
 
-        Vector3 start = Vector3(sample.lensX, sample.lensY, 0);
+        Vector3 start = Vector3(sample.lensX, sample.lensY, 30);
         Vector3 lookAt = Vector3(0.0f,0.0f,60.0f);
         //float focalDistance = Vector3(lookAt - start).lenght();
         //float halfWidth = focalDistance * tanf((90.0f/180)*3.14/2);

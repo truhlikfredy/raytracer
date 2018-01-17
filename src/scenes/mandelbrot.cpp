@@ -45,6 +45,7 @@ Color Mandelbrot::renderMandelbrotPixel(float lookAtX, float lookAtY, float widt
 
 
 Mandelbrot::Mandelbrot(): Scene(1, 1) {
+
   lights[0] = LightOmniGen([](float frame) {
     const float lightRotate = (M_PI * frame) / 31;
     Vector3 center(320 * cosf(lightRotate), 0.6 * 200 * (sinf(lightRotate) - 0.5), -100);
@@ -55,28 +56,28 @@ Mandelbrot::Mandelbrot(): Scene(1, 1) {
 
 
   objects[0] = SphereGen([this](float frame) {
-  std::function<MaterialStatic(Vector3 point, float frame)> materiaFn =
-  [this](Vector3 point, float frame) {
-    uv textureCoord = Sphere::toUv(~point);
-    textureCoord.u += frame / 8000.0f;
+    std::function<MaterialStatic(Vector3 point, float frame)> materiaFn =
+    [this](Vector3 point, float frame) {
+      uv textureCoord = Sphere::toUv(~point);
+      textureCoord.u += frame / 8000.0f;
 
-    Color fractal = renderMandelbrotPixel(-0.0068464412f, -0.80686056f, 0.0160606767f, 0.00782957993f, 1.0f, textureCoord);
-    Color glow(0.0f);
-    if (fractal.x == 0) {
-      glow = Color(0.03f);
-    }
+      Color fractal = renderMandelbrotPixel(-0.0068464412f, -0.80686056f, 0.0160606767f, 0.00782957993f, 1.0f, textureCoord);
+      Color glow(0.0f);
+      if (fractal.x == 0) {
+        glow = Color(0.03f);
+      }
 
-    return MaterialStatic{
-      .ambient = glow,
-//      .diffuse = renderMandelbrotPixel(-0.5f, 0.0f,2.5f, 3.0f, 1.0f, textureCoord),
-//      .diffuse = renderMandelbrotPixel(-1.2059523f, -1.2059523f, 0.36000158f, 0.17550077f, 2.0f, textureCoord),
-      .diffuse = fractal,
-      .specular = Color(0.2f),
-      .emission = Color(0.0),
-      .shininess = 5
+      return MaterialStatic{
+        .ambient = glow,
+        .diffuse = fractal,
+        .specular = Color(0.2f),
+        .emission = Color(0.0),
+        .shininess = 5
+      };
     };
-  };
-  return Sphere(Vector3(0.0f, 0.0f, 100.0f), 60.0f, materiaFn);
+    return Sphere(Vector3(0.0f, 0.0f, 100.0f), 60.0f, materiaFn);
   });
+
+
 }
 

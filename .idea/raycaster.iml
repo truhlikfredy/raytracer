@@ -32,12 +32,14 @@
       <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/lightOmniGen.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/lightOmni.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/entities/lights/lightOmni.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/scenes/scene.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/scenes/scene.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/scenes/mandelbrot.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/scenes/plain.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/scenes/dof.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/scenes/scene.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/scenes/mandelbrot.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/scenes/plain.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/scenes/dof.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/scenes/scene.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/raytracer.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
     </content>

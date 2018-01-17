@@ -57,9 +57,11 @@
 
 https://steveharveynz.wordpress.com/category/programming/c-raytracer/
 
-## Math
+## UV mapping
 
 https://gamedev.stackexchange.com/a/114416
+
+https://stackoverflow.com/questions/41661369/smoothly-mapping-a-2d-uv-point-onto-a-3d-xyz-sphere
 
 
 ## Anti-Aliasing, motion blur, lens effects
