@@ -21,7 +21,7 @@ public:
 
   float detectHit(Ray ray, Vector3 &hitPoint);
 
-  uv toUv(Vector3 point);
+  static uv toUv(Vector3 point);
 
   Vector3 operator ^ (Vector3 pointOnSurface);
 
