@@ -55,7 +55,7 @@ void Display::displaySamplerPattern(int width, int height, float frame) {
 
 
 void Display::renderLoop(Scene *scene) {
-  static float frame = 90;
+  static float frame = 0;
   sf::Event event;
 
   while (window.pollEvent(event))  {

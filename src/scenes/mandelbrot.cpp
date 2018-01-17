@@ -59,7 +59,8 @@ Mandelbrot::Mandelbrot(): Scene(1, 1) {
     std::function<MaterialStatic(Vector3 point, float frame)> materiaFn =
     [this](Vector3 point, float frame) {
       uv textureCoord = Sphere::toUv(~point);
-      textureCoord.u += frame / 8000.0f;
+      textureCoord.u += frame / 1800.0f;
+      textureCoord.v += frame / 200.0f;
 
       Color fractal = renderMandelbrotPixel(-0.0068464412f, -0.80686056f, 0.0160606767f, 0.00782957993f, 1.0f, textureCoord);
       Color glow(0.0f);
