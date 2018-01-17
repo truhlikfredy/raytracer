@@ -30,7 +30,7 @@ public:
 
   Object();
 
-  uv toUv(Vector3 point);
+  virtual uv toUv(Vector3 point) = 0;
 
   virtual float detectHit(Ray ray, Vector3 &hitPoint) = 0;
 

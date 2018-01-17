@@ -73,3 +73,11 @@ float Sphere::detectHit(Ray ray, Vector3 &hitPoint) {
 
   return hitDistance;
 }
+
+uv Sphere::toUv(Vector3 point) {
+  // https://gamedev.stackexchange.com/a/114416
+  return {
+    .u = atan2f(point.x, point.z) / (2 * M_PI) + 0.5f,
+    .v = point.y * 0.5f + 0.5f
+  };
+}

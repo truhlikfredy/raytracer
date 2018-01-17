@@ -57,6 +57,10 @@
 
 https://steveharveynz.wordpress.com/category/programming/c-raytracer/
 
+## Math
+
+https://gamedev.stackexchange.com/a/114416
+
 
 ## Anti-Aliasing, motion blur, lens effects
 

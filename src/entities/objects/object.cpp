@@ -21,9 +21,3 @@ Object::Object(Vector3 centerInit, MaterialStatic materialStaticInit):
 Object::Object() {
 }
 
-uv Object::toUv(Vector3 point) {
-  return {
-    .u = point.x,
-    .v = point.y,
-  };
-}
