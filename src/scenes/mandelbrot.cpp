@@ -46,6 +46,13 @@ Color Mandelbrot::renderMandelbrotPixel(float lookAtX, float lookAtY, float widt
 
 Mandelbrot::Mandelbrot(): Scene(1, 1) {
 
+  camera = {
+    .position     = Vector3(0.0f, 0.0f, 35.0f),
+    .lookAt       = Vector3(0.0f,0.0f,60.0f),
+    .apeture      = 0.0f,
+    .shutterSpeed = 0.0f
+  };
+
   lights[0] = LightOmniGen([](float frame) {
     const float lightRotate = (M_PI * frame) / 31;
     Vector3 center(320 * cosf(lightRotate), 0.6 * 200 * (sinf(lightRotate) - 0.5), -100);

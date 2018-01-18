@@ -8,6 +8,14 @@
 
 Dof::Dof(): Scene(1, 5) {
 
+  camera = {
+    .position     = Vector3(0.0f, 0.0f,  0.0f),
+    .lookAt       = Vector3(0.0f, 0.0f, 60.0f),
+    .apeture      = 8.0f,
+    .shutterSpeed = 0.0f
+  };
+
+
   const MaterialStatic balls[5] = {
     Materials::green,
     Materials::pollishedCopper,

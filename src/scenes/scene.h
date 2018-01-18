@@ -6,7 +6,8 @@
 #ifndef RAYTRACER_SCENE_H
 #define RAYTRACER_SCENE_H
 
-#include <vector>
+//#include <vector>
+#include "../types/vector3.h"
 #include "../entities/entity.h"
 #include "../entities/objects/object.h"
 #include "../entities/objects/sphereGen.h"
@@ -19,6 +20,13 @@ public:
   int nObjects;
   LightOmniGen* lights;
   SphereGen*    objects;
+
+  struct Camera {
+    Vector3 position;
+    Vector3 lookAt;
+    float apeture;      // Affects strenght of the depth of field, 0 = disabled DOF
+    float shutterSpeed; // Affects motion blur, 0 = disabled blur
+  } camera;
 
   Scene(int nlightsInit, int nObjectsInit);
   ~Scene();
