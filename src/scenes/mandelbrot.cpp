@@ -58,7 +58,7 @@ Mandelbrot::Mandelbrot(): Scene(1, 1) {
   objects[0] = SphereGen([this](float frame) {
     std::function<MaterialStatic(Vector3 point, float frame)> materiaFn =
     [this](Vector3 point, float frame) {
-      uv textureCoord = Sphere::toUv(~point);
+      uv textureCoord = Sphere::toUv(point);
       textureCoord.u += frame / 1800.0f;
       textureCoord.v += frame / 200.0f;
 
@@ -76,7 +76,7 @@ Mandelbrot::Mandelbrot(): Scene(1, 1) {
         .shininess = 5
       };
     };
-    return Sphere(Vector3(0.0f, 0.0f, 100.0f), 60.0f, materiaFn);
+    return Sphere(Vector3(0.0f, 0.0f, 100.0f), 57.0f, materiaFn);
   });
 
 
