@@ -11,6 +11,7 @@
 ## Programing
 
 * Using C++11 features. Try new features, but not too new (14/17) so this can be ported to embedded if desired (avoid loading files/textures)
+* Allowed portability by keeping it software only renderer, did not went OpenCL, Cuda route even when it's tempting.
 * Whole raytracer is designed from ground up to smallers scenes, it will not handle huge scenes well.
 * Multi-threaded, will try to use all threads detected on the system (but the load balancer is crude at the moment)
   *  Keet MT support very simple, no extra syncing required.
