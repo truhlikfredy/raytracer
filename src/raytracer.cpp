@@ -10,11 +10,21 @@
 #include "scenes/dof.h"
 #include "scenes/mandelbrot.h"
 
+template<size_t SIZE, class T> inline size_t array_size(T (&arr)[SIZE]) {
+  return SIZE;
+}
+
 int main() {
   Display *mainWindow = new Display();
   bool quitRequested = false;
 
-  Scene scene = Mandelbrot();
+  Scene scenes[3] = {
+    Plain(),
+    Dof(),
+    Mandelbrot()
+  };
+
+  int sceneIndex = 0;
 
   while (mainWindow->keepLooping() && !quitRequested) {
 
@@ -23,7 +33,7 @@ int main() {
       mainWindow->showSamplerPatterns ^= true; // invert the state
     }
 
-    if (Debounce::isKeyPressed(sf::Keyboard::C))  {
+    if (Debounce::isKeyPressed(sf::Keyboard::F))  {
       // Capture screenshot and save it to the file
       char filename[120];
       time_t t = time(0);
@@ -39,8 +49,17 @@ int main() {
       quitRequested = true;
     }
 
+    if (Debounce::isKeyPressed(sf::Keyboard::Right)) {
+      sceneIndex++;
+      sceneIndex %= array_size(scenes);
+    }
 
-    mainWindow->renderLoop(&scene);
+    if (Debounce::isKeyPressed(sf::Keyboard::Left)) {
+      sceneIndex--;
+      if (sceneIndex<0)  sceneIndex = array_size(scenes)-1;
+    }
+
+    mainWindow->renderLoop(&scenes[sceneIndex]);
   }
 
   return 0;

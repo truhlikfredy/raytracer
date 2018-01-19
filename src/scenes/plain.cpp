@@ -11,7 +11,7 @@
 Plain::Plain(): Scene(1, 2) {
 
   camera = {
-    .position     = Vector3(0.0f, 0.0f,  0.0f),
+    .possition    = Vector3(0.0f, 0.0f,  0.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 60.0f),
     .apeture      = 0.0f,
     .shutterSpeed = 2.0f

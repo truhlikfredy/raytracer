@@ -55,7 +55,6 @@ void Display::displaySamplerPattern(int width, int height, float frame) {
 
 
 void Display::renderLoop(Scene *scene) {
-  static float frame = 0;
   sf::Event event;
 
   while (window.pollEvent(event))  {
@@ -63,17 +62,17 @@ void Display::renderLoop(Scene *scene) {
   }
 
   clearDisplayMem();
-  render->renderFullWindow(scene, frame);
+  render->renderFullWindow(scene);
   convertToDisplayMem();
   if (showSamplerPatterns) {
-    displaySamplerPattern(ANTI_ALIASING, ANTI_ALIASING, frame);
+    displaySamplerPattern(ANTI_ALIASING, ANTI_ALIASING, scene->frame);
   }
 
   window.clear();
   texture.update(pixels);
   window.draw(sprite);
   window.display();
-  frame++;
+  scene->frame++;
 }
 
 

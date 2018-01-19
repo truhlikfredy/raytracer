@@ -12,11 +12,11 @@
 
 
 Render::Render(int widthInit, int heightInit) {
-  scene = nullptr;
-  width = widthInit;
-  height = heightInit;
+  scene         = nullptr;
+  width         = widthInit;
+  height        = heightInit;
   dynamicPixels = new DynamicPixel[widthInit * heightInit];
-  threadsMax = std::thread::hardware_concurrency();
+  threadsMax    = std::thread::hardware_concurrency();
 }
 
 
@@ -110,7 +110,7 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* lights, float frame
 }
 
 void Render::renderPartialWindow(float frame, windowType window) {
-  Sampler sampler(ANTI_ALIASING, ANTI_ALIASING * ANTI_ALIASING, 0.1f, 0, frame, 0.0f);
+  Sampler sampler(ANTI_ALIASING, ANTI_ALIASING * ANTI_ALIASING, scene->camera.shutterSpeed, 0, frame, scene->camera.apeture);
 
   Sphere    *objects = new Sphere[scene->nObjects];
   LightOmni *lights  = new LightOmni[scene->nLights];
@@ -122,8 +122,8 @@ void Render::renderPartialWindow(float frame, windowType window) {
       while (sampler.isNext()) {
         sampleTuple sample = sampler.getNextSample();
 
-        Vector3 start = Vector3(sample.lensX, sample.lensY, 35);
-        Vector3 lookAt = Vector3(0.0f,0.0f,60.0f);
+        Vector3 start = scene->camera.possition + Vector3(sample.lensX, sample.lensY, 0);
+        Vector3 lookAt = scene->camera.lookAt;
         //float focalDistance = Vector3(lookAt - start).lenght();
         //float halfWidth = focalDistance * tanf((90.0f/180)*3.14/2);
         //Vector3 up(0.0f, 1.0f, 0.0f);
@@ -169,7 +169,7 @@ void Render::clearDynamicPixels() {
   }
 }
 
-void Render::renderFullWindow(Scene *sceneInit, float frame) {
+void Render::renderFullWindow(Scene *sceneInit) {
   scene = sceneInit;
   std::vector<std::thread> workers;
 
@@ -177,8 +177,8 @@ void Render::renderFullWindow(Scene *sceneInit, float frame) {
 
   for (int segment = 0; segment < SEGMENTS; segment++) {
     for (int thread = 0; thread < threadsMax; thread++) {
-      workers.emplace_back([this, frame, thread] {
-        this->renderPartialWindow(frame, this->getThreadWindow(thread));
+      workers.emplace_back([this, thread] {
+        this->renderPartialWindow(scene->frame, this->getThreadWindow(thread));
       });
     }
     for (auto& worker: workers) worker.join();

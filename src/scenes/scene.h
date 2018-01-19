@@ -16,13 +16,14 @@
 
 class Scene {
 public:
-  int nLights;
-  int nObjects;
+  int           nLights;
+  int           nObjects;
   LightOmniGen* lights;
   SphereGen*    objects;
+  float         frame;
 
-  struct Camera {
-    Vector3 position;
+  struct {
+    Vector3 possition;
     Vector3 lookAt;
     float apeture;      // Affects strenght of the depth of field, 0 = disabled DOF
     float shutterSpeed; // Affects motion blur, 0 = disabled blur

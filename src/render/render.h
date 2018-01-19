@@ -58,6 +58,6 @@ public:
 
   Render(int width, int height);
 
-  void renderFullWindow(Scene *sceneInit, float frame);
+  void renderFullWindow(Scene *sceneInit);
 };
 #endif //RAYTRACER_RENDER_H

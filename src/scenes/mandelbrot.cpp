@@ -47,7 +47,7 @@ Color Mandelbrot::renderMandelbrotPixel(float lookAtX, float lookAtY, float widt
 Mandelbrot::Mandelbrot(): Scene(1, 1) {
 
   camera = {
-    .position     = Vector3(0.0f, 0.0f, 35.0f),
+    .possition     = Vector3(0.0f, 0.0f, 35.0f),
     .lookAt       = Vector3(0.0f,0.0f,60.0f),
     .apeture      = 0.0f,
     .shutterSpeed = 0.0f
