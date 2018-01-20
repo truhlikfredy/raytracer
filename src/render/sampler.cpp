@@ -171,3 +171,39 @@ float Sampler::randomFloat(unsigned int maximum, unsigned int pattern) {
   return (maximum * (1.0f / 4294967808.0f));
 }
 
+
+float Sampler::radicalInverse(int sampleIndex, int base) {
+  float inverseBased = 1.0f / base;
+  float inverseBaseSquared = inverseBased;
+  float ret = 0;
+
+  while (sampleIndex > 0) {
+    int digit = (sampleIndex % base);
+    ret += digit * inverseBaseSquared;
+    sampleIndex /= base;
+    inverseBaseSquared *= inverseBased;
+  }
+  return ret;
+}
+
+
+float Sampler::vanDerCorupt(int n) {
+  return this->radicalInverse(n, 2);
+}
+
+
+float Sampler::foldedRadicalInverse(int sampleIndex, int base) {
+  float inverseBase = 1.0f / base;
+  float inverseBaseSquared = inverseBase;
+  float ret = 0;
+
+  int offset = 0;
+  while (ret + base * inverseBaseSquared != ret) {
+    int digit = ((sampleIndex + offset) % base);
+    ret += digit * inverseBaseSquared;
+    sampleIndex /= base;
+    inverseBaseSquared *= inverseBase;
+    ++offset;
+  }
+  return ret;
+}

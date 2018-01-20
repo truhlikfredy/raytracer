@@ -54,6 +54,12 @@ public:
 
   sampleTuple getNextSample();
 
+  float radicalInverse(int sampleIndex, int base);
+
+  float vanDerCorupt(int n);
+
+  float foldedRadicalInverse(int sampleIndex, int base);
+
 };
 
 #endif //RAYTRACER_SAMPLER_H
