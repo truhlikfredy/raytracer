@@ -54,7 +54,7 @@ public:
 
   bool isNext();
 
-  sampleTuple getNextSample();
+  void getNextSample(sampleTuple *ret);
 
   float radicalInverse(int sampleIndex, int base);
 

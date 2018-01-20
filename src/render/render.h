@@ -7,7 +7,7 @@
 #define RAYTRACER_RENDER_H
 
 #define SEGMENTS 1  // how many partitions the screen should be split
-#define ANTI_ALIASING 3
+#define ANTI_ALIASING 2
 #define MAX_BOUNCES 3
 
 #include "../entities/lights/lightOmni.h"

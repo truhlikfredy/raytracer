@@ -38,10 +38,11 @@ void Display::convertToDisplayMem() {
 
 void Display::displaySamplerPattern(int width, int height, float frame) {
   static Sampler sampler(ANTI_ALIASING, 1, 0.1f, 0, (int)(frame / 20), 0.0f);
+  sampleTuple sample;
 
   sampler.nextPixel();
   for (int i = 0; i < width * height; i++) {
-    sampleTuple sample = sampler.getNextSample();
+    sampler.getNextSample(&sample);
     const int x = sample.spaceX * WIDTH;
     const int y = sample.spaceY * HEIGHT;
     const int offset = (x + y * WIDTH) *4;

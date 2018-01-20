@@ -53,45 +53,35 @@ bool Sampler::isNext() {
 /**
  * Calculate new pixel and time coordinates for a new ray to sample
  */
-sampleTuple Sampler::getNextSample() {
-  sampleTuple ret;
-  ret.spaceX = 0.0f;
-  ret.spaceY = 0.0f;
-  ret.time   = 0.0f;
-  ret.lensX  = 0.0f;
-  ret.lensY  = 0.0f;
+void Sampler::getNextSample(sampleTuple *ret) {
+  unsigned int oldIndex = index++;
+  //sample2D sample;
+
+  ret->spaceX = 0.0f;
+  ret->spaceY = 0.0f;
+  ret->time   = 0.0f;
+  ret->lensX  = 0.0f;
+  ret->lensY  = 0.0f;
 
 
-  if (space == 1 ) {
-    index++;
-    return ret;
-  }
+  if (space == 1 ) return;
 
   const sample2D spaceSample = vanDerCoruptSobol2(index, patternSpace);
-  ret.spaceX = spaceSample.x;
-  ret.spaceY = spaceSample.y;
+  ret->spaceX = spaceSample.x;
+  ret->spaceY = spaceSample.y;
 
-  if (time == 1) {
-    index++;
-    return ret;
-  }
+  if (time == 1) return;
 
-  ret.time   = vanDerCorput(index, patternTime) * shutter;
+  ret->time   = vanDerCorput(index, patternTime) * shutter;
 
-  if (apeture == 0.0f) {
-    index++;
-    return ret;
-  }
+  if (apeture == 0.0f) return;
 
   const sample2D lensSample = vanDerCoruptSobol2(index, patternLens);
-  ret.lensX = lensSample.x * apeture;
-  ret.lensY = lensSample.y * apeture;
+  ret->lensX = lensSample.x * apeture;
+  ret->lensY = lensSample.y * apeture;
   // the lens is sampled in a asqaure instead of circle/aperture shape, proper implementation
   // of the lens shape is not worth the overhead it will cause and not noticable quality gain,
   // still it needs magnitude more rays and the sampling strategy will not save from that
-
-  index++;
-  return ret;
 }
 
 /**

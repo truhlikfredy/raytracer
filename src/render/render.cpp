@@ -115,12 +115,14 @@ void Render::renderPartialWindow(float frame, windowType window) {
   Sphere    *objects = new Sphere[scene->nObjects];
   LightOmni *lights  = new LightOmni[scene->nLights];
 
+  sampleTuple sample;
+
   // printf("%f \r\n",frame);
   for (int y = window.yStart; y < window.yEnd; y++) {
     for (int x = window.xStart; x < window.xEnd; x++) {
       sampler.nextPixel();
       while (sampler.isNext()) {
-        sampleTuple sample = sampler.getNextSample();
+         sampler.getNextSample(&sample);
 
         Vector3 start = scene->camera.possition + Vector3(sample.lensX, sample.lensY, 0);
         Vector3 lookAt = scene->camera.lookAt;

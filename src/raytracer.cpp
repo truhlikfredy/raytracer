@@ -62,5 +62,10 @@ int main() {
     mainWindow->renderLoop(&scenes[sceneIndex]);
   }
 
+//  Sampler sampler = Sampler(2,2,1.0f,0.0f,1,0.0f);
+//
+//  for (int i = 0; i < 32; i++) {
+//    printf("%d = %f  %f\r\n", i, sampler.radicalInverse(i,2), sampler.foldedRadicalInverse(i, 2) , sampler.vanDerCorput(i, 0x2313434334), sampler.sobol2(i, 0x23134343343));
+//  }
   return 0;
 }
