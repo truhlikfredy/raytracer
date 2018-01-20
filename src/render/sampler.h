@@ -56,7 +56,7 @@ public:
 
   float radicalInverse(int sampleIndex, int base);
 
-  float vanDerCorupt(int n);
+  float vanDerCorput(int n, int pattern);
 
   float foldedRadicalInverse(int sampleIndex, int base);
 
