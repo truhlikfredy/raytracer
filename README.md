@@ -119,7 +119,7 @@ This freedom alows to get involved even in much higher dimmensions such as soft 
 
 Halton sampler is good when sample size is unknown:
 
-![halton sampler](https://en.wikipedia.org/wiki/Halton_sequence#/media/File:Halton_sequence_2_3.svg)
+![halton sampler](https://upload.wikimedia.org/wikipedia/commons/a/a5/Halton_sequence_2_3.svg)
 
 In 1D dimension the halton distributes pretty well and splits the unsampled left space into halves (if base is 2, or thirds when base is 3). The good feature is that it will be able to give as much samples as needed, while even small sample size will get even coverage.
 Both x and y are produced with radicalInverse functions, but with different bases (in the picture x is base 2 and y is base 3), it' important to chose good base numbers which are prime and still have to pay extra attention which one are chosen, because some bases produce almost identical outcomes.
