@@ -91,6 +91,13 @@ https://stackoverflow.com/questions/41661369/smoothly-mapping-a-2d-uv-point-onto
 
 ### Reading materials and introduction theory
 
+Amazing book on this subject is
+Physically Based Rendering: From Theory to Implementation
+http://www.pbrt.org/
+
+Even sample chapter is very useful for this raytracer
+
+
 http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.552.864&rep=rep1&type=pdf
 
 http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html
@@ -107,15 +114,23 @@ https://graphics.pixar.com/library/MultiJitteredSampling/paper.pdf
 
 http://www.pbrt.org/chapters/pbrt_chapter7.pdf
 
+https://cims.nyu.edu/~regev/teaching/lattices_fall_2004/ln/introduction.pdf
+
+http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=A2A2605C68EBF68DE1FCD941AFCA8EA8?doi=10.1.1.871.3498&rep=rep1&type=pdf
+
+http://slideplayer.com/slide/8978898/
+
 Bolied down, super sampling where each pixel's rays are divided with perfectly equal and even separation will still cause aliasing, but it will be slightly less noticable. The desire is using randomized sampling instead, to create noise instead of aliasing patterns, which are more pleasing on eyes. Problem is that random distribution can cause some rays to be sampled too close to each other, while neglecting some areas and causing some sparse regions. The goal is to have pseudo randomized sampling which still is close to the perfect grid, desire is to have even volume density.
 
 ![different samplers compared](/images/samplers.png)
+
+Regular sampler can also cause undesired moire effects.
 
 Some compromises have to be made, if the final sampling size is not known in advance then Halton sampler can be used which is not producing as good results as Hammersley, but for Hammersley the sampling size needs to be known in advance. With Halton sampler the raytracer could be "probing" rays and if desired quality is gained (averageOfAllRaysForThatPixel - lastRay) < delta then sampling can be stopped. So for completely black parts of the scenes the raytracer can only do 2-4 rays to figure out that the pixel is pretty boring and give up. While on complex pixels it can ramup the sampler to much higher samples per pixel.
 
 Other advantages are to combine domains, the brute force aproach is to go through all pixel, for each pixel go through all permutation of space anti aliasing and for each light, for example AA 3x3 by 3 lights. Then for each of these go throug some combinations of time to generate samples over different times to achieve motion blur, for example 6 samples to capture movement. Then for each of these go through 9 variants of different space location inside the camera sensor. Which emuates the depth of field and aperture effects. These extra high dimmension can ramp up complexity very quickly (3x3x3x6x9). Means doing 1458 samples per pixel for a secene with only 3 lights and very low quality AA sampling, bad motion and low quality DOF. So the trick is to overlay samples with other dimensions and shuffle them between each other. While doing antialiasing samples do samples in other higher dimensions as well, while doing 3x3 antiliasing dedicate each sample to different time and different lens aperture location so the complexity will stay just 3x3 while doing everything esle for free.
 
-This freedom alows to get involved even in much higher dimmensions such as soft shadows for area light with very small impact on the performance. To avoid any paterns / corelations and maintain the error seen as noise these samples have to be shuffled between the dimensions on single pixel and between each pixels as well. The quality of the sampler is greatly affecting the performance and quality of the raytracer, not talking about the extra features (motion blur, DOF, soft shadows) which gives almost for free without any significant complexity to code, nor computational complexity.
+This freedom alows to get involved even in much higher dimmensions such as soft shadows for area light with very small impact on the performance. To avoid any paterns / corelations and maintain the error seen as noise these samples have to be shuffled between the dimensions on single pixel and between each pixels as well. The quality of the sampler is greatly affecting the performance and quality of the raytracer, not talking about the extra features (motion blur, DOF, soft shadows) which gives almost for free without any significant complexity to code, nor computational complexity. Some of the samplers will work well even without getting power of 2 samples.
 
 ### Halton sampler
 
@@ -138,9 +153,9 @@ by radical inverse function. This make it hard to fit any good new samples into 
 
 Notice the larger sample size contains the previous smaller sample size.
 
-### RadicalInverse function
+### Radical inverse function
 
-In essence it converts the index input number into a binary represation (in case of base 2) and then mirrors the result:
+In essence it converts the index input number into a binary represation (for example base 2) and then mirrors the result:
 
  | Index input   | Base 2 value  | Radical inverse value |
  | ------------- | ------------- | --------------------- |
@@ -150,7 +165,20 @@ In essence it converts the index input number into a binary represation (in case
  | 4             |           100 | .001 (1/8)            |
  | 5             |           101 | .101 (5/8)            |
 
- Both Halton and Hammersley samplers are using this property.
+ Both Halton and Hammersley samplers are using this function.
+
+### Folded radical inverse function
+
+Is slightly modified variant of radical inverse function which gains better distribution and less frequent "grouping" of the samples. By adding i offset to i-th sample.
+Both halton and hammersley can use it, but it has strongest effect on halton.
+
+### van der Corput sequence
+
+Is in essence radical inverse function with base fixed to 2. Base has interesting property which can be used for advantage. Using regular XOR can be equivalent of shuffling and van der Corput can be improved to accept "pattern" which will be "suffled" with to randomize the outputs. XOR is very fast and function can produce decent samples with mininal system requirements.
+
+### radical inverse function due to Sobol'
+
+Is modified inverse function which can be used together with van der Corupt, is base 2 and pattern can be used to XOR / shuffle the pattern. When ech van der Corup and Sobol'2 are used for samples they create sampling set which satifies condition where there is only 1 point in the grid cell. This is true no matter how "sliced the pixel is", for 1 pixel which contains 16 samples, the grid can be 4x4, 2x8, 8x2, 16x1 and 1x16 and there will be only 1 sample per cell. Meaning that the samples are not grouping up and are evenly distributed. Also this can be suffled pretty well.
 
 
 ## Shading and Coloring
