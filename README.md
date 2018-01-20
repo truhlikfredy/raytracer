@@ -136,6 +136,22 @@ by radical inverse function. This make it hard to fit any good new samples into 
 
 ![more samples](/images/hammersley2.png)
 
+Notice the larger sample size contains the previous smaller sample size.
+
+### RadicalInverse function
+
+In essence it converts the index input number into a binary represation (in case of base 2) and then mirrors the result:
+
+ | Index input   | Base 2 value  | Radical inverse value |
+ | ------------- | ------------- | --------------------- |
+ | 1             |             1 | .1   (1/2)            |
+ | 2             |            10 | .01  (1/4)            |
+ | 3             |            11 | .11  (3/4)            |
+ | 4             |           100 | .001 (1/8)            |
+ | 5             |           101 | .101 (5/8)            |
+
+ Both Halton and Hammersley samplers are using this property.
+
 
 ## Shading and Coloring
 
