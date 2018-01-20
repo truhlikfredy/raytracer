@@ -13,6 +13,7 @@
  */
 
 #include "sampler.h"
+#include <cstdlib>
 
 
 Sampler::Sampler(unsigned int spaceInt, unsigned int timeInt, float shutterInit, unsigned int overlapInit,
@@ -21,7 +22,7 @@ Sampler::Sampler(unsigned int spaceInt, unsigned int timeInt, float shutterInit,
   this->time    = timeInt;       // How many samples in time dimension
   this->shutter = shutterInit;   // Speed of the shutter of the camer
   this->overlap = overlapInit;   // How much the dimensions overlap
-  this->pattern = patternInit;   // Initial seed value
+  //this->pattern = patternInit;   // Initial seed value
   this->index   = 0;
   this->apeture = apetureInit;
 
@@ -35,7 +36,9 @@ Sampler::Sampler(unsigned int spaceInt, unsigned int timeInt, float shutterInit,
  */
 void Sampler::nextPixel() {
   this->index = 0;
-  this->pattern+=space+3;
+  this->patternSpace=rand();
+  this->patternTime=rand();
+  this->patternLens=rand();
 }
 
 
@@ -64,7 +67,7 @@ sampleTuple Sampler::getNextSample() {
     return ret;
   }
 
-  const sample2D spaceSample = multiJitter(index, space, space, pattern);
+  const sample2D spaceSample = vanDerCoruptSobol2(index, patternSpace);
   ret.spaceX = spaceSample.x;
   ret.spaceY = spaceSample.y;
 
@@ -73,15 +76,14 @@ sampleTuple Sampler::getNextSample() {
     return ret;
   }
 
-  const sample2D timeSample  = multiJitter(pseudoShuffle(index, time), time, 1, pattern);
-  ret.time   = timeSample.x * shutter;
+  ret.time   = vanDerCorput(index, patternTime) * shutter;
 
   if (apeture == 0.0f) {
     index++;
     return ret;
   }
 
-  const sample2D lensSample = multiJitter(index, space, space, pattern);
+  const sample2D lensSample = vanDerCoruptSobol2(index, patternLens);
   ret.lensX = lensSample.x * apeture;
   ret.lensY = lensSample.y * apeture;
   // the lens is sampled in a asqaure instead of circle/aperture shape, proper implementation
@@ -187,17 +189,6 @@ float Sampler::radicalInverse(int sampleIndex, int base) {
 }
 
 
-float Sampler::vanDerCorput(int n, int pattern) {
-  n = (n << 16) | (n >> 16);
-  n = ((n & 0x00ff00ff) << 8) | ((n & 0xff00ff00) >> 8);
-  n = ((n & 0x0f0f0f0f) << 4) | ((n & 0xf0f0f0f0) >> 4);
-  n = ((n & 0x33333333) << 2) | ((n & 0xcccccccc) >> 2);
-  n = ((n & 0x55555555) << 1) | ((n & 0xaaaaaaaa) >> 1);
-  n ^= pattern;
-  return (float)n / (float)0x100000000LL;
-}
-
-
 float Sampler::foldedRadicalInverse(int sampleIndex, int base) {
   float inverseBase = 1.0f / base;
   float inverseBaseSquared = inverseBase;
@@ -213,3 +204,29 @@ float Sampler::foldedRadicalInverse(int sampleIndex, int base) {
   }
   return ret;
 }
+
+
+float Sampler::vanDerCorput(unsigned int sampleIndex, unsigned int pattern) {
+  sampleIndex = (sampleIndex << 16) | (sampleIndex >> 16);
+  sampleIndex = ((sampleIndex & 0x00ff00ff) << 8) | ((sampleIndex & 0xff00ff00) >> 8);
+  sampleIndex = ((sampleIndex & 0x0f0f0f0f) << 4) | ((sampleIndex & 0xf0f0f0f0) >> 4);
+  sampleIndex = ((sampleIndex & 0x33333333) << 2) | ((sampleIndex & 0xcccccccc) >> 2);
+  sampleIndex = ((sampleIndex & 0x55555555) << 1) | ((sampleIndex & 0xaaaaaaaa) >> 1);
+  sampleIndex ^= pattern;
+  return (float)sampleIndex / (float)0x100000000LL;
+}
+
+
+float Sampler::sobol2(unsigned int sampleIndex, unsigned int pattern) {
+  for (unsigned int v = 1 << 31; sampleIndex != 0; sampleIndex >>= 1, v ^= v >> 1)
+    if (sampleIndex & 0x1) pattern ^= v;
+  return (float)pattern / (float)0x100000000LL;
+}
+
+sample2D Sampler::vanDerCoruptSobol2(unsigned int sampleIndex, unsigned int pattern) {
+  return {
+    .x = vanDerCorput(sampleIndex, pattern),
+    .y = sobol2(sampleIndex, pattern)
+  };
+}
+

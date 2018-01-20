@@ -26,9 +26,11 @@ struct sample2D {
 class Sampler {
 
 private:
+  unsigned int patternSpace;
+  unsigned int patternTime;
+  unsigned int patternLens;
   unsigned int index;
   unsigned int maximum;
-  unsigned int pattern;
   unsigned int overlap;
   unsigned int space;
   unsigned int time;
@@ -56,9 +58,13 @@ public:
 
   float radicalInverse(int sampleIndex, int base);
 
-  float vanDerCorput(int n, int pattern);
+  float vanDerCorput(unsigned int sampleIndex, unsigned int pattern);
 
   float foldedRadicalInverse(int sampleIndex, int base);
+
+  float sobol2(unsigned int sampleIndex, unsigned int pattern);
+
+  sample2D vanDerCoruptSobol2(unsigned int sampleIndex, unsigned int pattern);
 
 };
 
