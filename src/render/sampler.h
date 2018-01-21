@@ -35,9 +35,6 @@ private:
   unsigned int patternLens;
   unsigned int patternLight;
   unsigned int patternLightSpace;
-  unsigned int index;
-  unsigned int indexMinimum;
-  unsigned int indexMaximum;
   unsigned int lights;
   float apeture;
   float shutter;
@@ -45,6 +42,10 @@ private:
   unsigned int pseudoShuffle(unsigned int index, unsigned int maximum);
 
 public:
+  unsigned int index;
+  unsigned int indexMinimum;
+  unsigned int indexMaximum;
+
   Sampler(unsigned int minSamples, unsigned int maxSamples, float shutterInit, float apetureInit, unsigned int lightsInit,
           unsigned int patternInit);
 
