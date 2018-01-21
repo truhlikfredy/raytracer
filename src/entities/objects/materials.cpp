@@ -37,7 +37,7 @@ MaterialStatic Materials::white= {
   .specular  = Color(0.0225f,   0.0225f,   0.0225f),
   .emission  = Color(0.0f),
   .shininess = 12.8f,
-  .reflectivity = 0.0f,
+  .reflectivity = 0.1f,
   .transpancy= 0.0f,
   .indexOfRefraction = 1.0f
 };
@@ -59,7 +59,7 @@ MaterialStatic Materials::mirror = {
   .specular  = Color(0.8f),
   .emission  = Color(0.0f),
   .shininess = 77.0f,
-  .reflectivity = 0.8f,
+  .reflectivity = 0.95f,
   .transpancy= 0.0f,
   .indexOfRefraction = 1.0f
 };
@@ -70,7 +70,7 @@ MaterialStatic Materials::brass= {
   .specular  = Color(0.992157f, 0.941176f, 0.807843f),
   .emission  = Color(0.0f),
   .shininess = 27.8974f,
-  .reflectivity = 0.9f,
+  .reflectivity = 0.8f,
   .transpancy= 0.0f,
   .indexOfRefraction = 1.50f
 };

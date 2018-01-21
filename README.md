@@ -21,27 +21,28 @@
 
 * Instead of calculating the scene for given time, it calculates the scene per each ray, this will allow for each ray to be in different time (motion blur) and even subpixels in a single pixel be sampled from slightly different time. Allowing easy multi dimensional sampling.
 * Randomized multi dimensional sampling in space and time (instead of aliasing it creates noise which is much more pleasing for the eyes, the lens, time jitter is not implemented)
+    * Moved from jittered sampler to radical inverse functions.
 * Phong shading (ambient + difuse + specular lighting)
 * Animated light and objects (they are lamba functions depending on time)
 * Using well known predefined materials
+* Depth of field effect
 * Multiple objects per scene
 * Allow for objects to pass a function as materialFn generator (allows change properties of the materialFn depending on coordinates and other variables)
+* Support multiple lights and objects in the scene
 * Shadows
+* Reflection
 * Mandelbrot fractal as a texture/material with different "shine" properties in different sections
+* Dynamicly adjusting sampler, allowing a range of samples per pixel and ability to stop wheneve desire quality (delta) is achieved
 
 # TODO (More precisely a wish list)
 
 * More agresive private methods
-* Dynamicly adjusting sampler, allowing a range of samples per pixel and ability to stop wheneve desire quality (delta) is achieved
 * Improve test pattern of the jitter results
 * Support different objects (plane, box, donut)
-* Support multiple lights and objects in the scene
-  *  Soft shadows
+* Soft shadows
 * Save videos as well.
 * Different light types: Spot light, Area flood light.
 * Do not shade object until it's for sure it's the winning depth (could be falsely rendered just for different object and depth wining the final result)
-* Depth of field effect
-* Reflection
 * Refraction
 * Different materials with different roughfness and textures
   *  Checkerboard
@@ -73,6 +74,8 @@
 ![multiple lights = multiple shadows](/images/screenshot08.png)
 
 ![chekerboard with DOF effect and multiple lights](/images/screenshot09.png)
+
+![reflections](/images/screenshot10.png)
 
 ![Screenshot of a sphere under extreme lens settings](/images/screenshot01.png)
 
