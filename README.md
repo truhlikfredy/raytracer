@@ -70,6 +70,8 @@
 
 ![fractal with different shiny properties](/images/screenshot07.png)
 
+![multiple lights = multiple shadows](/images/screenshot08.png)
+
 ![Screenshot of a sphere under extreme lens settings](/images/screenshot01.png)
 
 # References
