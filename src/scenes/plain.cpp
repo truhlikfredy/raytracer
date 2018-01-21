@@ -59,12 +59,3 @@ Plain::Plain(): Scene(2, 2) {
 
 
 }
-
-//    checkerboard attempt
-//    if ((int)point.x/5 % 2 ^ (int)point.y/5 % 2 ^ (int)point.z/5 % 2) {
-//      return Materials::red;
-//    }
-//    else {
-//      return Materials::mirror;
-//    }
-
