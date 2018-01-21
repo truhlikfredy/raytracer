@@ -67,7 +67,7 @@ public:
 
   static float sobol2(unsigned int sampleIndex, unsigned int pattern);
 
-  static void vanDerCoruptSobol2(unsigned int sampleIndex, unsigned int pattern, sample2D *sample);
+  static void vanDerCoruptSobol2(unsigned int sampleIndex, unsigned int pattern, sample2D &sample);
 
 };
 

@@ -81,7 +81,7 @@ void Sampler::getNextSample(sampleTuple *ret) {
   }
 
 
-  vanDerCoruptSobol2(origIndex, patternSpace, &sample);
+  vanDerCoruptSobol2(origIndex, patternSpace, sample);
   ret->spaceX = sample.x;
   ret->spaceY = sample.y;
 
@@ -90,7 +90,7 @@ void Sampler::getNextSample(sampleTuple *ret) {
   }
 
   if (apeture > 0.0f) {
-    vanDerCoruptSobol2(origIndex, patternLens, &sample);
+    vanDerCoruptSobol2(origIndex, patternLens, sample);
     ret->lensX = sample.x * apeture;
     ret->lensY = sample.y * apeture;
     // the lens is sampled in a sqaure instead of circle/aperture shape, proper implementation
@@ -102,7 +102,7 @@ void Sampler::getNextSample(sampleTuple *ret) {
     ret->light = (int)(sobol2(origIndex, patternLight) * lights) % lights;
   }
 
-  vanDerCoruptSobol2(origIndex, patternLightSpace, &sample);
+  vanDerCoruptSobol2(origIndex, patternLightSpace, sample);
   ret->lightx = sample.x;
   ret->lighty = sample.y;
 }
@@ -170,8 +170,8 @@ float Sampler::sobol2(unsigned int sampleIndex, unsigned int pattern) {
 }
 
 
-void Sampler::vanDerCoruptSobol2(unsigned int sampleIndex, unsigned int pattern, sample2D *sample) {
-  sample->x = vanDerCorput(sampleIndex, pattern);
-  sample->y = sobol2(sampleIndex, pattern);
+void Sampler::vanDerCoruptSobol2(unsigned int sampleIndex, unsigned int pattern, sample2D &sample) {
+  sample.x = vanDerCorput(sampleIndex, pattern);
+  sample.y = sobol2(sampleIndex, pattern);
 }
 
