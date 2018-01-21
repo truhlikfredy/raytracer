@@ -7,6 +7,7 @@
 * **S** to display test pattern of the pseudo randomized sampler results
 * **C** capture screenshots
 * **Left/Right** switch between scenes
+* [ and ] jump in time (jump back is smaller than jump forward)
 
 ## Programing
 
@@ -76,8 +77,6 @@
 ![chekerboard with DOF effect and multiple lights](/images/screenshot09.png)
 
 ![reflections](/images/screenshot10.png)
-
-![Screenshot of a sphere under extreme lens settings](/images/screenshot01.png)
 
 # References
 

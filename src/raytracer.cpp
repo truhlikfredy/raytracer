@@ -61,6 +61,14 @@ int main() {
       if (sceneIndex<0)  sceneIndex = array_size(scenes)-1;
     }
 
+    if (Debounce::isKeyPressed(sf::Keyboard::RBracket)) {
+      scenes[sceneIndex].frame += 30;
+    }
+
+    if (Debounce::isKeyPressed(sf::Keyboard::LBracket)) {
+      scenes[sceneIndex].frame -= 15;
+    }
+
     mainWindow->renderLoop(&scenes[sceneIndex]);
   }
 
