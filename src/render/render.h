@@ -7,7 +7,8 @@
 #define RAYTRACER_RENDER_H
 
 #define SEGMENTS 1  // how many partitions the screen should be split
-#define ANTI_ALIASING 2
+#define SAMPLING_MIN 4
+#define SAMPLING_MAX 9
 #define MAX_BOUNCES 3
 
 #include "../entities/lights/lightOmni.h"
@@ -44,9 +45,9 @@ private:
   windowType getThreadWindow(int thread);
 
 
-  Color rayStart(Ray ray, Sphere* objects, LightOmni* lights, float frame);
+  Color rayStart(Ray ray, Sphere* objects, LightOmni* light, float frame);
 
-  Color rayFollow(Ray ray, Sphere* objects, LightOmni* lights, float frame, int iteration);
+  Color rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration);
 
   void renderPartialWindow(float frame, windowType window);
 

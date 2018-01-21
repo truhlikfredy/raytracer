@@ -188,3 +188,5 @@ https://globe3d.sourceforge.io/g3d_html/gl-materials__ads.htm
 https://stackoverflow.com/questions/24132774/trouble-with-phong-shading
 
 https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
+
+http://en.wikipedia.org/wiki/Color_difference

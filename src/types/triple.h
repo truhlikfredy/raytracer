@@ -27,6 +27,8 @@ public:
 
   Triple operator/(float scalar);
 
+  float sum();
+
   //Triple operator=(Triple& secondTriple);
 };
 

@@ -116,11 +116,18 @@ void Render::renderPartialWindow(float frame, windowType window) {
   LightOmni light;
   sampleTuple sample;
 
+
   // printf("%f \r\n",frame);
   for (int y = window.yStart; y < window.yEnd; y++) {
     for (int x = window.xStart; x < window.xEnd; x++) {
+      unsigned int colors = 0;
+      Color totalColor(0.0f);
+      Color lastColor;
+
       sampler.nextPixel();
       while (sampler.isNext()) {
+
+
         sampler.getNextSample(&sample);
 
         Vector3 start = scene->camera.possition + Vector3(sample.lensX, sample.lensY, 0);
@@ -158,12 +165,28 @@ void Render::renderPartialWindow(float frame, windowType window) {
 //
 //        }
         light = scene->lights[sample.light].evaluateFn(frame);
-        Color shade = rayStart(rayForThisPixel, objects, &light, frame + sample.time);
-        shade = ~shade;
+        lastColor = ~rayStart(rayForThisPixel, objects, &light, frame + sample.time);
 
-        dynamicPixels[x + (y * width)].color = dynamicPixels[x + (y * width)].color + shade;
-        dynamicPixels[x + (y * width)].count++;
+        if (sampler.isMinimumDone()) {
+          Color previousAverage(totalColor / colors);
+          Color currentAverage((totalColor + lastColor) / (colors+1));
+          if (currentAverage.sum() == 0) {
+            sampler.finish();
+          }
+//          if (previousAverage.difference(currentAverage) < 0.1f) {
+//            //printf("stopped %d \n",colors);
+//            sampler.finish();
+//          }
+//          if ( fabsf(previousAverage.sum() - currentAverage.sum()) < 0.001f) {
+//            sampler.finish();
+//          }
+        }
+        totalColor = totalColor + lastColor;    // TODO
+        colors++;
+
       }
+      dynamicPixels[x + (y * width)].color = totalColor / colors;
+
     }
   }
 

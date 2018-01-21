@@ -48,6 +48,10 @@ Triple Triple::operator/(float scalar) {
   return Triple(this->x / scalar, this->y / scalar, this->z / scalar);
 }
 
+float Triple::sum() {
+  return this->x + this->y + this->z;
+}
+
 //Triple Triple::operator=(Triple& secondTriple) {
 //  return Triple(secondTriple->x, secondTriple->y, secondTriple->z);
 //}

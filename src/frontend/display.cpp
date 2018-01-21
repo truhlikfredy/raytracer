@@ -27,7 +27,8 @@ void Display::clearDisplayMem() {
 
 void Display::convertToDisplayMem() {
   for (int i = 0; i < HEIGHT * WIDTH; i++) {
-    Color average = render->dynamicPixels[i].color / render->dynamicPixels[i].count;
+    //Color average = render->dynamicPixels[i].color / render->dynamicPixels[i].count;
+    Color average = render->dynamicPixels[i].color;
     pixels[i*4 + 0] = (int)(average.x*255);
     pixels[i*4 + 1] = (int)(average.y*255);
     pixels[i*4 + 2] = (int)(average.z*255);
