@@ -7,12 +7,12 @@
 #include "lights.h"
 
 
-Lights::Lights(): Scene(2, 2) {
+Lights::Lights(): Scene(2, 3) {
 
   camera = {
     .possition    = Vector3(0.0f, 0.0f,  -20.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 30.0f),
-    .apeture      = 4.0f,
+    .apeture      = 0.0f,
     .shutterSpeed = 0.5f
   };
 
@@ -56,5 +56,11 @@ Lights::Lights(): Scene(2, 2) {
                   });
   });
 
+  objects[2] = SphereGen([](float frame) {
+    return Sphere(Vector3( 15, 25, 10), 15,
+                  [](Vector3 point, float frame) {
+                    return Materials::green;
+                  });
+  });
 
 }
