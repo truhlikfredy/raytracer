@@ -16,18 +16,15 @@
 #include <cstdlib>
 
 
-Sampler::Sampler(unsigned int spaceInt, unsigned int timeInt, float shutterInit, unsigned int overlapInit,
-                 unsigned int patternInit, float apetureInit) {
-  this->space   = spaceInt;      // How many samples in space dimension (this value gets squared)
-  this->time    = timeInt;       // How many samples in time dimension
-  this->shutter = shutterInit;   // Speed of the shutter of the camer
-  this->overlap = overlapInit;   // How much the dimensions overlap
-  //this->pattern = patternInit;   // Initial seed value
-  this->index   = 0;
-  this->apeture = apetureInit;
+Sampler::Sampler(unsigned int minSamples, unsigned int maxSamples, float shutterInit, float apetureInit, unsigned int lightsInit,
+                 unsigned int patternInit) {
+  this->indexMinimum = minSamples;      // Dynamic sampling
+  this->indexMaximum = maxSamples;
+  this->shutter      = shutterInit;     // Speed of the shutter of the camer
+  this->apeture      = apetureInit;
+  this->lights       = lightsInit;
+  //this->patternSpace = patternInit;   // Initial seed value
 
-  // when overlap is 1 or more multiply all, when it's 0 count only to space squared
-  this->maximum       = (overlap) ? (space * space * time * overlap) : (space * space);
 }
 
 
@@ -39,6 +36,8 @@ void Sampler::nextPixel() {
   this->patternSpace=rand();
   this->patternTime=rand();
   this->patternLens=rand();
+  this->patternLight=rand();
+  this->patternLightSpace=rand();
 }
 
 
@@ -46,7 +45,17 @@ void Sampler::nextPixel() {
  * Did all samples got iterated yet
  */
 bool Sampler::isNext() {
-  return index < maximum;
+  return index < indexMaximum;
+}
+
+
+bool Sampler::isMinimumDone() {
+  return index > indexMinimum;
+}
+
+
+void Sampler::finish() {
+  index = indexMaximum;
 }
 
 
@@ -54,7 +63,7 @@ bool Sampler::isNext() {
  * Calculate new pixel and time coordinates for a new ray to sample
  */
 void Sampler::getNextSample(sampleTuple *ret) {
-  unsigned int oldIndex = index++;
+  unsigned int origIndex = index++;
   sample2D sample;
 
   ret->spaceX = 0.0f;
@@ -62,26 +71,36 @@ void Sampler::getNextSample(sampleTuple *ret) {
   ret->time   = 0.0f;
   ret->lensX  = 0.0f;
   ret->lensY  = 0.0f;
+  ret->light  = 0;
+  ret->lightx = 0.0f;
+  ret->lighty = 0.0f;
 
+  if (indexMaximum == 1 ) return;
 
-  if (space == 1 ) return;
-
-  vanDerCoruptSobol2(index, patternSpace, &sample);
+  vanDerCoruptSobol2(origIndex, patternSpace, &sample);
   ret->spaceX = sample.x;
   ret->spaceY = sample.y;
 
-  if (time == 1) return;
+  if (time != 1) {
+    ret->time   = vanDerCorput(origIndex, patternTime) * shutter;
+  }
 
-  ret->time   = vanDerCorput(index, patternTime) * shutter;
+  if (apeture != 0.0f) {
+    vanDerCoruptSobol2(origIndex, patternLens, &sample);
+    ret->lensX = sample.x * apeture;
+    ret->lensY = sample.y * apeture;
+    // the lens is sampled in a sqaure instead of circle/aperture shape, proper implementation
+    // of the lens shape is not worth the overhead it will cause and not noticable quality gain,
+    // still it needs magnitude more rays and the sampling strategy will not save from that
+  }
 
-  if (apeture == 0.0f) return;
+  if (lights > 0) {
+    ret->light = (int)(sobol2(origIndex, patternLight) * lights);
+  }
 
-  vanDerCoruptSobol2(index, patternLens, &sample);
-  ret->lensX = sample.x * apeture;
-  ret->lensY = sample.y * apeture;
-  // the lens is sampled in a sqaure instead of circle/aperture shape, proper implementation
-  // of the lens shape is not worth the overhead it will cause and not noticable quality gain,
-  // still it needs magnitude more rays and the sampling strategy will not save from that
+  vanDerCoruptSobol2(origIndex, patternLightSpace, &sample);
+  ret->lightx = sample.x;
+  ret->lighty = sample.y;
 }
 
 

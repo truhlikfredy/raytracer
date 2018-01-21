@@ -11,11 +11,14 @@
 #include <utility>
 
 struct sampleTuple {
-  float spaceX;
-  float spaceY;
-  float time;
-  float lensX;
-  float lensY;
+  float        spaceX;
+  float        spaceY;
+  float        time;
+  float        lensX;
+  float        lensY;
+  unsigned int light;
+  float        lightx;
+  float        lighty;
 };
 
 struct sample2D {
@@ -29,10 +32,12 @@ private:
   unsigned int patternSpace;
   unsigned int patternTime;
   unsigned int patternLens;
+  unsigned int patternLight;
+  unsigned int patternLightSpace;
   unsigned int index;
-  unsigned int maximum;
-  unsigned int overlap;
-  unsigned int space;
+  unsigned int indexMinimum;
+  unsigned int indexMaximum;
+  unsigned int lights;
   unsigned int time;
   float apeture;
   float shutter;
@@ -40,12 +45,16 @@ private:
   unsigned int pseudoShuffle(unsigned int index, unsigned int maximum);
 
 public:
-  Sampler(unsigned int spaceInt, unsigned int timeInt, float shutterInit, unsigned int overlapInit,
-          unsigned int patternInit, float apetureInit);
+  Sampler(unsigned int minSamples, unsigned int maxSamples, float shutterInit, float apetureInit, unsigned int lightsInit,
+          unsigned int patternInit);
 
   void nextPixel();
 
   bool isNext();
+
+  bool isMinimumDone();
+
+  void finish();
 
   void getNextSample(sampleTuple *ret);
 
