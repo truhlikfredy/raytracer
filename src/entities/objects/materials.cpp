@@ -59,7 +59,7 @@ MaterialStatic Materials::mirror = {
   .specular  = Color(0.8f),
   .emission  = Color(0.0f),
   .shininess = 77.0f,
-  .reflectivity = 0.0f,
+  .reflectivity = 0.8f,
   .transpancy= 0.0f,
   .indexOfRefraction = 1.0f
 };
