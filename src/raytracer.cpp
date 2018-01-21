@@ -20,10 +20,10 @@ int main() {
   bool quitRequested = false;
 
   Scene scenes[4] = {
+    Lights(),
     Plain(),
     Dof(),
-    Mandelbrot(),
-    Lights()
+    Mandelbrot()
   };
 
   int sceneIndex = 0;

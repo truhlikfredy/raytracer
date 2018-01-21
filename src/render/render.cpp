@@ -43,6 +43,17 @@ Color Render::rayStart(Ray ray, Sphere* objects, LightOmni* light, float frame) 
   return rayFollow(ray, objects, light, frame, 1);
 }
 
+
+void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionIndex, Vector3 &refractionRay) {
+  float dorNormalIncidence = normal % incidentVec;
+  float k = 1.f - refractionIndex * refractionIndex * (1.f - dorNormalIncidence * dorNormalIncidence);
+  if (k < 0.f) {
+    refractionRay = Vector3();
+  } else {
+    refractionRay = incidentVec * refractionIndex - (refractionIndex * dorNormalIncidence + sqrtf(k));
+  }
+}
+
 Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration) {
   Color   color(0.0f);
 
@@ -55,6 +66,7 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
   int smallestObjectIndex = -1;
   Vector3 smallestHitPoint;
 
+  // Find closest collision
   for (int i = 0; i< scene->nObjects; i++){
     Vector3 hitPoint;
     Sphere object = objects[i];
@@ -71,7 +83,7 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
     }
   }
 
-  // Only shade the winning object
+  // Only shade the closes collision
   if (smallestObjectIndex >= 0) {
     Sphere object = objects[smallestObjectIndex];
 
@@ -79,7 +91,7 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
     Vector3 hitNormal = object ^smallestHitPoint;
     Vector3 hitReflected = ray.direction - (hitNormal * 2 * (ray.direction % hitNormal));
     Vector3 hitLight = ~Vector3(light->center - smallestHitPoint);
-    Vector3 hitLight2 = ~Vector3(smallestHitPoint - light->center);
+    //Vector3 hitLight = ~Vector3(smallestHitPoint - light->center);
 
     MaterialStatic hitMaterial = object.materialFn(smallestHitPoint, frame);
 
@@ -87,12 +99,26 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
     float specular = fmaxf(0, hitLight % hitReflected);
 
 
+    color = Color();
+
+    if (hitMaterial.transpancy != 0.0f) {
+      Vector3 hitRefracted;
+      refract(ray.direction, hitNormal, hitMaterial.indexOfRefraction, hitRefracted);
+
+      color = rayFollow(Ray(smallestHitPoint, hitRefracted), objects, light, frame, iteration +1) * hitMaterial.transpancy;
+    }
+
+    if (hitMaterial.reflectivity != 0.0f) {
+      color = color + rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1) * hitMaterial.reflectivity;
+    }
+
+
     // diffuse = similarity (dot product) of hitLight and hitNormal
     // https://youtu.be/KDHuWxy53uM
     // And use the diffuse / specular only when they are positive
     // shadeOfTheRay = specular + diffuse + ambient
     // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-    color = Color(
+    color = color + Color(
       light->color * powf(specular, hitMaterial.shininess) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
 
     for (int j = 0; j < scene->nObjects; j++) {
@@ -114,12 +140,9 @@ void Render::renderPartialWindow(float frame, windowType window) {
   Sampler sampler(SAMPLING_MIN, SAMPLING_MAX, scene->camera.shutterSpeed, scene->camera.apeture, scene->nLights, frame);
 
   Sphere    *objects = new Sphere[scene->nObjects];
-  //LightOmni *lights  = new LightOmni[scene->nLights];
   LightOmni light;
   sampleTuple sample;
 
-
-  // printf("%f \r\n",frame);
   for (int y = window.yStart; y < window.yEnd; y++) {
     for (int x = window.xStart; x < window.xEnd; x++) {
       unsigned int colors = 0;

@@ -8,7 +8,7 @@
 
 #define SEGMENTS 1  // how many partitions the screen should be split
 #define SAMPLING_MIN 3
-#define SAMPLING_MAX 9
+#define SAMPLING_MAX 6
 #define MAX_BOUNCES 3
 
 #include "../entities/lights/lightOmni.h"
@@ -38,6 +38,7 @@ private:
 
   windowType getThreadWindow(int thread);
 
+  void refract(Vector3 &incidentVec, Vector3 &normal, float refractionIndex, Vector3 &refractionRay);
 
   Color rayStart(Ray ray, Sphere* objects, LightOmni* light, float frame);
 
