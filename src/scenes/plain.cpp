@@ -45,7 +45,7 @@ Plain::Plain(): Scene(2, 2) {
           .specular = Color(0.2f),
           .emission = Color(0.0),
           .shininess = point.z,
-          .reflectivity = 0.0f,
+          .reflectivity = 0.5f,
           .transparency = 0.0f
         };
       };
