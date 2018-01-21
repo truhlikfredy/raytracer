@@ -16,6 +16,14 @@ Lights::Lights(): Scene(2, 3) {
     .shutterSpeed = 0.0f
   };
 
+  const MaterialStatic squares[6] = {
+    Materials::green,
+    Materials::blue,
+    Materials::lightGray,
+    Materials::indigo,
+    Materials::yellow,
+    Materials::red
+  };
 
   lights[0] = LightOmniGen([](float frame) {
     const float lightRotate = (M_PI * frame) / 31;
@@ -33,17 +41,19 @@ Lights::Lights(): Scene(2, 3) {
   });
 
 
-  objects[0] = SphereGen([](float frame) {
+  objects[0] = SphereGen([squares](float frame) {
     std::function<MaterialStatic(Vector3 point, float frame)> materiaFn =
-      [](Vector3 point, float frame) {
-      if (((((int)point.x+400)/15) % 2) ^ (((int)point.z+400)/15) % 2) {
-        return Materials::white;
-      }
-      else {
-        return Materials::mirror;
-      }
+      [squares](Vector3 point, float frame) {
+        const int x = (((int)point.x+400)/15);
+        const int z = (((int)point.z+400)/15);
 
-//        return Materials::white;
+        if ((x % 2) ^ (z % 2)) {
+          return squares[(x+z * 6) % 6];
+          //return Materials::white;
+        }
+        else {
+          return Materials::mirror;
+        }
       };
     return Sphere(Vector3(0.0f, 510.0f, 100.0f), 500.0f, materiaFn);
   });

@@ -35,6 +35,13 @@ public:
   static MaterialStatic yellow;
   static MaterialStatic white;
   static MaterialStatic green;
+  static MaterialStatic indigo;
+  static MaterialStatic blue;
+  static MaterialStatic violet;
+  static MaterialStatic black;
+  static MaterialStatic mediumGray;
+  static MaterialStatic lightGray;
+
 
   // materials
   static MaterialStatic mirror;
