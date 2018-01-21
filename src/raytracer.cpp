@@ -9,6 +9,7 @@
 #include "scenes/plain.h"
 #include "scenes/dof.h"
 #include "scenes/mandelbrot.h"
+#include "scenes/lights.h"
 
 template<size_t SIZE, class T> inline size_t array_size(T (&arr)[SIZE]) {
   return SIZE;
@@ -18,10 +19,11 @@ int main() {
   Display *mainWindow = new Display();
   bool quitRequested = false;
 
-  Scene scenes[3] = {
+  Scene scenes[4] = {
     Plain(),
     Dof(),
-    Mandelbrot()
+    Mandelbrot(),
+    Lights()
   };
 
   int sceneIndex = 0;

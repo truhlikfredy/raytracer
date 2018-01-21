@@ -29,6 +29,7 @@ struct sample2D {
 class Sampler {
 
 private:
+  unsigned int pattern;
   unsigned int patternSpace;
   unsigned int patternTime;
   unsigned int patternLens;

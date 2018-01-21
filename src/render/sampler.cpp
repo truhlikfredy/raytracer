@@ -23,7 +23,7 @@ Sampler::Sampler(unsigned int minSamples, unsigned int maxSamples, float shutter
   this->shutter      = shutterInit;     // Speed of the shutter of the camer
   this->apeture      = apetureInit;
   this->lights       = lightsInit;
-  //this->patternSpace = patternInit;   // Initial seed value
+  this->pattern      = patternInit;     // Initial seed value
 
 }
 
@@ -75,7 +75,11 @@ void Sampler::getNextSample(sampleTuple *ret) {
   ret->lightx = 0.0f;
   ret->lighty = 0.0f;
 
-  if (indexMaximum == 1 ) return;
+  if   (indexMaximum == 1 ) {
+    // ret->light = (int)(pattern) % lights;   // will strobe between light sourcesf
+    return;
+  }
+
 
   vanDerCoruptSobol2(origIndex, patternSpace, &sample);
   ret->spaceX = sample.x;
