@@ -8,7 +8,7 @@
 
 #define SEGMENTS 1  // how many partitions the screen should be split
 #define SAMPLING_MIN 3
-#define SAMPLING_MAX 8
+#define SAMPLING_MAX 9
 #define MAX_BOUNCES 3
 
 #include "../entities/lights/lightOmni.h"
@@ -30,12 +30,6 @@ struct windowType {
 #include "../scenes/scene.h"
 
 
-struct DynamicPixel {
-  Color    color;
-  unsigned count;
-};
-
-
 class Render {
 private:
   unsigned int width;
@@ -55,7 +49,7 @@ private:
 
 public:
   unsigned int threadsMax = 1;
-  DynamicPixel* dynamicPixels;
+  Color* dynamicPixels;
 
   Render(int width, int height);
 

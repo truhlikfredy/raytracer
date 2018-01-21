@@ -15,7 +15,7 @@ Render::Render(int widthInit, int heightInit) {
   scene         = nullptr;
   width         = widthInit;
   height        = heightInit;
-  dynamicPixels = new DynamicPixel[widthInit * heightInit];
+  dynamicPixels = new Color[widthInit * heightInit];
   threadsMax    = std::thread::hardware_concurrency();
 }
 
@@ -44,68 +44,70 @@ Color Render::rayStart(Ray ray, Sphere* objects, LightOmni* light, float frame) 
 }
 
 Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration) {
-  Color   color;
-  Vector3 hitPoint;
+  Color   color(0.0f);
 
   if (iteration > MAX_BOUNCES) {
     return Color(0.0f);
   }
 
-//  Entity* item = &staticScene.light.front();
-
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
   float smallestHitDistance = FLT_MAX;  // set it to maximum at first
-  //int smallestObject = 0;
+  int smallestObjectIndex = -1;
+  Vector3 smallestHitPoint;
 
   for (int i = 0; i< scene->nObjects; i++){
+    Vector3 hitPoint;
     Sphere object = objects[i];
-    //Object* object = (Object*)(&item);
-    //Entity* it = &item;
-
-    //Sphere *object = static_cast<Sphere *>(it);
     float hitDistance = object.detectHit(ray, hitPoint);
 
     if (hitDistance != -1.0f) {
       // The ray hit the sphere
       if (smallestHitDistance > hitDistance) {
-        // It's the shortest hit yet, let's calculate it's color by shading it depending on the bounce angle
+        // It's the shortest hit yet, let's save it, if it will win then calculate it's color by shading it depending on the bounce angle
+        smallestObjectIndex = i;
         smallestHitDistance = hitDistance;
-        // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
-        Vector3 hitNormal    = object ^ hitPoint;
-        Vector3 hitReflected = ray.direction - (hitNormal * 2 *(ray.direction % hitNormal));
-        Vector3 hitLight     = ~Vector3(light->center - hitPoint);
-        Vector3 hitLight2     = ~Vector3(hitPoint - light->center);
+        smallestHitPoint = hitPoint;
+      }
+    }
+  }
 
-        MaterialStatic hitMaterial = object.materialFn(hitPoint, frame);
+  // Only shade the winning object
+  if (smallestObjectIndex >= 0) {
+    Sphere object = objects[smallestObjectIndex];
 
-        float   diffuse      = fmaxf(0, hitLight % hitNormal); // how similar are they?
-        float   specular     = fmaxf(0, hitLight % hitReflected);
+    // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
+    Vector3 hitNormal = object ^smallestHitPoint;
+    Vector3 hitReflected = ray.direction - (hitNormal * 2 * (ray.direction % hitNormal));
+    Vector3 hitLight = ~Vector3(light->center - smallestHitPoint);
+    Vector3 hitLight2 = ~Vector3(smallestHitPoint - light->center);
+
+    MaterialStatic hitMaterial = object.materialFn(smallestHitPoint, frame);
+
+    float diffuse = fmaxf(0, hitLight % hitNormal); // how similar are they?
+    float specular = fmaxf(0, hitLight % hitReflected);
 
 
-        // diffuse = similarity (dot product) of hitLight and hitNormal
-        // https://youtu.be/KDHuWxy53uM
-        // And use the diffuse / specular only when they are positive
-        // shadeOfTheRay = specular + diffuse + ambient
-        // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-        color = Color(light->color * powf(specular, hitMaterial.shininess) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
+    // diffuse = similarity (dot product) of hitLight and hitNormal
+    // https://youtu.be/KDHuWxy53uM
+    // And use the diffuse / specular only when they are positive
+    // shadeOfTheRay = specular + diffuse + ambient
+    // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
+    color = Color(
+      light->color * powf(specular, hitMaterial.shininess) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
 
-        for (int j = 0; j< scene->nObjects; j++) {
-          // test all objects if they are casting shadow from this light
-          if (j != i) {  // can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
-            Sphere shadow = objects[j];
-            if (shadow.detectHit(Ray(hitPoint, hitLight)) != -1) {
-              color = Color(hitMaterial.ambient);
-              break;
-            }
-          }
+    for (int j = 0; j < scene->nObjects; j++) {
+      // test all objects if they are casting shadow from this light
+      if (j != smallestObjectIndex) {  // can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
+        Sphere shadow = objects[j];
+        if (shadow.detectHit(Ray(smallestHitPoint, hitLight)) != -1) {
+          color = Color(hitMaterial.ambient);
+          break;
         }
-
       }
     }
   }
 
   return color;
-
 }
 
 void Render::renderPartialWindow(float frame, windowType window) {
@@ -132,60 +134,32 @@ void Render::renderPartialWindow(float frame, windowType window) {
 
         Vector3 start = scene->camera.possition + Vector3(sample.lensX, sample.lensY, 0);
         Vector3 lookAt = scene->camera.lookAt;
-        //float focalDistance = Vector3(lookAt - start).lenght();
-        //float halfWidth = focalDistance * tanf((90.0f/180)*3.14/2);
-        //Vector3 up(0.0f, 1.0f, 0.0f);
         Vector3 down(0.0f, -1.0f, 0.0f);
         Vector3 right = (~Vector3(lookAt & down))*320;
         Vector3 up2 = (~Vector3(lookAt & right))*200;
-        //Vector3 U = Vector3(~lookAt & up);
-        //Vector3 V = ~Vector3(U & ~lookAt);
-        //U = ~U;
-        //float aspectRatio = (float)height/width;
-        //float viewPlaneHalfHeight = aspectRatio * halfWidth;
-        //Vector3 viewBottomLeft = lookAt - V*viewPlaneHalfHeight - U*halfWidth;
-        //Vector3 xInc = (U * 2 * halfWidth) / width;
-        //Vector3 yInc = (U * 2 * viewPlaneHalfHeight) / height;
-        //Vector3 dest2 = viewBottomLeft + xInc * x + yInc * y;
 
         float recenterX = ( x + sample.spaceX - width/2.0f) / ( 2.0 * width);
         float recenterY = ( y + sample.spaceY - height/2.0f) / ( 2.0 * height);
 
         Vector3 dest3 = ~Vector3((right * recenterX) + (up2 * recenterY) + lookAt - start);
 
-
-        //Vector3 dest  = ~Vector3(x + sample.spaceX - width / 2.0f, y + sample.spaceY - height / 2.0f, 90);
-
         Ray rayForThisPixel(start,dest3);
-//        Ray rayForThisPixel(start,~Vector3(dest3-start));
-
-//        light = scene->lights[sample.light].evaluateFn(frame);
-//        if (sample.light != 0) {
-//          printf("%d \n", sample.light);
-//
-//        }
         light = scene->lights[sample.light].evaluateFn(frame);
         lastColor = ~rayStart(rayForThisPixel, objects, &light, frame + sample.time);
 
-        if (sampler.isMinimumDone()) {
-          Color previousAverage(totalColor / colors);
-          Color currentAverage((totalColor + lastColor) / (colors+1));
-          if (currentAverage.sum() == 0) {
-            sampler.finish();
-          }
-//          if (previousAverage.difference(currentAverage) < 0.1f) {
-//            //printf("stopped %d \n",colors);
-//            sampler.finish();
-//          }
-//          if ( fabsf(previousAverage.sum() - currentAverage.sum()) < 0.001f) {
-//            sampler.finish();
-//          }
-        }
         totalColor = totalColor + lastColor;    // TODO
         colors++;
 
+        if (sampler.index == sampler.indexMinimum) {
+          // detect black parts of the scene after few sample rays
+          Color currentAverage(totalColor/ colors);
+          if (currentAverage.sum() == 0) {
+            sampler.finish();
+          }
+        }
+
       }
-      dynamicPixels[x + (y * width)].color = totalColor / colors;
+      dynamicPixels[x + (y * width)] = totalColor / colors;
 
     }
   }
@@ -195,8 +169,7 @@ void Render::renderPartialWindow(float frame, windowType window) {
 
 void Render::clearDynamicPixels() {
   for (int i = 0; i < height * width; i++) {
-    dynamicPixels[i].color = Color();
-    dynamicPixels[i].count = 0;
+    dynamicPixels[i] = Color();
   }
 }
 
