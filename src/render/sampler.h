@@ -39,13 +39,6 @@ private:
 
   unsigned int pseudoShuffle(unsigned int index, unsigned int maximum);
 
-  unsigned int permute(unsigned int input, unsigned int maximum, unsigned int pattern);
-
-  float randomFloat(unsigned int maximum, unsigned int pattern);
-
-  sample2D multiJitter(unsigned int sample, unsigned int width, unsigned int height,
-                       unsigned int pattern);
-
 public:
   Sampler(unsigned int spaceInt, unsigned int timeInt, float shutterInit, unsigned int overlapInit,
           unsigned int patternInit, float apetureInit);
@@ -56,15 +49,15 @@ public:
 
   void getNextSample(sampleTuple *ret);
 
-  float radicalInverse(int sampleIndex, int base);
+  static float radicalInverse(int sampleIndex, int base);
 
-  float vanDerCorput(unsigned int sampleIndex, unsigned int pattern);
+  static float vanDerCorput(unsigned int sampleIndex, unsigned int pattern);
 
-  float foldedRadicalInverse(int sampleIndex, int base);
+  static float foldedRadicalInverse(int sampleIndex, int base);
 
-  float sobol2(unsigned int sampleIndex, unsigned int pattern);
+  static float sobol2(unsigned int sampleIndex, unsigned int pattern);
 
-  sample2D vanDerCoruptSobol2(unsigned int sampleIndex, unsigned int pattern);
+  static void vanDerCoruptSobol2(unsigned int sampleIndex, unsigned int pattern, sample2D *sample);
 
 };
 

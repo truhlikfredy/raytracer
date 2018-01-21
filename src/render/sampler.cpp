@@ -55,7 +55,7 @@ bool Sampler::isNext() {
  */
 void Sampler::getNextSample(sampleTuple *ret) {
   unsigned int oldIndex = index++;
-  //sample2D sample;
+  sample2D sample;
 
   ret->spaceX = 0.0f;
   ret->spaceY = 0.0f;
@@ -66,9 +66,9 @@ void Sampler::getNextSample(sampleTuple *ret) {
 
   if (space == 1 ) return;
 
-  const sample2D spaceSample = vanDerCoruptSobol2(index, patternSpace);
-  ret->spaceX = spaceSample.x;
-  ret->spaceY = spaceSample.y;
+  vanDerCoruptSobol2(index, patternSpace, &sample);
+  ret->spaceX = sample.x;
+  ret->spaceY = sample.y;
 
   if (time == 1) return;
 
@@ -76,28 +76,14 @@ void Sampler::getNextSample(sampleTuple *ret) {
 
   if (apeture == 0.0f) return;
 
-  const sample2D lensSample = vanDerCoruptSobol2(index, patternLens);
-  ret->lensX = lensSample.x * apeture;
-  ret->lensY = lensSample.y * apeture;
-  // the lens is sampled in a asqaure instead of circle/aperture shape, proper implementation
+  vanDerCoruptSobol2(index, patternLens, &sample);
+  ret->lensX = sample.x * apeture;
+  ret->lensY = sample.y * apeture;
+  // the lens is sampled in a sqaure instead of circle/aperture shape, proper implementation
   // of the lens shape is not worth the overhead it will cause and not noticable quality gain,
   // still it needs magnitude more rays and the sampling strategy will not save from that
 }
 
-/**
- * Decide on the resulting sample, where sample < width*height
- */
-sample2D Sampler::multiJitter(unsigned int sample, unsigned int width, unsigned int height,
-                                             unsigned int pattern) {
-
-  const int staticX = permute(sample % width, width,  pattern * 0xa511e9b3);
-  const int staticY = permute(sample / width, height, pattern * 0x63d83595);
-  const float jitterX = randomFloat(sample, pattern * 0xa399d265);
-  const float jitterY = randomFloat(sample, pattern * 0x711ad6a5);
-
-  return {(sample % width + (staticY + jitterX) / height) / width,
-          (sample / width + (staticX + jitterY) / width) / height};
-}
 
 /**
  * pseudoShuffle is meant to be used to map between two different dimensions, e.g. space dimension has 9 entries and
@@ -108,59 +94,6 @@ sample2D Sampler::multiJitter(unsigned int sample, unsigned int width, unsigned 
 unsigned int Sampler::pseudoShuffle(unsigned int index, unsigned int maximum) {
   return ((index ^ 0x16) % maximum);
 //  return (index % maximum);
-}
-
-
-/**
- * Permutate between the pattern combinations.
- */
-unsigned int Sampler::permute(unsigned int input, unsigned int maximum, unsigned int pattern) {
-  unsigned w = maximum - 1;
-  w |= w >> 1;
-  w |= w >> 2;
-  w |= w >> 4;
-  w |= w >> 8;
-  w |= w >> 16;
-  do {
-    input ^= pattern;
-    input *= 0xe170893d;
-    input ^= pattern >> 16;
-    input ^= (input & w) >> 4;
-    input ^= pattern >> 8;
-    input *= 0x0929eb3f;
-    input ^= pattern >> 23;
-    input ^= (input & w) >> 1;
-    input *= 1 | pattern >> 27;
-    input *= 0x6935fa69;
-    input ^= (input & w) >> 11;
-    input *= 0x74dcb303;
-    input ^= (input & w) >> 2;
-    input *= 0x9e501cc3;
-    input ^= (input & w) >> 2;
-    input *= 0xc860a3df;
-    input &= w;
-    input ^= input >> 5;
-  } while (input >= maximum);
-  return ((input + pattern) % maximum);
-}
-
-
-/**
- * Get pseudorandom number between 0 and maximum with a specific pattern (seed)
- */
-float Sampler::randomFloat(unsigned int maximum, unsigned int pattern) {
-  maximum ^= pattern;
-  maximum ^= maximum >> 17;
-  maximum ^= maximum >> 10;
-  maximum *= 0xb36534e5;
-  maximum ^= maximum >> 12;
-  maximum ^= maximum >> 21;
-  maximum *= 0x93fc4795;
-  maximum ^= 0xdf6e307f;
-  maximum ^= maximum >> 17;
-  maximum *= 1 | pattern >> 18;
-
-  return (maximum * (1.0f / 4294967808.0f));
 }
 
 
@@ -213,10 +146,9 @@ float Sampler::sobol2(unsigned int sampleIndex, unsigned int pattern) {
   return (float)pattern / (float)0x100000000LL;
 }
 
-sample2D Sampler::vanDerCoruptSobol2(unsigned int sampleIndex, unsigned int pattern) {
-  return {
-    .x = vanDerCorput(sampleIndex, pattern),
-    .y = sobol2(sampleIndex, pattern)
-  };
+
+void Sampler::vanDerCoruptSobol2(unsigned int sampleIndex, unsigned int pattern, sample2D *sample) {
+  sample->x = vanDerCorput(sampleIndex, pattern);
+  sample->y = sobol2(sampleIndex, pattern);
 }
 
