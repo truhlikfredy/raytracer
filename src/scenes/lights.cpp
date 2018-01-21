@@ -20,14 +20,14 @@ Lights::Lights(): Scene(2, 2) {
   lights[0] = LightOmniGen([](float frame) {
     const float lightRotate = (M_PI * frame) / 31;
     Vector3 center(320 * cosf(lightRotate), 10 * (sinf(lightRotate) - 20 ), 20);
-    Color color(0.0f, 0.2f, 0.8f);
+    Color color(0.1f, 0.0f, 0.7f);
 
     return LightOmni(center, color);
   });
 
   lights[1] = LightOmniGen([](float frame) {
     Vector3 center(300, -50, 200);
-    Color color(0.0f, 0.9f, 0.0f);
+    Color color(0.0f, 0.8f, 0.0f);
 
     return LightOmni(center, color);
   });
@@ -36,9 +36,16 @@ Lights::Lights(): Scene(2, 2) {
   objects[0] = SphereGen([](float frame) {
     std::function<MaterialStatic(Vector3 point, float frame)> materiaFn =
       [](Vector3 point, float frame) {
+      if (((((int)point.x+400)/15) % 2) ^ (((int)point.z+400)/15) % 2) {
         return Materials::white;
+      }
+      else {
+        return Materials::mirror;
+      }
+
+//        return Materials::white;
       };
-    return Sphere(Vector3(0.0f, 1510.0f, 100.0f), 1500.0f, materiaFn);
+    return Sphere(Vector3(0.0f, 510.0f, 100.0f), 500.0f, materiaFn);
   });
 
 
