@@ -8,7 +8,7 @@
 #include "../entities/lights/lightOmni.h"
 #include "../entities/objects/sphere.h"
 
-Plain::Plain(): Scene(1, 2) {
+Plain::Plain(): Scene(2, 2) {
 
   camera = {
     .possition    = Vector3(0.0f, 0.0f,  0.0f),
@@ -22,6 +22,13 @@ Plain::Plain(): Scene(1, 2) {
     const float lightRotate = (M_PI * frame) / 31;
     Vector3 center(320 * cosf(lightRotate), 0.6 * 200 * (sinf(lightRotate) - 0.5), 20);
     Color color(0.0f, 0.2f, 0.8f);
+
+    return LightOmni(center, color);
+  });
+
+  lights[1] = LightOmniGen([](float frame) {
+    Vector3 center(300, -50, 200);
+    Color color(0.0f, 0.9f, 0.0f);
 
     return LightOmni(center, color);
   });

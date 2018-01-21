@@ -36,14 +36,14 @@ windowType Render::getThreadWindow(int thread) {
 
 
 
-Color Render::rayStart(Ray ray, Sphere* objects, LightOmni* lights, float frame) {
-  scene->evaluateLights(lights, frame);
+Color Render::rayStart(Ray ray, Sphere* objects, LightOmni* light, float frame) {
+  //scene->evaluateLights(light, frame);
   scene->evaluateObjects(objects, frame);
 
-  return rayFollow(ray, objects, lights, frame, 1);
+  return rayFollow(ray, objects, light, frame, 1);
 }
 
-Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* lights, float frame, int iteration) {
+Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration) {
   Color   color;
   Vector3 hitPoint;
 
@@ -51,9 +51,8 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* lights, float frame
     return Color(0.0f);
   }
 
-//  Entity* item = &staticScene.lights.front();
+//  Entity* item = &staticScene.light.front();
 
-  LightOmni light = lights[0];
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
   float smallestHitDistance = FLT_MAX;  // set it to maximum at first
   //int smallestObject = 0;
@@ -74,8 +73,8 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* lights, float frame
         // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
         Vector3 hitNormal    = object ^ hitPoint;
         Vector3 hitReflected = ray.direction - (hitNormal * 2 *(ray.direction % hitNormal));
-        Vector3 hitLight     = ~Vector3(light.center - hitPoint);
-        Vector3 hitLight2     = ~Vector3(hitPoint - light.center);
+        Vector3 hitLight     = ~Vector3(light->center - hitPoint);
+        Vector3 hitLight2     = ~Vector3(hitPoint - light->center);
 
         MaterialStatic hitMaterial = object.materialFn(hitPoint, frame);
 
@@ -88,7 +87,7 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* lights, float frame
         // And use the diffuse / specular only when they are positive
         // shadeOfTheRay = specular + diffuse + ambient
         // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-        color = Color(light.color * powf(specular, hitMaterial.shininess) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
+        color = Color(light->color * powf(specular, hitMaterial.shininess) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
 
         for (int j = 0; j< scene->nObjects; j++) {
           // test all objects if they are casting shadow from this light
@@ -110,11 +109,11 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* lights, float frame
 }
 
 void Render::renderPartialWindow(float frame, windowType window) {
-  Sampler sampler(ANTI_ALIASING, ANTI_ALIASING * ANTI_ALIASING, scene->camera.shutterSpeed, 0, frame, scene->camera.apeture);
+  Sampler sampler(SAMPLING_MIN, SAMPLING_MAX, scene->camera.shutterSpeed, scene->camera.apeture, scene->nLights, frame);
 
   Sphere    *objects = new Sphere[scene->nObjects];
-  LightOmni *lights  = new LightOmni[scene->nLights];
-
+  //LightOmni *lights  = new LightOmni[scene->nLights];
+  LightOmni light;
   sampleTuple sample;
 
   // printf("%f \r\n",frame);
@@ -122,7 +121,7 @@ void Render::renderPartialWindow(float frame, windowType window) {
     for (int x = window.xStart; x < window.xEnd; x++) {
       sampler.nextPixel();
       while (sampler.isNext()) {
-         sampler.getNextSample(&sample);
+        sampler.getNextSample(&sample);
 
         Vector3 start = scene->camera.possition + Vector3(sample.lensX, sample.lensY, 0);
         Vector3 lookAt = scene->camera.lookAt;
@@ -152,7 +151,14 @@ void Render::renderPartialWindow(float frame, windowType window) {
 
         Ray rayForThisPixel(start,dest3);
 //        Ray rayForThisPixel(start,~Vector3(dest3-start));
-        Color shade = rayStart(rayForThisPixel, objects, lights, frame + sample.time);
+
+//        light = scene->lights[sample.light].evaluateFn(frame);
+//        if (sample.light != 0) {
+//          printf("%d \n", sample.light);
+//
+//        }
+        light = scene->lights[sample.light].evaluateFn(frame);
+        Color shade = rayStart(rayForThisPixel, objects, &light, frame + sample.time);
         shade = ~shade;
 
         dynamicPixels[x + (y * width)].color = dynamicPixels[x + (y * width)].color + shade;

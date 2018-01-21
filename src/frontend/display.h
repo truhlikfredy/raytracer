@@ -21,7 +21,7 @@ private:
   sf::Sprite       sprite;
   sf::RenderWindow window;
 
-  void displaySamplerPattern(int width, int height, float frame);
+  void displaySamplerPattern(float frame);
 
 public:
   bool showSamplerPatterns;

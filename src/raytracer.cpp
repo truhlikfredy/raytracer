@@ -63,9 +63,20 @@ int main() {
   }
 
 //  Sampler sampler = Sampler(2,2,1.0f,0.0f,1,0.0f);
-//
-//  for (int i = 0; i < 32; i++) {
-//    printf("%d = %f  %f\r\n", i, sampler.radicalInverse(i,2), sampler.foldedRadicalInverse(i, 2) , sampler.vanDerCorput(i, 0x2313434334), sampler.sobol2(i, 0x23134343343));
+
+//  unsigned int pattern = rand()+3221298787;
+//  int lights[8] = { 0, 0, 0};
+//  for (int i = 0; i < 18; i++) {
+//    int light = (int)(Sampler::sobol2(i, pattern) * 2);
+//    lights[light]++;
+//    printf("%d = %d (", i, light); //, sampler.foldedRadicalInverse(i, 2) , sampler.vanDerCorput(i, 0x2313434334), sampler.sobol2(i, 0x23134343343)
+//    for (int j = 0; j < 8; j++) {
+//      printf("%d=%d ", j, lights[j]);
+//    }
+//    printf(")\n");
 //  }
+
+//  printf("---------- \n");
+
   return 0;
 }
