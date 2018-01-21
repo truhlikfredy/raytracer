@@ -72,6 +72,8 @@
 
 ![multiple lights = multiple shadows](/images/screenshot08.png)
 
+![chekerboard with DOF effect and multiple lights](/images/screenshot09.png)
+
 ![Screenshot of a sphere under extreme lens settings](/images/screenshot01.png)
 
 # References
