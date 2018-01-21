@@ -14,7 +14,10 @@ MaterialStatic Materials::red = {
   .diffuse   = Color(1.0f, 0.0f, 0.0f),
   .specular  = Color(0.0225f),
   .emission  = Color(0.0f),
-  .shininess = 12.8f
+  .shininess = 12.8f,
+  .reflectivity = 0.0f,
+  .transpancy= 0.0f,
+  .indexOfRefraction = 1.0f
 };
 
 MaterialStatic Materials::yellow = {
@@ -22,7 +25,10 @@ MaterialStatic Materials::yellow = {
   .diffuse   = Color(1.0f,    0.964706f, 0.0f),
   .specular  = Color(0.0225f, 0.0225f,   0.0225f),
   .emission  = Color(0.0f),
-  .shininess = 12.8f
+  .shininess = 12.8f,
+  .reflectivity = 0.0f,
+  .transpancy= 0.0f,
+  .indexOfRefraction = 1.0f
 };
 
 MaterialStatic Materials::white= {
@@ -30,7 +36,10 @@ MaterialStatic Materials::white= {
   .diffuse   = Color(0.992157f, 0.992157f, 0.992157f),
   .specular  = Color(0.0225f,   0.0225f,   0.0225f),
   .emission  = Color(0.0f),
-  .shininess = 12.8f
+  .shininess = 12.8f,
+  .reflectivity = 0.0f,
+  .transpancy= 0.0f,
+  .indexOfRefraction = 1.0f
 };
 
 MaterialStatic Materials::green= {
@@ -38,7 +47,10 @@ MaterialStatic Materials::green= {
   .diffuse   = Color(0.0f,    1.0f,    0.0f),
   .specular  = Color(0.0225f, 0.0225f, 0.0225f),
   .emission  = Color(0.0f),
-  .shininess = 12.8f
+  .shininess = 12.8f,
+  .reflectivity = 0.5f,
+  .transpancy= 0.0f,
+  .indexOfRefraction = 1.0f
 };
 
 MaterialStatic Materials::mirror = {
@@ -46,7 +58,10 @@ MaterialStatic Materials::mirror = {
   .diffuse   = Color(0.1f),
   .specular  = Color(0.8f),
   .emission  = Color(0.0f),
-  .shininess = 77.0f
+  .shininess = 77.0f,
+  .reflectivity = 0.0f,
+  .transpancy= 0.0f,
+  .indexOfRefraction = 1.0f
 };
 
 MaterialStatic Materials::brass= {
@@ -54,7 +69,10 @@ MaterialStatic Materials::brass= {
   .diffuse   = Color(0.780392f, 0.568627f, 0.113725f),
   .specular  = Color(0.992157f, 0.941176f, 0.807843f),
   .emission  = Color(0.0f),
-  .shininess = 27.8974f
+  .shininess = 27.8974f,
+  .reflectivity = 0.9f,
+  .transpancy= 0.0f,
+  .indexOfRefraction = 1.50f
 };
 
 MaterialStatic Materials::pollishedCopper= {
@@ -62,5 +80,8 @@ MaterialStatic Materials::pollishedCopper= {
   .diffuse   = Color(0.5508f,   0.2118f,   0.066f),
   .specular  = Color(0.580594f, 0.223257f, 0.0695701f),
   .emission  = Color(0.0f),
-  .shininess = 51.2f
+  .shininess = 51.2f,
+  .reflectivity = 0.0f,
+  .transpancy= 0.0f,
+  .indexOfRefraction = 1.0f
 };
