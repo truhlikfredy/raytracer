@@ -81,11 +81,11 @@ void Sampler::getNextSample(sampleTuple *ret) {
   ret->spaceX = sample.x;
   ret->spaceY = sample.y;
 
-  if (time != 1) {
+  if (shutter > 0) {
     ret->time   = vanDerCorput(origIndex, patternTime) * shutter;
   }
 
-  if (apeture != 0.0f) {
+  if (apeture > 0.0f) {
     vanDerCoruptSobol2(origIndex, patternLens, &sample);
     ret->lensX = sample.x * apeture;
     ret->lensY = sample.y * apeture;
@@ -95,7 +95,7 @@ void Sampler::getNextSample(sampleTuple *ret) {
   }
 
   if (lights > 0) {
-    ret->light = (int)(sobol2(origIndex, patternLight) * lights);
+    ret->light = (int)(sobol2(origIndex, patternLight) * lights) % lights;
   }
 
   vanDerCoruptSobol2(origIndex, patternLightSpace, &sample);

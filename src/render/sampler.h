@@ -38,7 +38,6 @@ private:
   unsigned int indexMinimum;
   unsigned int indexMaximum;
   unsigned int lights;
-  unsigned int time;
   float apeture;
   float shutter;
 
