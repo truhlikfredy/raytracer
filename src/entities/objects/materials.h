@@ -11,15 +11,15 @@
 #include "../../types/color.h"
 
 struct MaterialStatic {
+  bool  castsShadows;
   Color ambient;
   Color diffuse;
   Color specular;
   Color emission;
   float shininess;
   float reflectivity;
-  float transpancy;
-  float indexOfRefraction;
-  // TODO: castShadows bool, transparency, reflectancy, indexOfRefraction
+  float transparency;
+  float refractiveIndex;
 };
 
 struct uv {

@@ -76,11 +76,14 @@ Mandelbrot::Mandelbrot(): Scene(1, 1) {
       }
 
       return MaterialStatic{
+        .castsShadows = true,
         .ambient = glow,
         .diffuse = fractal,
         .specular = Color(0.2f),
         .emission = Color(0.0),
-        .shininess = 5
+        .shininess = 5,
+        .reflectivity = 0.0f,
+        .transparency = 0.0f
       };
     };
     return Sphere(Vector3(0.0f, 0.0f, 100.0f), 57.0f, materiaFn);

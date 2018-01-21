@@ -13,7 +13,7 @@ Lights::Lights(): Scene(2, 3) {
     .possition    = Vector3(0.0f, 0.0f,  -20.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 30.0f),
     .apeture      = 0.0f,
-    .shutterSpeed = 0.5f
+    .shutterSpeed = 0.0f
   };
 
 
