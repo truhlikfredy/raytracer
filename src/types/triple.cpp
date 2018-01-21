@@ -11,7 +11,7 @@
 
 
 Triple::Triple() {
-  x = y = z = 0;
+  x = y = z = 0.0f;
 }
 
 Triple::Triple(float init) {
