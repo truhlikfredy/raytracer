@@ -77,6 +77,8 @@ float Sphere::detectHit(Ray ray, Vector3 &hitPoint) {
 uv Sphere::toUv(Vector3 point) {
   // https://gamedev.stackexchange.com/a/114416
   // https://en.wikipedia.org/wiki/UV_mapping
+
+  // TODO minus origin
   point = ~point;
   return {
     .u = atan2f(point.x, point.z) / (2 * M_PI) + 0.5f,
