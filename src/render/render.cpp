@@ -55,10 +55,9 @@ void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionInde
 }
 
 Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration) {
-  Color   color(0.0f);
 
   if (iteration > MAX_BOUNCES) {
-    return Color(0.0f);
+    return Color();
   }
 
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
@@ -99,17 +98,19 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
     float specular = fmaxf(0, hitLight % hitReflected);
 
 
-    color = Color();
+    Color colorBase = Color();
+    Color colorRefract = Color();
+    Color colorReflect = Color();
 
-    if (hitMaterial.transpancy != 0.0f) {
+    if (hitMaterial.transparency != 0.0f) {
       Vector3 hitRefracted;
-      refract(ray.direction, hitNormal, hitMaterial.indexOfRefraction, hitRefracted);
+      refract(ray.direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
 
-      color = rayFollow(Ray(smallestHitPoint, hitRefracted), objects, light, frame, iteration +1) * hitMaterial.transpancy;
+      colorRefract = rayFollow(Ray(smallestHitPoint, hitRefracted), objects, light, frame, iteration +1) * hitMaterial.transparency;
     }
 
     if (hitMaterial.reflectivity != 0.0f) {
-      color = color + rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1) * hitMaterial.reflectivity;
+      colorReflect = rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1) * hitMaterial.reflectivity;
     }
 
 
@@ -118,22 +119,26 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
     // And use the diffuse / specular only when they are positive
     // shadeOfTheRay = specular + diffuse + ambient
     // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-    color = color + Color(
-      light->color * powf(specular, hitMaterial.shininess) + hitMaterial.diffuse * diffuse + hitMaterial.ambient);
+    colorBase = light->color * powf(specular, hitMaterial.shininess) + hitMaterial.diffuse * diffuse + hitMaterial.ambient;
 
     for (int j = 0; j < scene->nObjects; j++) {
       // test all objects if they are casting shadow from this light
-      if (j != smallestObjectIndex) {  // can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
+      if (j != smallestObjectIndex) {
+        // can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
         Sphere shadow = objects[j];
         if (shadow.detectHit(Ray(smallestHitPoint, hitLight)) != -1) {
-          color = Color(hitMaterial.ambient);
-          break;
+          if (shadow.materialFn(hitLight,frame).castsShadows) {
+            colorBase = Color(hitMaterial.ambient);
+            break;
+          }
         }
       }
     }
+
+    return Color(colorBase + colorRefract + colorReflect);
   }
 
-  return color;
+  return Color(0.0f);
 }
 
 void Render::renderPartialWindow(float frame, windowType window) {
