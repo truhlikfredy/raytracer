@@ -6,13 +6,13 @@
 #ifndef RAYTRACER_DISPLAY_H
 #define RAYTRACER_DISPLAY_H
 
-//#define WIDTH  320
-//#define HEIGHT 200
-//#define SCALE 4.0  // display the window bigger than it really is (render low-res while having large window)
+#define WIDTH  320
+#define HEIGHT 200
+#define SCALE 4.0  // display the window bigger than it really is (render low-res while having large window)
 
-#define WIDTH  960
-#define HEIGHT 600
-#define SCALE 1.0  // display the window bigger than it really is (render low-res while having large window)
+//#define WIDTH  960
+//#define HEIGHT 600
+//#define SCALE 1.0  // display the window bigger than it really is (render low-res while having large window)
 
 #include <SFML/Graphics.hpp>
 #include "../render/render.h"

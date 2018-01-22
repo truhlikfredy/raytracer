@@ -174,6 +174,6 @@ MaterialStatic Materials::glass= {
   .shininess       = 96.0f,
   .reflectivity    = 0.2f,
   .transparency    = 0.95f,
-  .refractiveIndex = 1.5f
+  .refractiveIndex = 1.8f
 };
 

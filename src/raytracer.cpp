@@ -29,6 +29,7 @@ int main() {
   int sceneIndex = 0;
 
   scenes[0].frame = 30;
+//  scenes[0].frame = 69;
 
   while (mainWindow->keepLooping() && !quitRequested) {
 
