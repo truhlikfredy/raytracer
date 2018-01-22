@@ -17,9 +17,11 @@ public:
 
   Sphere();
 
-  float detectHit(Ray ray);
+  //float detectHit(Ray ray);
 
   float detectHit(Ray ray, Vector3 &hitPoint);
+
+  float detectHitMax(Ray ray, Vector3 &hitPoint);
 
   static uv toUv(Vector3 point);
 
