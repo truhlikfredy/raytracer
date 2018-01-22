@@ -7,7 +7,7 @@
 #include "lights.h"
 
 
-Lights::Lights(): Scene(2, 3) {
+Lights::Lights(): Scene(2, 4) {
 
   camera = {
     .possition    = Vector3(0.0f, 0.0f,  -20.0f),
@@ -73,4 +73,10 @@ Lights::Lights(): Scene(2, 3) {
                   });
   });
 
+  objects[3] = SphereGen([](float frame) {
+    return Sphere(Vector3( 2, 1, 0), 8,
+                  [](Vector3 point, float frame) {
+                    return Materials::glass;
+                  });
+  });
 }

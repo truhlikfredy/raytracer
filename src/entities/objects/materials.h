@@ -47,6 +47,7 @@ public:
   static MaterialStatic mirror;
   static MaterialStatic brass;
   static MaterialStatic pollishedCopper;
+  static MaterialStatic glass;
 };
 
 // Allow dynamic materials made on the fly

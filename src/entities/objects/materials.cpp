@@ -148,9 +148,9 @@ MaterialStatic Materials::brass= {
   .specular        = Color(0.992157f, 0.941176f, 0.807843f),
   .emission        = Color(),
   .shininess       = 27.8974f,
-  .reflectivity    = 0.0f,
-  .transparency    = 0.8f,
-  .refractiveIndex = 1.5f
+  .reflectivity    = 0.8f,
+  .transparency    = 0.0f,
+  .refractiveIndex = 1.0f
 };
 
 MaterialStatic Materials::pollishedCopper= {
@@ -164,3 +164,16 @@ MaterialStatic Materials::pollishedCopper= {
   .transparency    = 0.0f,
   .refractiveIndex = 1.0f
 };
+
+MaterialStatic Materials::glass= {
+  .castsShadows    = true,
+  .ambient         = Color(),
+  .diffuse         = Color(0.588235f, 0.670588f, 0.729412f),
+  .specular        = Color(0.9f),
+  .emission        = Color(),
+  .shininess       = 96.0f,
+  .reflectivity    = 0.2f,
+  .transparency    = 0.95f,
+  .refractiveIndex = 1.5f
+};
+

@@ -28,6 +28,8 @@ int main() {
 
   int sceneIndex = 0;
 
+  scenes[0].frame = 30;
+
   while (mainWindow->keepLooping() && !quitRequested) {
 
     if (Debounce::isKeyPressed(sf::Keyboard::S))  {

@@ -16,7 +16,7 @@ Render::Render(int widthInit, int heightInit) {
   width         = widthInit;
   height        = heightInit;
   dynamicPixels = new Color[widthInit * heightInit];
-  //threadsMax    = std::thread::hardware_concurrency();
+  threadsMax    = std::thread::hardware_concurrency();
 }
 
 
@@ -40,12 +40,11 @@ Color Render::rayStart(Ray ray, Sphere* objects, LightOmni* light, float frame) 
   //scene->evaluateLights(light, frame);
   scene->evaluateObjects(objects, frame);
 
-  return rayFollow(ray, objects, light, frame, 1);
+  return rayFollow(ray, objects, light, frame, 1, false);
 }
 
 
 void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionIndex, Vector3 &refractionRay) {
-
   float cosi = fmax(-1, fmin(1, (incidentVec % normal)));
   float etai = 1, etat = refractionIndex;
   Vector3 n = normal;
@@ -53,35 +52,16 @@ void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionInde
   float eta = etai / etat;
   float k = 1 - eta * eta * (1 - cosi * cosi);
   refractionRay = k < 0 ? 0 : incidentVec * eta  + n * (eta * cosi - sqrtf(k));
-
-//  float cosi = -(normal % incidentVec);
-//  float k = 1 - refractionIndex * refractionIndex * (1 - cosi * cosi);
-//  refractionRay = ~Vector3(incidentVec * refractionIndex + incidentVec * (refractionIndex *  cosi - sqrt(k)));
-//  refractionRay = incidentVec;
-
-
-//  float dorNormalIncidence = ~normal % ~incidentVec;
-//  float k = 1.0f - refractionIndex * refractionIndex * (1.0f - dorNormalIncidence * dorNormalIncidence);
-//  if (k < 0.f) {
-//    refractionRay = Vector3();
-//  } else {
-//    refractionRay = ~incidentVec * refractionIndex - (refractionIndex * dorNormalIncidence + sqrtf(k));
-//  }
 }
 
-Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration) {
+Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration, bool inside) {
 
   if (iteration > MAX_BOUNCES) {
-    return Color(0.0f, 1.0f, 0.0f);
+    return Color();
   }
-
-  if (iteration == 4)
-    return Color(.5f);
 
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
   float smallestHitDistance = FLT_MAX;  // set it to maximum at first
-
-//  if (iteration == 2) smallestHitDistance = 0;
   int smallestObjectIndex = -1;
   Vector3 smallestHitPoint;
 
@@ -91,22 +71,14 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
     Sphere object = objects[i];
     float hitDistance;
 
-    if (iteration ==2 )
+    if (inside) {
       hitDistance = object.detectHitMax(ray, hitPoint);
-    else
+    }
+    else {
       hitDistance = object.detectHit(ray, hitPoint);
+    }
 
     if (hitDistance != -1.0f) {
-      // The ray hit the sphere
-//      if (iteration == 2) {
-//        if (smallestHitDistance < hitDistance) {
-//          // It's the shortest hit yet, let's save it, if it will win then calculate it's color by shading it depending on the bounce angle
-//          smallestObjectIndex = i;
-//          smallestHitDistance = hitDistance;
-//          smallestHitPoint = hitPoint;
-//        }
-//      }
-//      else
       if (smallestHitDistance > hitDistance) {
         // It's the shortest hit yet, let's save it, if it will win then calculate it's color by shading it depending on the bounce angle
         smallestObjectIndex = i;
@@ -139,24 +111,14 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
     //if (iteration ==1)
     if (hitMaterial.transparency != 0.0f) {
       Vector3 hitRefracted;
-      if (iteration ==1 ) {
-        refract(ray.direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
-      }
-      else {
-        hitNormal = hitNormal * -1.0f;
-        refract(ray.direction, hitNormal, 1 / hitMaterial.refractiveIndex , hitRefracted);
-        //hitRefracted = ray.direction;
-      }
+      refract(ray.direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
 
-      colorRefract = rayFollow(Ray(smallestHitPoint, hitRefracted), objects, light, frame, iteration +1) * hitMaterial.transparency;
-//      colorRefract = rayFollow(Ray(smallestHitPoint, ray.direction), objects, light, frame, iteration +1); //* hitMaterial.transparency;
-      return colorRefract;
+      colorRefract = rayFollow(Ray(smallestHitPoint, hitRefracted), objects, light, frame, iteration +1, !inside) * hitMaterial.transparency;
     }
 
-//    if (hitMaterial.reflectivity != 0.0f) {
-//    refractionRay = incidentVec - normal * (incidentVec % normal) * 2;
-//      colorReflect = rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1) * hitMaterial.reflectivity;
-//    }
+    if (hitMaterial.reflectivity != 0.0f && inside == false) {
+      colorReflect = rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1, false) * hitMaterial.reflectivity;
+    }
 
 
     // diffuse = similarity (dot product) of hitLight and hitNormal
@@ -166,24 +128,24 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
     // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
     colorBase = light->color * powf(specular, hitMaterial.shininess) + hitMaterial.diffuse * diffuse + hitMaterial.ambient;
 
-//    for (int j = 0; j < scene->nObjects; j++) {
-//      // test all objects if they are casting shadow from this light
-//      if (j != smallestObjectIndex) {
-//        // can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
-//        Sphere shadow = objects[j];
-//        if (shadow.detectHit(Ray(smallestHitPoint, hitLight)) != -1) {
-//          if (shadow.materialFn(hitLight,frame).castsShadows) {
-//            colorBase = Color(hitMaterial.ambient);
-//            break;
-//          }
-//        }
-//      }
-//    }
+    for (int j = 0; j < scene->nObjects; j++) {
+      // test all objects if they are casting shadow from this light
+      if (j != smallestObjectIndex) {
+        // can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
+        Sphere shadow = objects[j];
+        if (shadow.detectHit(Ray(smallestHitPoint, hitLight)) != -1) {
+          if (shadow.materialFn(hitLight,frame).castsShadows) {
+            colorBase = Color(hitMaterial.ambient);
+            break;
+          }
+        }
+      }
+    }
 
     return Color(colorBase + colorRefract + colorReflect);
   }
 
-  return Color(0.0f,0.0f,1.0f);
+  return Color();
 }
 
 void Render::renderPartialWindow(float frame, windowType window) {
