@@ -41,15 +41,37 @@ Large::Large():Scene(1, BALLS +1) {
         const int x = (((int)point.x+400)/30);
         const int y = (((int)point.y+400)/30);
 
-//        uv a Sphere::toUv(point);
+        mandelbrotSet set = {-0.0068464412f, -0.80686056f, 0.0160606767f, 0.00782957993f, 1.0f };
+        uv textureCoord = Sphere::toUv(point);
+        textureCoord.u += frame / 1800.0f;
+        textureCoord.v += frame / 200.0f;
 
-        if ((x % 2) ^ (y % 2)) {
-          return squares[(x+y * 6) % 6];
-          //return Materials::white;
+        Color fractal =  Materials::mandelbrot(set, textureCoord);
+        float reflect = 0.0f;
+        if (fractal.x == 0) {
+          reflect = 0.95f;
         }
-        else {
-          return Materials::mirror;
-        }
+
+        return materialStatic{
+          .castsShadows = true,
+          .ambient = fractal / 10,
+          .diffuse = fractal,
+          .specular = Color(0.2f),
+          .emission = Color(0.0),
+          .shininess = 5,
+          .reflectivity = 1.0f-fractal.x,
+          .transparency = 0.0f
+        };
+
+//        uv a Sphere::toUv(point);
+//
+//        if ((x % 2) ^ (y % 2)) {
+//          return squares[(x+y * 6) % 6];
+//          //return Materials::white;
+//        }
+//        else {
+//          return Materials::mirror;
+//        }
       };
     return Sphere(Vector3(0.0f, 200.0f, 600.0f), 500.0f, materiaFn);
   });
