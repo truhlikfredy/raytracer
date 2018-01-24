@@ -42,6 +42,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/scenes/mandelbrot.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/scenes/lights.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/scenes/dof.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/scenes/large.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/scenes/large.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/raytracer.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
     </content>
