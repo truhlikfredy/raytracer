@@ -16,7 +16,7 @@ Dof::Dof(): Scene(1, 5) {
   };
 
 
-  const MaterialStatic balls[5] = {
+  const materialStatic balls[5] = {
     Materials::green,
     Materials::pollishedCopper,
     Materials::brass,

@@ -98,7 +98,7 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
     Vector3 hitLight = ~Vector3(light->center - smallestHitPoint);
     //Vector3 hitLight = ~Vector3(smallestHitPoint - light->center);
 
-    MaterialStatic hitMaterial = object.materialFn(smallestHitPoint, frame);
+    materialStatic hitMaterial = object.materialFn(smallestHitPoint, frame);
 
     float diffuse = fmaxf(0, hitLight % hitNormal); // how similar are they?
     float specular = fmaxf(0, hitLight % hitReflected);

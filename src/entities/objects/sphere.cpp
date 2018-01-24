@@ -9,7 +9,7 @@
 //Sphere::Sphere(std::function<Sphere(float frame)> propertiesFnInit): Object(propertiesFnInit) {
 //}
 
-Sphere::Sphere(Vector3 centerInt, float radiusInit, std::function<MaterialStatic(Vector3 point, float frame)> materialFnInit):
+Sphere::Sphere(Vector3 centerInt, float radiusInit, std::function<materialStatic(Vector3 point, float frame)> materialFnInit):
   Object(centerInt, materialFnInit) {
   radius = radiusInit;
 }

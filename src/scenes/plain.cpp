@@ -34,9 +34,9 @@ Plain::Plain(): Scene(2, 2) {
 
 
   objects[0] = SphereGen([](float frame) {
-    std::function<MaterialStatic(Vector3 point, float frame)> materiaFn =
+    std::function<materialStatic(Vector3 point, float frame)> materiaFn =
       [](Vector3 point, float frame) {
-        return MaterialStatic{
+        return materialStatic{
           .castsShadows = true,
           .ambient = Color(0.0f, 0.025f, 0.0f),
           .diffuse = Color((sinf(point.x / 2 + point.y + point.z + frame / 5) + 0.3) * 0.5,

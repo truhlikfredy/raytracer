@@ -10,7 +10,7 @@
 
 class Mandelbrot: public Scene {
 private:
-  Color renderMandelbrotPixel(float lookAtX, float lookAtY, float width, float height, float gamma, uv pixel);
+  Color mandelbrot(float lookAtX, float lookAtY, float width, float height, float gamma, uv pixel);
 
 public:
   Mandelbrot();

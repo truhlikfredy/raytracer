@@ -10,7 +10,7 @@
 #include "../../types/vector3.h"
 #include "../../types/color.h"
 
-struct MaterialStatic {
+struct materialStatic {
   bool  castsShadows;
   Color ambient;
   Color diffuse;
@@ -27,27 +27,38 @@ struct uv {
   float v;
 };
 
+struct mandelbrotSet {
+  float lookAtX;
+  float lookAtY;
+  float width;
+  float height;
+  float gamma;
+};
+
 class Materials {
 
 public:
   // colors
-  static MaterialStatic red;
-  static MaterialStatic yellow;
-  static MaterialStatic white;
-  static MaterialStatic green;
-  static MaterialStatic indigo;
-  static MaterialStatic blue;
-  static MaterialStatic violet;
-  static MaterialStatic black;
-  static MaterialStatic mediumGray;
-  static MaterialStatic lightGray;
+  static materialStatic red;
+  static materialStatic yellow;
+  static materialStatic white;
+  static materialStatic green;
+  static materialStatic indigo;
+  static materialStatic blue;
+  static materialStatic violet;
+  static materialStatic black;
+  static materialStatic mediumGray;
+  static materialStatic lightGray;
 
 
   // materials
-  static MaterialStatic mirror;
-  static MaterialStatic brass;
-  static MaterialStatic pollishedCopper;
-  static MaterialStatic glass;
+  static materialStatic mirror;
+  static materialStatic brass;
+  static materialStatic pollishedCopper;
+  static materialStatic glass;
+
+  // textures
+  static Color mandelbrot(mandelbrotSet &set, uv &pixel);
 };
 
 // Allow dynamic materials made on the fly

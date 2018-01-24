@@ -8,13 +8,13 @@
 // Object::Object(std::function<Object(float frame)> propertiesFnInit): Entity(propertiesFnInit), materialFn(nullptr) {
 
 Object::Object(Vector3 centerInit,
-               std::function<MaterialStatic(Vector3 point, float frame)> materialFnInit):
+               std::function<materialStatic(Vector3 point, float frame)> materialFnInit):
                materialFn(materialFnInit), Entity() {
   center = centerInit;
 }
 
-Object::Object(Vector3 centerInit, MaterialStatic materialStaticInit):
-  materialStatic(materialStaticInit), materialFn(nullptr), Entity() {
+Object::Object(Vector3 centerInit, materialStatic materialInit):
+  material(materialInit), materialFn(nullptr), Entity() {
   center = centerInit;
 }
 

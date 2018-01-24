@@ -13,7 +13,7 @@ class Sphere: public Object {
 public:
   float   radius;
 
-  Sphere(Vector3 centerInt, float radiusInit, std::function<MaterialStatic(Vector3 point, float frame)> materialFnInit);
+  Sphere(Vector3 centerInt, float radiusInit, std::function<materialStatic(Vector3 point, float frame)> materialFnInit);
 
   Sphere();
 
