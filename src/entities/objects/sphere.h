@@ -15,6 +15,8 @@ public:
 
   Sphere(Vector3 centerInt, float radiusInit, std::function<materialStatic(Vector3 point, float frame)> materialFnInit);
 
+  Sphere(Vector3 centerInt, float radiusInit);
+
   Sphere();
 
   float detectHit(Ray ray);
@@ -23,7 +25,7 @@ public:
 
   float detectHitMax(Ray ray, Vector3 &hitPoint);
 
-  static uv toUv(Vector3 point);
+  uv toUv(Vector3 point);
 
   Vector3 operator ^ (Vector3 pointOnSurface);
 

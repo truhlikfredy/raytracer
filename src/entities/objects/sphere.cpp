@@ -9,6 +9,10 @@
 //Sphere::Sphere(std::function<Sphere(float frame)> propertiesFnInit): Object(propertiesFnInit) {
 //}
 
+Sphere::Sphere(Vector3 centerInt, float radiusInit):  Object(centerInt) {
+  radius = radiusInit;
+}
+
 Sphere::Sphere(Vector3 centerInt, float radiusInit, std::function<materialStatic(Vector3 point, float frame)> materialFnInit):
   Object(centerInt, materialFnInit) {
   radius = radiusInit;
@@ -113,10 +117,9 @@ uv Sphere::toUv(Vector3 point) {
   // https://gamedev.stackexchange.com/a/114416
   // https://en.wikipedia.org/wiki/UV_mapping
 
-  // TODO minus origin
-  point = ~point;
+  Vector3 newPoint = ~Vector3(point - this->center);
   return {
-    .u = atan2f(point.x, point.z) / (2 * M_PI) + 0.5f,
-    .v = 0.5 - asin(point.y) / M_PI
+    .u = atan2f(newPoint.x, newPoint.z) / (2 * M_PI) + 0.5f,
+    .v = 0.5 - asin(newPoint.y) / M_PI
   };
 }

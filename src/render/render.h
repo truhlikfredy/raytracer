@@ -7,9 +7,9 @@
 #define RAYTRACER_RENDER_H
 
 #define SEGMENTS 1  // how many partitions the screen should be split
-#define SAMPLING_MIN 4
-#define SAMPLING_MAX 9
-#define MAX_BOUNCES 5
+#define SAMPLING_MIN 3
+#define SAMPLING_MAX 6
+#define MAX_BOUNCES 4
 
 #include "../entities/lights/lightOmni.h"
 #include "ray.h"

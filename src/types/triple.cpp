@@ -52,6 +52,11 @@ float Triple::sum() {
   return this->x + this->y + this->z;
 }
 
+
+Triple Triple::operator*(Triple secondTriple) {
+  return Triple(this->x * secondTriple.x, this->y * secondTriple.y, z * secondTriple.z);
+}
+
 //Triple Triple::operator=(Triple& secondTriple) {
 //  return Triple(secondTriple->x, secondTriple->y, secondTriple->z);
 //}

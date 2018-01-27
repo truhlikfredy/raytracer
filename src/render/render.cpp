@@ -126,7 +126,13 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
     // And use the diffuse / specular only when they are positive
     // shadeOfTheRay = specular + diffuse + ambient
     // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-    colorBase = light->color * powf(specular, hitMaterial.shininess) + hitMaterial.diffuse * diffuse + hitMaterial.ambient;
+
+    //http://www.paulsprojects.net/tutorials/simplebump/simplebump.html
+    Color emmision(0.0f, 0.0f, 0.0f);
+    Color globalAmbient(0.0f, 0.0f, 0.0f);
+    float atenuate = 1.0f;
+
+    colorBase = emmision + globalAmbient + ( light->color * powf(specular, hitMaterial.shininess) + hitMaterial.diffuse * light->color * diffuse + hitMaterial.ambient) * atenuate;
 
     for (int j = 0; j < scene->nObjects; j++) {
       // test all objects if they are casting shadow from this light
@@ -142,6 +148,7 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
       }
     }
 
+    //return colorBase;
     return Color(colorBase + colorRefract + colorReflect);
   }
 

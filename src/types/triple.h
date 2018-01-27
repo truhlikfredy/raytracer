@@ -25,6 +25,8 @@ public:
 
   Triple operator*(float scalar);
 
+  Triple operator*(Triple secondTriple);
+
   Triple operator/(float scalar);
 
   float sum();

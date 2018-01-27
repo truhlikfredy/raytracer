@@ -18,6 +18,10 @@ Object::Object(Vector3 centerInit, materialStatic materialInit):
   center = centerInit;
 }
 
+Object::Object(Vector3 centerInit) {
+  center = centerInit;
+}
+
 Object::Object() {
 }
 

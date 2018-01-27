@@ -28,6 +28,8 @@ public:
 
   Object(Vector3 centerInit, materialStatic materialInit);
 
+  Object(Vector3 centerInit);
+
   Object();
 
   //virtual uv toUv(Vector3 point) = 0;
