@@ -115,12 +115,9 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
 
       colorRefract = rayFollow(Ray(smallestHitPoint, hitRefracted), objects, light, frame, iteration +1, !inside) * hitMaterial.transparency;
     }
-
     if (hitMaterial.reflectivity != 0.0f && inside == false) {
       colorReflect = rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1, false) * hitMaterial.reflectivity;
     }
-
-
     // diffuse = similarity (dot product) of hitLight and hitNormal
     // https://youtu.be/KDHuWxy53uM
     // And use the diffuse / specular only when they are positive
@@ -132,7 +129,7 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
     Color globalAmbient(0.0f, 0.0f, 0.0f);
     float atenuate = 1.0f;
 
-    colorBase = emmision + globalAmbient + ( light->color * powf(specular, hitMaterial.shininess) + hitMaterial.diffuse * light->color * diffuse + hitMaterial.ambient) * atenuate;
+    colorBase = light->color * powf(specular, hitMaterial.shininess) + hitMaterial.diffuse * diffuse + hitMaterial.ambient;
 
     for (int j = 0; j < scene->nObjects; j++) {
       // test all objects if they are casting shadow from this light
