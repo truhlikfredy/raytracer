@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define M_PI_F	3.141592653589f  // single point variant of pi
+
 template<size_t SIZE, class T> inline size_t array_size(T (&arr)[SIZE]) {
   return SIZE;
 }

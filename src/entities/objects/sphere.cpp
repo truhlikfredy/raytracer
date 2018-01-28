@@ -5,6 +5,7 @@
 
 #include <cmath>
 #include "sphere.h"
+#include "../../utils/utils.h"
 
 //Sphere::Sphere(std::function<Sphere(float frame)> propertiesFnInit): Object(propertiesFnInit) {
 //}
@@ -102,8 +103,8 @@ float Sphere::detectHitMax(Ray ray, Vector3 &hitPoint) {
   if (tempAll < 0) return -1.0f; // The ray didn't hit the sphere at all
 
   // 2 points are intersecting the sphere, chose the closest point to the camera
-  float hitDistance = fmaxf( (-temp1 + sqrt(tempAll)) / dotDir,
-                             (-temp1 - sqrt(tempAll)) / dotDir );
+  float hitDistance = fmaxf( (-temp1 + sqrtf(tempAll)) / dotDir,
+                             (-temp1 - sqrtf(tempAll)) / dotDir );
 
   if (hitDistance <= 0 ) return -1.0f;
 
@@ -119,7 +120,7 @@ uv Sphere::toUv(Vector3 point) {
 
   Vector3 newPoint = ~Vector3(this->center - point);
   return {
-    .u = atan2f(newPoint.x, newPoint.z) / (2 * M_PI) + 0.5f,
-    .v = 0.5 - asin(newPoint.y) / M_PI
+    .u = atan2f(newPoint.x, newPoint.z) / (2.0f * M_PI_F) + 0.5f,
+    .v = 0.5f - asinf(newPoint.y) / M_PI_F
   };
 }
