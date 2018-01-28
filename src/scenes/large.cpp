@@ -7,12 +7,12 @@
 #include "large.h"
 #include "../render/sampler.h"
 
-#define BALLS 2
+#define BALLS 6
 
 Large::Large():Scene(3, BALLS +2) {
 
   camera = {
-    .possition    = Vector3(0.0f, 0.0f,  -50.0f),
+    .possition    = Vector3(0.0f, 0.0f,  -80.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 30.0f),
     .apeture      = 0.0f,
     .shutterSpeed = 0.0f,
@@ -125,7 +125,7 @@ Large::Large():Scene(3, BALLS +2) {
     Sampler::vanDerCoruptSobol2(i, 0, sample);
     float index = Sampler::vanDerCorput(i, 0);
     objects[i+2] = SphereGen([sample, index, i](float frame) {
-      return Sphere(Vector3( -60 + sample.x * 120, -40 + 80* sample.y, (i% 5)* 7 -20), 8,
+      return Sphere(Vector3( -40 + sample.x * 80, -30 + 60* sample.y, (i% 3)* 7 -0), 8,
                     [index](Vector3 point, float frame) {
                       materialStatic ret = Materials::glass;
                       ret.refractiveIndex = 1 + index;
