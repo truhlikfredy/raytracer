@@ -145,8 +145,10 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
         Sphere shadow = objects[j];
         if (shadow.detectHit(Ray(smallestHitPoint, hitLight)) != -1) {
           if (shadow.materialFn(hitLight,frame).castsShadows) {
-            ret.sum = Color();    // null the summing factor, leaveonly average factor ok which is average
-            break;
+            if (Vector3(light->center - smallestHitPoint).lenght() > Vector3(smallestHitPoint - shadow.center).lenght()) {
+              ret.sum = Color();    // null the summing factor, leaveonly average factor ok which is average
+              break;
+            }
           }
         }
       }
