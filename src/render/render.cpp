@@ -162,7 +162,7 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
 }
 
 void Render::renderPartialWindow(float frame, windowType window) {
-  Sampler sampler(SAMPLING_MIN, SAMPLING_MAX, scene->camera.shutterSpeed, scene->camera.apeture, scene->nLights, frame);
+  Sampler sampler(SAMPLING_MIN * scene->nLights, SAMPLING_MAX * scene->nLights, scene->camera.shutterSpeed, scene->camera.apeture, scene->nLights, frame);
 
   Sphere    *objects = new Sphere[scene->nObjects];
   LightOmni light;
