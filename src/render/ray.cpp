@@ -5,7 +5,9 @@
 
 #include "ray.h"
 
-Ray::Ray(Vector3 sourceInit, Vector3 directionInit) {
-  source    = sourceInit;
-  direction = directionInit;
+Ray::Ray(): source(Vector3()), direction(Vector3()) {
 }
+
+Ray::Ray(Vector3 sourceInit, Vector3 directionInit): source(sourceInit), direction(directionInit) {
+}
+

@@ -12,6 +12,8 @@ struct Ray {
   Vector3 source;
   Vector3 direction;
 
+  Ray();
+
   Ray(Vector3 sourceInit, Vector3 directionInit);
 };
 
