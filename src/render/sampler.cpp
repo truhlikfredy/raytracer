@@ -20,11 +20,10 @@ Sampler::Sampler(unsigned int minSamples, unsigned int maxSamples, float shutter
                  unsigned int patternInit) {
   this->indexMinimum = minSamples;      // Dynamic sampling
   this->indexMaximum = maxSamples;
-  this->shutter      = shutterInit;     // Speed of the shutter of the camer
+  this->shutter      = shutterInit;     // Speed of the shutter of the camera
   this->apeture      = apetureInit;
   this->lights       = lightsInit;
   this->pattern      = patternInit;     // Initial seed value
-
 }
 
 
@@ -32,12 +31,12 @@ Sampler::Sampler(unsigned int minSamples, unsigned int maxSamples, float shutter
  * Change the seed a bit and start for new pixel
  */
 void Sampler::nextPixel() {
-  this->index = 0;
-  this->patternSpace=rand();
-  this->patternTime=rand();
-  this->patternLens=rand();
-  this->patternLight=rand();
-  this->patternLightSpace=rand();
+  this->index             = 0;
+  this->patternSpace      = rand();
+  this->patternTime       = rand();
+  this->patternLens       = rand();
+  this->patternLight      = rand();
+  this->patternLightSpace = rand();
 }
 
 
@@ -76,10 +75,8 @@ void Sampler::getNextSample(sampleTuple *ret) {
   ret->lighty = 0.0f;
 
   if   (indexMaximum == 1 ) {
-    // ret->light = (int)(pattern) % lights;   // will strobe between light sourcesf
     return;
   }
-
 
   vanDerCoruptSobol2(origIndex, patternSpace, sample);
   ret->spaceX = sample.x;
@@ -116,7 +113,6 @@ void Sampler::getNextSample(sampleTuple *ret) {
  */
 unsigned int Sampler::pseudoShuffle(unsigned int index, unsigned int maximum) {
   return ((index ^ 0x16) % maximum);
-//  return (index % maximum);
 }
 
 

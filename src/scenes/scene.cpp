@@ -7,6 +7,7 @@
 
 Scene::Scene(int nlightsInit, int nobjectsInit): nLights(nlightsInit), nObjects(nobjectsInit) {
   frame = 0.0f;
+  ambient = Color(0.1f);
   this->lights = new LightOmniGen[nlightsInit];
   this->objects = new SphereGen[nobjectsInit];
 };

@@ -14,8 +14,7 @@ class Entity {
 
 public:
   Vector3 center;
-
-// TODO : enabled/disabled bool
+  bool isEnabled;
 
   std::function<Entity(float frame)> evaluateFn;
 

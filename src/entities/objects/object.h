@@ -7,10 +7,10 @@
 #define RAYTRACER_OBJECT_H
 
 #include <functional>
-#include "materials.h"
-#include "../../render/ray.h"
 #include "../../types/color.h"
+#include "../../render/ray.h"
 #include "../entity.h"
+#include "materials.h"
 
 class Object: public Entity {
 

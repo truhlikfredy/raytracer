@@ -13,8 +13,7 @@ Lights::Lights(): Scene(2, 4) {
     .possition    = Vector3(0.0f, 0.0f,  -20.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 30.0f),
     .apeture      = 0.0f,
-    .shutterSpeed = 0.0f,
-    .ambient      = Color(0.1f)
+    .shutterSpeed = 0.0f
   };
 
   const materialStatic squares[6] = {
@@ -45,28 +44,11 @@ Lights::Lights(): Scene(2, 4) {
   objects[0] = SphereGen([squares](float frame) {
     std::function<materialStatic(Vector3 point, float frame)> materiaFn =
       [squares](Vector3 point, float frame) {
-//        uv textureCoord = Sphere::toUv(point);
-//        textureCoord.u += frame / 1800.0f;
-//        textureCoord.v += frame / 200.0f;
-//        Color fractal = renderMandelbrotPixel(-0.0068464412f, -0.80686056f, 0.0160606767f, 0.00782957993f, 1.0f, textureCoord);
-//        return materialStatic{
-//          .castsShadows = true,
-//          .ambient = Color(),
-//          .diffuse = fractal,
-//          .specular = Color(0.2f),
-//          .emission = Color(0.0),
-//          .shininess = 5,
-//          .reflectivity = 0.0f,
-//          .transparency = 0.0f
-//        };
         const int x = (((int)point.x+400)/15);
         const int z = (((int)point.z+400)/15);
 
-//        uv a Sphere::toUv(point);
-
         if ((x % 2) ^ (z % 2)) {
           return squares[(x+z * 6) % 6];
-          //return Materials::white;
         }
         else {
           return Materials::mirror;
@@ -74,7 +56,6 @@ Lights::Lights(): Scene(2, 4) {
       };
     return Sphere(Vector3(0.0f, 510.0f, 100.0f), 500.0f, materiaFn);
   });
-
 
   objects[1] = SphereGen([](float frame) {
     return Sphere(Vector3(sinf(frame / 8) * 15, sin(frame / 4) * 2 +3, sin(frame / 20) * 15 + 25), 15,
@@ -96,4 +77,5 @@ Lights::Lights(): Scene(2, 4) {
                     return Materials::glass;
                   });
   });
+
 }

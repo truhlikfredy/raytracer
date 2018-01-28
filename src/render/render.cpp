@@ -8,8 +8,6 @@
 #include <vector>
 #include <float.h>
 #include "render.h"
-#include "../entities/objects/sphere.h"
-#include "../scenes/scene.h"
 
 
 Render::Render(int widthInit, int heightInit) {
@@ -36,9 +34,7 @@ windowType Render::getThreadWindow(int thread) {
 }
 
 
-
 colors Render::rayStart(Ray ray, Sphere* objects, LightOmni* light, float frame) {
-  //scene->evaluateLights(light, frame);
   scene->evaluateObjects(objects, frame);
 
   return rayFollow(ray, objects, light, frame, 1, false);
@@ -55,8 +51,8 @@ void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionInde
   refractionRay = k < 0 ? 0 : incidentVec * eta  + n * (eta * cosi - sqrtf(k));
 }
 
-colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration, bool inside) {
 
+colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration, bool inside) {
   colors ret = {.average = Color(), .sum = Color() };
 
   if (iteration > MAX_BOUNCES) {
@@ -131,11 +127,8 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
     // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
 
     //http://www.paulsprojects.net/tutorials/simplebump/simplebump.html
-//    Color emmision(0.0f, 0.0f, 0.0f);
-    //Color globalAmbient(0.0f, 0.0f, 0.0f);
-//    float atenuate = 1.0f;
 
-    ret.average = scene->camera.ambient * hitMaterial.ambient;
+    ret.average = scene->ambient * hitMaterial.ambient;
     ret.sum = ( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * light->color;
 
     for (int j = 0; j < scene->nObjects; j++) {
@@ -160,6 +153,7 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
 
   return ret;
 }
+
 
 void Render::renderPartialWindow(float frame, windowType window) {
   Sampler sampler(SAMPLING_MIN * scene->nLights, SAMPLING_MAX * scene->nLights, scene->camera.shutterSpeed, scene->camera.apeture, scene->nLights, frame);
@@ -208,20 +202,22 @@ void Render::renderPartialWindow(float frame, windowType window) {
         }
 
       }
-//      dynamicPixels[x + (y * width)] = (totalColor.sum * colorsCount) / scene->nLights  + totalColor.average/colorsCount;
-      dynamicPixels[x + (y * width)] = ~Color( (totalColor.sum) / ((float)colorsCount/scene->nLights)  + (totalColor.average/colorsCount));
-
+      const float raysPerLight = ((float)colorsCount/scene->nLights);
+      dynamicPixels[x + (y * width)] = ~Color( (totalColor.sum     / raysPerLight) +
+                                               (totalColor.average / colorsCount));
     }
   }
 
   delete[] objects;
 }
 
+
 void Render::clearDynamicPixels() {
   for (int i = 0; i < height * width; i++) {
     dynamicPixels[i] = Color();
   }
 }
+
 
 void Render::renderFullWindow(Scene *sceneInit) {
   scene = sceneInit;

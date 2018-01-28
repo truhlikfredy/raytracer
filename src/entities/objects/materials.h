@@ -61,6 +61,4 @@ public:
   static Color mandelbrot(mandelbrotSet &set, uv &pixel);
 };
 
-// Allow dynamic materials made on the fly
-
 #endif //RAYTRACER_MATERIAL_H

@@ -5,14 +5,14 @@
 
 #include "entity.h"
 
-Entity::Entity(Vector3 centerInit): center(centerInit)  {
+Entity::Entity(Vector3 centerInit): center(centerInit), isEnabled(true)  {
   evaluateFn = nullptr;
 }
 
-Entity::Entity(std::function<Entity(float frame)> evaluateFnInit) {
+Entity::Entity(std::function<Entity(float frame)> evaluateFnInit): isEnabled(true) {
   evaluateFn = evaluateFnInit;
 }
 
-Entity::Entity() {
+Entity::Entity(): isEnabled(true) {
 }
 

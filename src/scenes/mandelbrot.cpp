@@ -8,13 +8,13 @@
 
 
 Mandelbrot::Mandelbrot(): Scene(1, 1) {
+  ambient = Color(0.1f);
 
   camera = {
     .possition    = Vector3(0.0f, 0.0f, 35.0f),
     .lookAt       = Vector3(0.0f,0.0f,60.0f),
     .apeture      = 0.0f,
-    .shutterSpeed = 0.0f,
-    .ambient      = Color(0.1f)
+    .shutterSpeed = 0.0f
   };
 
   lights[0] = LightOmniGen([](float frame) {
@@ -25,12 +25,11 @@ Mandelbrot::Mandelbrot(): Scene(1, 1) {
     return LightOmni(center, color);
   });
 
-
   objects[0] = SphereGen([this](float frame) {
     Sphere sphere(Vector3(0.0f, 0.0f, 100.0f), 57.0f);
     std::function<materialStatic(Vector3 point, float frame)> materiaFn =
     [sphere](Vector3 point, float frame) mutable {
-      mandelbrotSet set = {-0.0068464412f, -0.80686056f, 0.0160606767f, 0.00782957993f, 1.0f };
+      mandelbrotSet set = {-0.0068464412f, -0.80686056f, 0.0160606767f * 2, 0.00782957993f *2, 1.0f };
       uv textureCoord = sphere.toUv(point);
       textureCoord.u += frame / 1800.0f;
       textureCoord.v += frame / 200.0f;

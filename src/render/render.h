@@ -11,12 +11,12 @@
 #define SAMPLING_MAX 4
 #define MAX_BOUNCES 4
 
+#include "../types/color.h"
 #include "../entities/lights/lightOmni.h"
+#include "../scenes/scene.h"
+#include "sampler.h"
 #include "ray.h"
 
-
-//#include <tuple>
-//typedef std::tuple<int, int, int, int> windowType;
 
 struct windowType {
   unsigned int xStart;
@@ -25,15 +25,12 @@ struct windowType {
   unsigned int yEnd;
 };
 
-#include "../types/color.h"
-#include "sampler.h"
-#include "../scenes/scene.h"
-
 
 struct colors {
   Color average;
   Color sum;
 };
+
 
 class Render {
 private:
@@ -61,4 +58,6 @@ public:
 
   void renderFullWindow(Scene *sceneInit);
 };
+
+
 #endif //RAYTRACER_RENDER_H

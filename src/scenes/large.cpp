@@ -15,8 +15,7 @@ Large::Large():Scene(3, BALLS +2) {
     .possition    = Vector3(0.0f, 0.0f,  -80.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 30.0f),
     .apeture      = 0.0f,
-    .shutterSpeed = 0.0f,
-    .ambient      = Color(0.1f)
+    .shutterSpeed = 0.0f
   };
 
   const materialStatic squares[6] = {
@@ -82,16 +81,6 @@ Large::Large():Scene(3, BALLS +2) {
           .reflectivity = 1.0f-fractal.x,
           .transparency = 0.0f
         };
-
-//        uv a Sphere::toUv(point);
-//
-//        if ((x % 2) ^ (y % 2)) {
-//          return squares[(x+y * 6) % 6];
-//          //return Materials::white;
-//        }
-//        else {
-//          return Materials::mirror;
-//        }
       };
     sphere1.materialFn = materiaFn;
     return sphere1;

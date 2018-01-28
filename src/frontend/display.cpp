@@ -50,7 +50,6 @@ void Display::displaySamplerPattern(float frame) {
     pixels[offset + 1] = 255;
     pixels[offset + 2] = 255;
     pixels[offset + 3] = 255;
-    //printf(" %f, %f \r\n", sample.first, sample.second);
   }
 }
 

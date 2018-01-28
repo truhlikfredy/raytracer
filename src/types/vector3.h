@@ -17,11 +17,11 @@ public:
 
   Vector3(const Triple& base);
 
-  float operator%(Vector3 secondVector);
+  float operator%(Vector3 secondVector); // dot product
 
   Vector3 operator~();
 
-  Vector3 operator&(Vector3 secondVector);
+  Vector3 operator&(Vector3 secondVector); // x   https://steveharveynz.wordpress.com/2012/12/20/ray-tracer-part-two-creating-the-camera/
 
   float lenght();
 };
