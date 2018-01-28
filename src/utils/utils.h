@@ -17,7 +17,7 @@ template<size_t SIZE, class T> inline size_t array_size(T (&arr)[SIZE]) {
 
 class Utils {
 public:
-  static void getTimeStampFilename(char *prefix, char *filename);
+  static void getTimeStampFilename(const char *prefix, char *filename);
 };
 
 #endif //RAYTRACER_UTILS_H

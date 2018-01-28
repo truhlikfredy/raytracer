@@ -40,7 +40,7 @@ int main() {
     if (Debounce::isKeyPressed(sf::Keyboard::F))  {
       // Capture screenshot and save it to the file
       char filename[120];
-      Utils::getTimeStampFilename("images/screenshot",filename);
+      Utils::getTimeStampFilename("images/screenshot", filename);
       mainWindow->texture.copyToImage().saveToFile(filename);
     }
 
