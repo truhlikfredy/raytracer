@@ -13,7 +13,8 @@
 * **S** to display test pattern of the pseudo randomized sampler results
 * **C** capture screenshots
 * **Left/Right** switch between scenes
-* [ and ] jump in time (jump back is smaller than jump forward)
+* **\[** and **\]** jump in time (jump back is smaller than jump forward)
+* **B** will start benchmark of a sellected scne and when finished it will exit
 
 ## Programing
 

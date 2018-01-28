@@ -71,7 +71,17 @@ int main() {
       scenes[sceneIndex].frame -= 15;
     }
 
+    if (Debounce::isKeyPressed(sf::Keyboard::B)) {
+      // start benchmark
+      scenes[sceneIndex].frame = 0;
+      mainWindow->benchmarkAllowed = true;
+    }
+
     mainWindow->renderLoop(&scenes[sceneIndex]);
+  }
+
+  if (mainWindow->benchmarkEnded) {
+    mainWindow->benchmarkSummary();
   }
 
   return 0;

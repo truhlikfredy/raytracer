@@ -57,7 +57,10 @@ public:
   bool             showSamplerPatterns;
   bool             onScreenDisplay;
   bool             stdOutLog;
+  bool             benchmarkAllowed;
+  bool             benchmarkEnded;
   sf::Texture      texture;
+  long long        elapsedTotal;
   Display();
 
   void renderLoop(Scene *scene);
@@ -65,6 +68,7 @@ public:
   void clearDisplayMem();
   void convertToDisplayMem();
   void log(char *text);
+  void benchmarkSummary();
 };
 
 #endif //RAYTRACER_DISPLAY_H
