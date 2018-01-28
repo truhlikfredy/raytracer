@@ -5,17 +5,25 @@
 
 #include "scene.h"
 
-Scene::Scene(int nlightsInit, int nobjectsInit): nLights(nlightsInit), nObjects(nobjectsInit) {
+Scene::Scene(int nlightsInit, int nobjectsInit, float lastFrameInit):
+  nLights(nlightsInit), nObjects(nobjectsInit), lastFrame(lastFrameInit) {
+
   frame = 0.0f;
   ambient = Color(0.1f);
   this->lights = new LightOmniGen[nlightsInit];
   this->objects = new SphereGen[nobjectsInit];
 };
 
+
+Scene::Scene(int nlightsInit, int nobjectsInit): Scene(nlightsInit, nobjectsInit, 0.0f) {
+};
+
+
 Scene::~Scene() {
 //  delete[] lights;
 //  delete[] objects;
 }
+
 
 void Scene::evaluateLights(LightOmni* result, float frame) {
   for (int i = 0; i < nLights; i ++) {

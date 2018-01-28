@@ -20,6 +20,7 @@ public:
   LightOmniGen* lights;
   SphereGen*    objects;
   float         frame;
+  float         lastFrame;
   Color         ambient;
 
   struct {
@@ -29,7 +30,10 @@ public:
     float   shutterSpeed; // Affects motion blur, 0 = disabled blur
   } camera;
 
+  Scene(int nlightsInit, int nObjectsInit, float lastFrame);
+
   Scene(int nlightsInit, int nObjectsInit);
+
   ~Scene();
 
   void evaluateLights(LightOmni* result, float frame);
