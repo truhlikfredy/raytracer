@@ -92,7 +92,11 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
     // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
     Vector3 hitNormal    = object ^smallestHitPoint;
     Vector3 hitReflected = ray.direction - (hitNormal * 2 * (ray.direction % hitNormal));
-    Vector3 hitLight     = ~Vector3(light->center - smallestHitPoint);
+    Vector3 hitLight     = Vector3(light->center - smallestHitPoint);
+
+    // calculate lenght from the collision point to light source and then normalize the vector pointing to it
+    float hitLightLen    = hitLight.lenght();
+    hitLight = ~hitLight;
 
     materialStatic hitMaterial = object.materialFn(smallestHitPoint, frame);
 
@@ -104,6 +108,7 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
     colors colorReflect = {.average = Color(), .sum = Color() };
 
     if (hitMaterial.transparency != 0.0f) {
+      // If transparency is enabled then handle refraction
       Vector3 hitRefracted;
       refract(ray.direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
 
@@ -111,35 +116,41 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
       colorRefract.average *= hitMaterial.transparency;
       colorRefract.sum     *= hitMaterial.transparency;
     }
+
     if (hitMaterial.reflectivity != 0.0f && inside == false) {
+      // If the material is reflective then handle reflection
       colorReflect = rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1, false);
       colorReflect.average *= hitMaterial.reflectivity;
       colorReflect.sum     *= hitMaterial.reflectivity;
     }
+
     // diffuse = similarity (dot product) of hitLight and hitNormal
     // https://youtu.be/KDHuWxy53uM
     // And use the diffuse / specular only when they are positive
     // shadeOfTheRay = specular + diffuse + ambient
     // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-
-    //http://www.paulsprojects.net/tutorials/simplebump/simplebump.html
+    // http://www.paulsprojects.net/tutorials/simplebump/simplebump.html
 
     ret.average = scene->ambient * hitMaterial.ambient;
     ret.sum     = ( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * light->color;
 
     for (int j = 0; j < scene->nObjects; j++) {
       // test all objects if they are casting shadow from this light
-      if (j != smallestObjectIndex) {
-        // can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
-        Sphere shadow = objects[j];
-        if (shadow.detectHit(Ray(smallestHitPoint, hitLight)) != -1) {
-          if (shadow.materialFn(hitLight,frame).castsShadows) {
-            if (Vector3(light->center - smallestHitPoint).lenght() > Vector3(smallestHitPoint - shadow.center).lenght()) {
-              ret.sum = Color();    // null the summing factor, leaveonly average factor ok which is average
-              break;
-            }
-          }
-        }
+      Sphere objectCausingShadow = objects[j];
+      if (j != smallestObjectIndex &&
+        objectCausingShadow.detectHit(Ray(smallestHitPoint, hitLight)) != -1 &&
+        objectCausingShadow.materialFn(hitLight,frame).castsShadows &&
+        hitLightLen > (objectCausingShadow.center - smallestHitPoint).lenght() ) {
+
+        // If the following are meet:
+        // 1) can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
+        // 2) ray needs to hit the object which is causing shadows (if it's not hit then it couldn't cause shadow)
+        // 3) object's material needs to have property to cast shadows
+        // 4) object needs to be between the light source and the collision point and not behind the light source
+        // Then do the following:
+
+        ret.sum = Color();    // null the summing factor, leave only average factor ok which is the ambient part
+        break;
       }
     }
 
