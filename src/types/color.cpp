@@ -22,8 +22,8 @@ Color Color::operator ~() {
   return *this;
 }
 
-lab Color::toLab() {
-  //http://www.brucelindbloom.com
+Color Color::toLab() {
+  // Will convert RGB to LAB colorspace http://www.brucelindbloom.com
 
   float r = x;
   float g = y;
@@ -82,16 +82,11 @@ lab Color::toLab() {
   as = 500 * (fx - fy);
   bs = 200 * (fy - fz);
 
-  return {
-    .x = (int) (2.55 * Ls + .5),
-    .y = (int) (as + .5),
-    .z = (int) (bs + .5)
-  };
+  return Color((2.55 * Ls + .5), (as + .5), (bs + .5));
 }
 
 
-float Color::difference(Color secondColor) {
-  lab first = this->toLab();
-  lab second = secondColor.toLab();
-  return sqrtf(powf(first.x - second.x , 2) + powf(first.y - second.y, 2) + powf(first.z - first.z, 2));
+float Color::labDifference(Color secondColor) {
+  // return distance between the colors after converting them to lab
+  return this->toLab().distance(secondColor.toLab());
 }

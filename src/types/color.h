@@ -8,12 +8,6 @@
 
 #include "triple.h"
 
-struct lab {
-  int x;
-  int y;
-  int z;
-};
-
 class Color : public Triple {
 
 public:
@@ -22,8 +16,8 @@ public:
   Color(const Triple& base);
 
   Color operator~();
-  lab toLab();
-  float difference(Color secondColor);
+  Color toLab();
+  float labDifference(Color secondColor);
 };
 
 

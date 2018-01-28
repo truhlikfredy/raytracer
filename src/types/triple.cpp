@@ -52,6 +52,12 @@ float Triple::sum() {
   return this->x + this->y + this->z;
 }
 
+float Triple::distance(Triple secondTriple) {
+  return sqrtf(powf(this->x - secondTriple.x, 2) +
+               powf(this->y - secondTriple.y, 2) +
+               powf(this->z - secondTriple.z, 2));
+}
+
 
 Triple Triple::operator*(Triple secondTriple) {
   return Triple(this->x * secondTriple.x, this->y * secondTriple.y, z * secondTriple.z);

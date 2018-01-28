@@ -29,6 +29,8 @@ public:
 
   Triple operator/(float scalar);
 
+  float distance(Triple secondTriple);
+
   float sum();
 
   //Triple operator=(Triple& secondTriple);
