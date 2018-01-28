@@ -9,7 +9,7 @@
 
 #define BALLS 6
 
-Large::Large():Scene(3, BALLS +2) {
+Large::Large():Scene(3, BALLS +2, 20.0f) {
 
   camera = {
     .possition    = Vector3(0.0f, 0.0f,  -80.0f),

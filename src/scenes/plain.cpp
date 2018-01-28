@@ -7,7 +7,7 @@
 #include "plain.h"
 
 
-Plain::Plain(): Scene(2, 2) {
+Plain::Plain(): Scene(2, 2, 130.0f) {
 
   camera = {
     .possition    = Vector3(0.0f, 0.0f,  0.0f),

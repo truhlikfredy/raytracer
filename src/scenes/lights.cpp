@@ -7,7 +7,7 @@
 #include "lights.h"
 
 
-Lights::Lights(): Scene(2, 4) {
+Lights::Lights(): Scene(2, 4, 120.0f) {
 
   camera = {
     .possition    = Vector3(0.0f, 0.0f,  -20.0f),

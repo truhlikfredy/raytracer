@@ -6,7 +6,7 @@
 #include <cmath>
 #include "dof.h"
 
-Dof::Dof(): Scene(1, 5) {
+Dof::Dof(): Scene(1, 5, 60.0f) {
 
   camera = {
     .possition     = Vector3(0.0f, 0.0f,  0.0f),

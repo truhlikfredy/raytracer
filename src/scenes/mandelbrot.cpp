@@ -7,7 +7,7 @@
 #include "mandelbrot.h"
 
 
-Mandelbrot::Mandelbrot(): Scene(1, 1) {
+Mandelbrot::Mandelbrot(): Scene(1, 1, 40.0f) {
   ambient = Color(0.1f);
 
   camera = {
