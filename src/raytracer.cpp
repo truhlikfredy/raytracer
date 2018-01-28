@@ -11,6 +11,7 @@
 #include "scenes/mandelbrot.h"
 #include "scenes/lights.h"
 #include "scenes/large.h"
+#include "scenes/large2.h"
 
 template<size_t SIZE, class T> inline size_t array_size(T (&arr)[SIZE]) {
   return SIZE;
@@ -20,7 +21,8 @@ int main() {
   Display *mainWindow = new Display();
   bool quitRequested = false;
 
-  Scene scenes[5] = {
+  Scene scenes[6] = {
+    Large2(),
     Large(),
     Lights(),
     Plain(),
