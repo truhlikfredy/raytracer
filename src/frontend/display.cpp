@@ -8,6 +8,9 @@
 
 Display::Display()  {
   showSamplerPatterns = false;
+  onScreenDisplay     = false;
+  stdOutLog           = false;
+
   pixels = new sf::Uint8[WIDTH * HEIGHT * 4];
 
   render = new Render(WIDTH, HEIGHT);
@@ -72,7 +75,11 @@ void Display::renderLoop(Scene *scene) {
   texture.update(pixels);
   window.draw(sprite);
   window.display();
-  scene->frame++;
+  printf("%f\r\n", scene->frame);
+
+  if (scene->lastFrame > scene->frame){
+    scene->frame++;
+  }
 }
 
 

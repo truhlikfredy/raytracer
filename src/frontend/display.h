@@ -6,9 +6,14 @@
 #ifndef RAYTRACER_DISPLAY_H
 #define RAYTRACER_DISPLAY_H
 
-#define RENDER_COMPLEXITY 2
+#define RENDER_COMPLEXITY 1
 
-#if RENDER_COMPLEXITY == 1
+#if RENDER_COMPLEXITY == 0
+  #define WIDTH  80
+  #define HEIGHT 50
+  #define SCALE 10.0  // display the window bigger than it really is (render low-res while having large window)
+
+#elif RENDER_COMPLEXITY == 1
   #define WIDTH  160
   #define HEIGHT 100
   #define SCALE 8.0  // display the window bigger than it really is (render low-res while having large window)
@@ -49,7 +54,9 @@ private:
   void displaySamplerPattern(float frame);
 
 public:
-  bool showSamplerPatterns;
+  bool             showSamplerPatterns;
+  bool             onScreenDisplay;
+  bool             stdOutLog;
   sf::Texture      texture;
   Display();
 
@@ -57,6 +64,7 @@ public:
   bool keepLooping();
   void clearDisplayMem();
   void convertToDisplayMem();
+  void log(char *text);
 };
 
 #endif //RAYTRACER_DISPLAY_H
