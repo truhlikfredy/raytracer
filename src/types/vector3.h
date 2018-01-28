@@ -23,7 +23,6 @@ public:
 
   Vector3 operator&(Vector3 secondVector); // x   https://steveharveynz.wordpress.com/2012/12/20/ray-tracer-part-two-creating-the-camera/
 
-  float lenght();
 };
 
 #endif /* VECTOR_H_ */

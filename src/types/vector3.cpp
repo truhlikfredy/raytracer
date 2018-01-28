@@ -37,7 +37,4 @@ Vector3 Vector3::operator&(Vector3 secondVector) {
 }
 
 
-float Vector3::lenght() {
-  return sqrt(x * x + y * y + z * z);
-}
 

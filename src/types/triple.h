@@ -43,6 +43,8 @@ public:
 
   float sum();
 
+  float lenght();
+
   //Triple operator=(Triple& secondTriple);
 };
 

@@ -106,6 +106,12 @@ float Triple::distance(Triple secondTriple) {
 }
 
 
+float Triple::lenght() {
+  return sqrt(this->x * this->x +
+              this->y * this->y +
+              this->z * this->z);
+}
+
 
 //Triple Triple::operator=(Triple& secondTriple) {
 //  return Triple(secondTriple->x, secondTriple->y, secondTriple->z);
