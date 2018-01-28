@@ -99,6 +99,20 @@ https://gamedev.stackexchange.com/a/114416
 
 https://stackoverflow.com/questions/41661369/smoothly-mapping-a-2d-uv-point-onto-a-3d-xyz-sphere
 
+## Coloring, phong-shading, Lights
+
+https://stackoverflow.com/questions/24132774/trouble-with-phong-shading
+
+https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
+
+http://manual.reallusion.com/Character_Creator/ENU/1/15_Multiple_Channel_Texture_Mapping/Modifying_Texture_Settings_Advanced.htm
+
+https://globe3d.sourceforge.io/g3d_html/gl-materials__ads.htm#25_8
+
+http://pratapdafedar.blogspot.ie/2013/05/all-about-opengl.html
+
+https://www.livehome3d.com/support/lh3d-help/images/specular1.png
+
 
 ## Anti-Aliasing, motion blur, depth of field lens effects, soft shadows
 
