@@ -3,7 +3,6 @@
  * date: 08/01/2018
  */
 
-
 #include <float.h>
 #include <cmath>
 
@@ -14,17 +13,20 @@ Triple::Triple() {
   x = y = z = 0.0f;
 }
 
+
 Triple::Triple(float init) {
   x = init;
   y = init;
   z = init;
 }
 
+
 Triple::Triple(float xInit, float yInit, float zInit) {
   x = xInit;
   y = yInit;
   z = zInit;
 }
+
 
 //Triple::Triple(Triple &triple) {
 //  x = triple.x;
@@ -36,21 +38,56 @@ Triple Triple::operator+(Triple secondTriple) {
   return Triple(this->x + secondTriple.x, this->y + secondTriple.y, this->z + secondTriple.z);
 }
 
+
+Triple Triple::operator+=(Triple secondTriple) {
+  return Triple(this->x + secondTriple.x, this->y + secondTriple.y, this->z + secondTriple.z);
+}
+
+
 Triple Triple::operator-(Triple secondTriple) {
   return Triple(this->x - secondTriple.x, this->y - secondTriple.y, this->z - secondTriple.z);
 }
+
+
+Triple Triple::operator-=(Triple secondTriple) {
+  return Triple(this->x - secondTriple.x, this->y - secondTriple.y, this->z - secondTriple.z);
+}
+
 
 Triple Triple::operator*(float scalar) {
   return Triple(this->x * scalar, this->y * scalar, this->z * scalar);
 }
 
+
+Triple Triple::operator*=(float scalar) {
+  return Triple(this->x * scalar, this->y * scalar, this->z * scalar);
+}
+
+
+Triple Triple::operator*(Triple secondTriple) {
+  return Triple(this->x * secondTriple.x, this->y * secondTriple.y, z * secondTriple.z);
+}
+
+
+Triple Triple::operator*=(Triple secondTriple) {
+  return Triple(this->x * secondTriple.x, this->y * secondTriple.y, z * secondTriple.z);
+}
+
+
 Triple Triple::operator/(float scalar) {
   return Triple(this->x / scalar, this->y / scalar, this->z / scalar);
 }
 
+
+Triple Triple::operator/=(float scalar) {
+  return Triple(this->x / scalar, this->y / scalar, this->z / scalar);
+}
+
+
 float Triple::sum() {
   return this->x + this->y + this->z;
 }
+
 
 float Triple::distance(Triple secondTriple) {
   return sqrtf(powf(this->x - secondTriple.x, 2) +
@@ -59,9 +96,6 @@ float Triple::distance(Triple secondTriple) {
 }
 
 
-Triple Triple::operator*(Triple secondTriple) {
-  return Triple(this->x * secondTriple.x, this->y * secondTriple.y, z * secondTriple.z);
-}
 
 //Triple Triple::operator=(Triple& secondTriple) {
 //  return Triple(secondTriple->x, secondTriple->y, secondTriple->z);
