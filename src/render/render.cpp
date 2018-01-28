@@ -9,6 +9,7 @@
 #include <float.h>
 #include "render.h"
 #include "../entities/objects/sphere.h"
+#include "../scenes/scene.h"
 
 
 Render::Render(int widthInit, int heightInit) {
@@ -36,7 +37,7 @@ windowType Render::getThreadWindow(int thread) {
 
 
 
-Color Render::rayStart(Ray ray, Sphere* objects, LightOmni* light, float frame) {
+colors Render::rayStart(Ray ray, Sphere* objects, LightOmni* light, float frame) {
   //scene->evaluateLights(light, frame);
   scene->evaluateObjects(objects, frame);
 
@@ -54,10 +55,12 @@ void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionInde
   refractionRay = k < 0 ? 0 : incidentVec * eta  + n * (eta * cosi - sqrtf(k));
 }
 
-Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration, bool inside) {
+colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration, bool inside) {
+
+  colors ret = {.average = Color(), .sum = Color() };
 
   if (iteration > MAX_BOUNCES) {
-    return Color();
+    return ret;
   }
 
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
@@ -104,19 +107,22 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
     float specular = fmaxf(0, hitLight % hitReflected);
 
 
-    Color colorBase = Color();
-    Color colorRefract = Color();
-    Color colorReflect = Color();
+    colors colorRefract = {.average = Color(), .sum = Color() };
+    colors colorReflect = {.average = Color(), .sum = Color() };
 
     //if (iteration ==1)
     if (hitMaterial.transparency != 0.0f) {
       Vector3 hitRefracted;
       refract(ray.direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
 
-      colorRefract = rayFollow(Ray(smallestHitPoint, hitRefracted), objects, light, frame, iteration +1, !inside) * hitMaterial.transparency;
+      colorRefract = rayFollow(Ray(smallestHitPoint, hitRefracted), objects, light, frame, iteration +1, !inside);
+      colorRefract.average = colorRefract.average * hitMaterial.transparency;
+      colorRefract.sum = colorRefract.sum * hitMaterial.transparency;
     }
     if (hitMaterial.reflectivity != 0.0f && inside == false) {
-      colorReflect = rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1, false) * hitMaterial.reflectivity;
+      colorReflect = rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1, false);
+      colorReflect.average = colorReflect.average * hitMaterial.reflectivity;
+      colorReflect.sum = colorReflect.sum * hitMaterial.reflectivity;
     }
     // diffuse = similarity (dot product) of hitLight and hitNormal
     // https://youtu.be/KDHuWxy53uM
@@ -125,11 +131,12 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
     // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
 
     //http://www.paulsprojects.net/tutorials/simplebump/simplebump.html
-    Color emmision(0.0f, 0.0f, 0.0f);
-    Color globalAmbient(0.0f, 0.0f, 0.0f);
-    float atenuate = 1.0f;
+//    Color emmision(0.0f, 0.0f, 0.0f);
+    //Color globalAmbient(0.0f, 0.0f, 0.0f);
+//    float atenuate = 1.0f;
 
-    colorBase = light->color * powf(specular, hitMaterial.shininess) + hitMaterial.diffuse * diffuse + hitMaterial.ambient;
+    ret.average = scene->camera.ambient * hitMaterial.ambient;
+    ret.sum = ( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * light->color;
 
     for (int j = 0; j < scene->nObjects; j++) {
       // test all objects if they are casting shadow from this light
@@ -138,18 +145,18 @@ Color Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame,
         Sphere shadow = objects[j];
         if (shadow.detectHit(Ray(smallestHitPoint, hitLight)) != -1) {
           if (shadow.materialFn(hitLight,frame).castsShadows) {
-            colorBase = Color(hitMaterial.ambient);
+            ret.sum = Color();    // null the summing factor, leaveonly average factor ok which is average
             break;
           }
         }
       }
     }
 
-    //return colorBase;
-    return Color(colorBase + colorRefract + colorReflect);
+    ret.average = ret.average + colorRefract.average + colorReflect.average;
+    ret.sum = ret.sum + colorRefract.sum + colorReflect.sum;
   }
 
-  return Color();
+  return ret;
 }
 
 void Render::renderPartialWindow(float frame, windowType window) {
@@ -161,9 +168,9 @@ void Render::renderPartialWindow(float frame, windowType window) {
 
   for (int y = window.yStart; y < window.yEnd; y++) {
     for (int x = window.xStart; x < window.xEnd; x++) {
-      unsigned int colors = 0;
-      Color totalColor(0.0f);
-      Color lastColor;
+      unsigned int colorsCount = 0;
+      colors totalColor = {.average = Color(), .sum = Color() };
+      colors lastColor;
 
       sampler.nextPixel();
       while (sampler.isNext()) {
@@ -184,21 +191,23 @@ void Render::renderPartialWindow(float frame, windowType window) {
 
         Ray rayForThisPixel(start,dest3);
         light = scene->lights[sample.light].evaluateFn(frame);
-        lastColor = ~rayStart(rayForThisPixel, objects, &light, frame + sample.time);
+        lastColor = rayStart(rayForThisPixel, objects, &light, frame + sample.time);
 
-        totalColor = totalColor + lastColor;    // TODO
-        colors++;
+
+        totalColor.average = totalColor.average + ~lastColor.average;
+        totalColor.sum = totalColor.sum + ~lastColor.sum;
+        colorsCount++;
 
         if (sampler.index == sampler.indexMinimum) {
           // detect black parts of the scene after few sample rays
-          Color currentAverage(totalColor/ colors);
-          if (currentAverage.sum() == 0) {
+          if (Color((totalColor.average + totalColor.sum)/ colorsCount).sum() == 0) {
             sampler.finish();
           }
         }
 
       }
-      dynamicPixels[x + (y * width)] = totalColor / colors;
+//      dynamicPixels[x + (y * width)] = (totalColor.sum * colorsCount) / scene->nLights  + totalColor.average/colorsCount;
+      dynamicPixels[x + (y * width)] = ~Color( (totalColor.sum) / ((float)colorsCount/scene->nLights)  + (totalColor.average/colorsCount));
 
     }
   }

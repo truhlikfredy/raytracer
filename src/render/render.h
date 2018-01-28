@@ -7,8 +7,8 @@
 #define RAYTRACER_RENDER_H
 
 #define SEGMENTS 1  // how many partitions the screen should be split
-#define SAMPLING_MIN 3
-#define SAMPLING_MAX 6
+#define SAMPLING_MIN 4
+#define SAMPLING_MAX 9
 #define MAX_BOUNCES 4
 
 #include "../entities/lights/lightOmni.h"
@@ -30,6 +30,11 @@ struct windowType {
 #include "../scenes/scene.h"
 
 
+struct colors {
+  Color average;
+  Color sum;
+};
+
 class Render {
 private:
   unsigned int width;
@@ -40,9 +45,9 @@ private:
 
   void refract(Vector3 &incidentVec, Vector3 &normal, float refractionIndex, Vector3 &refractionRay);
 
-  Color rayStart(Ray ray, Sphere* objects, LightOmni* light, float frame);
+  colors rayStart(Ray ray, Sphere* objects, LightOmni* light, float frame);
 
-  Color rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration, bool inside);
+  colors rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration, bool inside);
 
   void renderPartialWindow(float frame, windowType window);
 

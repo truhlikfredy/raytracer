@@ -13,7 +13,8 @@ Lights::Lights(): Scene(2, 4) {
     .possition    = Vector3(0.0f, 0.0f,  -20.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 30.0f),
     .apeture      = 0.0f,
-    .shutterSpeed = 0.0f
+    .shutterSpeed = 0.0f,
+    .ambient      = Color(0.1f)
   };
 
   const materialStatic squares[6] = {
@@ -28,7 +29,7 @@ Lights::Lights(): Scene(2, 4) {
   lights[0] = LightOmniGen([](float frame) {
     const float lightRotate = (M_PI * frame) / 31;
     Vector3 center(320 * cosf(lightRotate), 10 * (sinf(lightRotate) - 20 ), -20);
-    Color color(0.1f, 0.0f, 0.4f);
+    Color color(0.9f, 0.1f, 0.9f);
 
     return LightOmni(center, color);
   });

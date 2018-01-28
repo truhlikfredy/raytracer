@@ -10,16 +10,17 @@
 Mandelbrot::Mandelbrot(): Scene(1, 1) {
 
   camera = {
-    .possition     = Vector3(0.0f, 0.0f, 35.0f),
+    .possition    = Vector3(0.0f, 0.0f, 35.0f),
     .lookAt       = Vector3(0.0f,0.0f,60.0f),
     .apeture      = 0.0f,
-    .shutterSpeed = 0.0f
+    .shutterSpeed = 0.0f,
+    .ambient      = Color(0.1f)
   };
 
   lights[0] = LightOmniGen([](float frame) {
     const float lightRotate = (M_PI * frame) / 31;
     Vector3 center(320 * cosf(lightRotate), 0.6 * 200 * (sinf(lightRotate) - 0.5), -100);
-    Color color(0.0f, 0.8f, 0.3f);
+    Color color(0.7f, 0.95f, 0.8f);
 
     return LightOmni(center, color);
   });

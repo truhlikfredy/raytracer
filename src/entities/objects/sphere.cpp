@@ -117,7 +117,7 @@ uv Sphere::toUv(Vector3 point) {
   // https://gamedev.stackexchange.com/a/114416
   // https://en.wikipedia.org/wiki/UV_mapping
 
-  Vector3 newPoint = ~Vector3(point - this->center);
+  Vector3 newPoint = ~Vector3(this->center - point);
   return {
     .u = atan2f(newPoint.x, newPoint.z) / (2 * M_PI) + 0.5f,
     .v = 0.5 - asin(newPoint.y) / M_PI

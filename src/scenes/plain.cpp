@@ -20,14 +20,14 @@ Plain::Plain(): Scene(2, 2) {
   lights[0] = LightOmniGen([](float frame) {
     const float lightRotate = (M_PI * frame) / 31;
     Vector3 center(320 * cosf(lightRotate), 0.6 * 200 * (sinf(lightRotate) - 0.5), 20);
-    Color color(0.0f, 0.2f, 0.8f);
+    Color color(0.5f, 0.5f, 0.9f);
 
     return LightOmni(center, color);
   });
 
   lights[1] = LightOmniGen([](float frame) {
     Vector3 center(300, -50, 200);
-    Color color(0.0f, 0.3f, 0.0f);
+    Color color(0.0f, 0.8f, 0.0f);
 
     return LightOmni(center, color);
   });

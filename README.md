@@ -44,6 +44,7 @@
 * More agresive private methods
 * Improve test pattern of the jitter results
 * Support different objects (plane, box, donut)
+* Objects and camera transform (rotation, movement)
 * Soft shadows
 * Save videos as well.
 * Different light types: Spot light, Area flood light.

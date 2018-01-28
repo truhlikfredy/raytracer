@@ -27,6 +27,7 @@ public:
     Vector3 lookAt;
     float apeture;      // Affects strenght of the depth of field, 0 = disabled DOF
     float shutterSpeed; // Affects motion blur, 0 = disabled blur
+    Color ambient;
   } camera;
 
   Scene(int nlightsInit, int nObjectsInit);

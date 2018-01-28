@@ -99,7 +99,7 @@ void Sampler::getNextSample(sampleTuple *ret) {
   }
 
   if (lights > 0) {
-    ret->light = (int)(origIndex + pattern) % lights;
+    ret->light = (int)(origIndex) % lights;
   }
 
   vanDerCoruptSobol2(origIndex, patternLightSpace, sample);

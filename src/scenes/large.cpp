@@ -15,7 +15,8 @@ Large::Large():Scene(3, BALLS +2) {
     .possition    = Vector3(0.0f, 0.0f,  -50.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 30.0f),
     .apeture      = 0.0f,
-    .shutterSpeed = 0.0f
+    .shutterSpeed = 0.0f,
+    .ambient      = Color(0.1f)
   };
 
   const materialStatic squares[6] = {
@@ -30,7 +31,7 @@ Large::Large():Scene(3, BALLS +2) {
   lights[0] = LightOmniGen([](float frame) {
     const float lightRotate = (M_PI * frame) / 11;
     Vector3 center(3 * cosf(lightRotate)+7, 2 * (sinf(lightRotate) - 10 ), -40);
-    Color color(0.0f, 0.0f, 0.8f);
+    Color color(0.0f, 0.1f, 0.8f);
 
     return LightOmni(center, color);
   });
@@ -38,15 +39,15 @@ Large::Large():Scene(3, BALLS +2) {
   lights[1] = LightOmniGen([](float frame) {
     const float lightRotate = (M_PI * frame) / 11;
     Vector3 center(3 * cosf(lightRotate*1.7)+6, 2 * (sinf(lightRotate*1.7) - 12 ), -40);
-    Color color(0.8f, 0.0f, 0.0f);
+    Color color(0.8f, 0.0f, 0.1f);
 
     return LightOmni(center, color);
   });
 
   lights[2] = LightOmniGen([](float frame) {
     const float lightRotate = (M_PI * frame) / 11;
-    Vector3 center(3 * cosf(lightRotate)-7, 2 * (sinf(lightRotate) - 10 ), -40);
-    Color color(0.0f, 0.8f, 0.0f);
+    Vector3 center(3 * cosf(lightRotate*2.5)-7, 2 * (sinf(lightRotate*2.5) - 10 ), -40);
+    Color color(0.1f, 0.8f, 0.0f);
 
     return LightOmni(center, color);
   });
@@ -60,7 +61,7 @@ Large::Large():Scene(3, BALLS +2) {
         const int x = (((int)point.x+400)/30);
         const int y = (((int)point.y+400)/30);
 
-        mandelbrotSet set = {-0.0068464412f, -0.80686056f, 0.0160606767f, 0.00782957993f, 1.0f };
+        mandelbrotSet set = {-0.0068464412f, -0.80686056f, 0.0160606767f*2, 0.00782957993f*2, 1.0f };
         uv textureCoord = sphere1.toUv(point);
         textureCoord.u += frame / 1800.0f;
         textureCoord.v += frame / 200.0f;
@@ -77,7 +78,7 @@ Large::Large():Scene(3, BALLS +2) {
           .diffuse = fractal,
           .specular = Color(0.2f),
           .emission = Color(0.0),
-          .shininess = 5,
+          .shininess = 85,
           .reflectivity = 1.0f-fractal.x,
           .transparency = 0.0f
         };
