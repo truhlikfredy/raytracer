@@ -21,23 +21,23 @@ public:
 
   Triple operator+(Triple secondTriple);
 
-  Triple operator+=(Triple secondTriple);
+  void operator+=(Triple secondTriple);
 
   Triple operator-(Triple secondTriple);
 
-  Triple operator-=(Triple secondTriple);
+  void operator-=(Triple secondTriple);
 
   Triple operator*(float scalar);
 
-  Triple operator*=(float scalar);
+  void operator*=(float scalar);
 
   Triple operator*(Triple secondTriple);
 
-  Triple operator*=(Triple secondTriple);
+  void operator*=(Triple secondTriple);
 
   Triple operator/(float scalar);
 
-  Triple operator/=(float scalar);
+  void operator/=(float scalar);
 
   float distance(Triple secondTriple);
 

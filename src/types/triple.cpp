@@ -39,8 +39,10 @@ Triple Triple::operator+(Triple secondTriple) {
 }
 
 
-Triple Triple::operator+=(Triple secondTriple) {
-  return Triple(this->x + secondTriple.x, this->y + secondTriple.y, this->z + secondTriple.z);
+void Triple::operator+=(Triple secondTriple) {
+  this->x += secondTriple.x;
+  this->y += secondTriple.y;
+  this->z += secondTriple.z;
 }
 
 
@@ -49,8 +51,10 @@ Triple Triple::operator-(Triple secondTriple) {
 }
 
 
-Triple Triple::operator-=(Triple secondTriple) {
-  return Triple(this->x - secondTriple.x, this->y - secondTriple.y, this->z - secondTriple.z);
+void Triple::operator-=(Triple secondTriple) {
+  this->x -= secondTriple.x;
+  this->y -= secondTriple.y;
+  this->z -= secondTriple.z;
 }
 
 
@@ -59,8 +63,10 @@ Triple Triple::operator*(float scalar) {
 }
 
 
-Triple Triple::operator*=(float scalar) {
-  return Triple(this->x * scalar, this->y * scalar, this->z * scalar);
+void Triple::operator*=(float scalar) {
+  this->x *= scalar;
+  this->y *= scalar;
+  this->z *= scalar;
 }
 
 
@@ -69,8 +75,10 @@ Triple Triple::operator*(Triple secondTriple) {
 }
 
 
-Triple Triple::operator*=(Triple secondTriple) {
-  return Triple(this->x * secondTriple.x, this->y * secondTriple.y, z * secondTriple.z);
+void Triple::operator*=(Triple secondTriple) {
+  this->x *= secondTriple.x;
+  this->y *= secondTriple.y;
+  this->z *= secondTriple.z;
 }
 
 
@@ -79,8 +87,10 @@ Triple Triple::operator/(float scalar) {
 }
 
 
-Triple Triple::operator/=(float scalar) {
-  return Triple(this->x / scalar, this->y / scalar, this->z / scalar);
+void Triple::operator/=(float scalar) {
+  this->x /= scalar;
+  this->y /= scalar;
+  this->z /= scalar;
 }
 
 

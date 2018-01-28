@@ -82,7 +82,7 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
         // It's the shortest hit yet, let's save it, if it will win then calculate it's color by shading it depending on the bounce angle
         smallestObjectIndex = i;
         smallestHitDistance = hitDistance;
-        smallestHitPoint = hitPoint;
+        smallestHitPoint    = hitPoint;
       }
     }
   }
@@ -92,33 +92,31 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
     Sphere object = objects[smallestObjectIndex];
 
     // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
-    Vector3 hitNormal = object ^smallestHitPoint;
+    Vector3 hitNormal    = object ^smallestHitPoint;
     Vector3 hitReflected = ray.direction - (hitNormal * 2 * (ray.direction % hitNormal));
-    Vector3 hitLight = ~Vector3(light->center - smallestHitPoint);
-    //Vector3 hitLight = ~Vector3(smallestHitPoint - light->center);
+    Vector3 hitLight     = ~Vector3(light->center - smallestHitPoint);
 
     materialStatic hitMaterial = object.materialFn(smallestHitPoint, frame);
 
-    float diffuse = fmaxf(0, hitLight % hitNormal); // how similar are they?
+    float diffuse  = fmaxf(0, hitLight % hitNormal); // how similar are they?
     float specular = fmaxf(0, hitLight % hitReflected);
 
 
     colors colorRefract = {.average = Color(), .sum = Color() };
     colors colorReflect = {.average = Color(), .sum = Color() };
 
-    //if (iteration ==1)
     if (hitMaterial.transparency != 0.0f) {
       Vector3 hitRefracted;
       refract(ray.direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
 
       colorRefract = rayFollow(Ray(smallestHitPoint, hitRefracted), objects, light, frame, iteration +1, !inside);
-      colorRefract.average = colorRefract.average * hitMaterial.transparency;
-      colorRefract.sum = colorRefract.sum * hitMaterial.transparency;
+      colorRefract.average *= hitMaterial.transparency;
+      colorRefract.sum     *= hitMaterial.transparency;
     }
     if (hitMaterial.reflectivity != 0.0f && inside == false) {
       colorReflect = rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1, false);
-      colorReflect.average = colorReflect.average * hitMaterial.reflectivity;
-      colorReflect.sum = colorReflect.sum * hitMaterial.reflectivity;
+      colorReflect.average *= hitMaterial.reflectivity;
+      colorReflect.sum     *= hitMaterial.reflectivity;
     }
     // diffuse = similarity (dot product) of hitLight and hitNormal
     // https://youtu.be/KDHuWxy53uM
@@ -129,7 +127,7 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
     //http://www.paulsprojects.net/tutorials/simplebump/simplebump.html
 
     ret.average = scene->ambient * hitMaterial.ambient;
-    ret.sum = ( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * light->color;
+    ret.sum     = ( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * light->color;
 
     for (int j = 0; j < scene->nObjects; j++) {
       // test all objects if they are casting shadow from this light
@@ -147,8 +145,8 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
       }
     }
 
-    ret.average = ret.average + colorRefract.average + colorReflect.average;
-    ret.sum = ret.sum + colorRefract.sum + colorReflect.sum;
+    ret.average += colorRefract.average + colorReflect.average;
+    ret.sum     += colorRefract.sum     + colorReflect.sum;
   }
 
   return ret;
@@ -171,27 +169,23 @@ void Render::renderPartialWindow(float frame, windowType window) {
       sampler.nextPixel();
       while (sampler.isNext()) {
 
-
         sampler.getNextSample(&sample);
-
-        Vector3 start = scene->camera.possition + Vector3(sample.lensX, sample.lensY, 0);
-        Vector3 lookAt = scene->camera.lookAt;
-        Vector3 down(0.0f, -1.0f, 0.0f);
-        Vector3 right = (~Vector3(lookAt & down))*320;
-        Vector3 up2 = (~Vector3(lookAt & right))*200;
-
-        float recenterX = ( x + sample.spaceX - width/2.0f) / ( 2.0 * width);
+        float recenterX = ( x + sample.spaceX - width/2.0f)  / ( 2.0 * width);
         float recenterY = ( y + sample.spaceY - height/2.0f) / ( 2.0 * height);
 
-        Vector3 dest3 = ~Vector3((right * recenterX) + (up2 * recenterY) + lookAt - start);
+        Vector3 down(0.0f, -1.0f, 0.0f);
+        Vector3 start  = scene->camera.possition + Vector3(sample.lensX, sample.lensY, 0);
+        Vector3 lookAt = scene->camera.lookAt;
+        Vector3 right  = (~Vector3(lookAt & down))*320;
+        Vector3 up2    = (~Vector3(lookAt & right))*200;
+        Vector3 dest3  = ~Vector3((right * recenterX) + (up2 * recenterY) + lookAt - start);
 
         Ray rayForThisPixel(start,dest3);
         light = scene->lights[sample.light].evaluateFn(frame);
         lastColor = rayStart(rayForThisPixel, objects, &light, frame + sample.time);
 
-
-        totalColor.average = totalColor.average + ~lastColor.average;
-        totalColor.sum = totalColor.sum + ~lastColor.sum;
+        totalColor.average += ~lastColor.average;
+        totalColor.sum     += ~lastColor.sum;
         colorsCount++;
 
         if (sampler.index == sampler.indexMinimum) {
