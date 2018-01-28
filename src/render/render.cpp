@@ -8,12 +8,10 @@
 #include <vector>
 #include <float.h>
 #include "render.h"
+#include "../entities/camera.h"
 
 
-Render::Render(int widthInit, int heightInit) {
-  scene         = nullptr;
-  width         = widthInit;
-  height        = heightInit;
+Render::Render(int widthInit, int heightInit): width(widthInit), height(heightInit), scene(nullptr) {
   dynamicPixels = new Color[widthInit * heightInit];
   threadsMax    = std::thread::hardware_concurrency();
 }
@@ -154,11 +152,18 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
 
 
 void Render::renderPartialWindow(float frame, windowType window) {
-  Sampler sampler(SAMPLING_MIN * scene->nLights, SAMPLING_MAX * scene->nLights, scene->camera.shutterSpeed, scene->camera.apeture, scene->nLights, frame);
+  // this will be executed by multiple different threads,
+  // things needs to be in local stack or globaly synchronize to be safe
 
-  Sphere    *objects = new Sphere[scene->nObjects];
-  LightOmni light;
+  Sampler sampler(SAMPLING_MIN * scene->nLights, SAMPLING_MAX * scene->nLights,
+                  scene->camera.shutterSpeed, scene->camera.apeture, scene->nLights, frame);
+
+  Camera  camera(width,height);
+
+  Sphere      *objects = new Sphere[scene->nObjects];
+  LightOmni   light;
   sampleTuple sample;
+  Ray         rayForThisPixel;
 
   for (int y = window.yStart; y < window.yEnd; y++) {
     for (int x = window.xStart; x < window.xEnd; x++) {
@@ -170,17 +175,8 @@ void Render::renderPartialWindow(float frame, windowType window) {
       while (sampler.isNext()) {
 
         sampler.getNextSample(&sample);
-        const float recenterX = ( x + sample.spaceX - width  / 2.0f ) / ( 2.0 * width  );
-        const float recenterY = ( y + sample.spaceY - height / 2.0f ) / ( 2.0 * height );
 
-        Vector3 down(0.0f, -1.0f, 0.0f);
-        Vector3 start  = scene->camera.possition + Vector3(sample.lensX, sample.lensY, 0);
-        Vector3 lookAt = scene->camera.lookAt;
-        Vector3 right  = (~Vector3(lookAt & down))  * 320;
-        Vector3 up     = (~Vector3(lookAt & right)) * 200;
-        Vector3 dest   = ~Vector3((right * recenterX) + (up * recenterY) + lookAt - start);
-
-        Ray rayForThisPixel(start, dest);
+        camera.getRay(x, y, sample, scene, rayForThisPixel);
         light = scene->lights[sample.light].evaluateFn(frame);
         lastColor = rayStart(rayForThisPixel, objects, &light, frame + sample.time);
 
