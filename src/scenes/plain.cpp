@@ -13,7 +13,7 @@ Plain::Plain(): Scene(2, 2, 130.0f) {
     .possition    = Vector3(0.0f, 0.0f,  0.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 60.0f),
     .apeture      = 0.0f,
-    .shutterSpeed = 1.0f
+    .shutterBlur = 1.0f
   };
 
   lights[0] = LightOmniGen([](float frame) {

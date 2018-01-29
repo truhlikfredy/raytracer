@@ -41,6 +41,7 @@
 * Reflection
 * Mandelbrot fractal as a texture/material with different "shine" properties in different sections
 * Dynamicly adjusting sampler, allowing a range of samples per pixel and ability to stop wheneve desire quality (delta) is achieved
+* Improved performance on scenes where there is no motion blur (means that the scene is evaluated only once and not for each ray in each pixel). Benchmark parameters: Width=320 Height=200 SamplingMin=2 SamplingMax=4 Bounches=4. On complex scenes such as "large2" it decreased from 75 seconds to calculate 25 frames to 48seconds. For "lights" it improved from 73 seconds to calculate 120 frames to 52 seconds. Scenes with motion blur enable do not have any benefit and scene with low complexity have mesurable improvement but not as much as complex scenes.
 
 # TODO (More precisely a wish list)
 
@@ -59,6 +60,7 @@
   *  Results of lamba functions
 * Inverse square law to fade off the light with hitDistance
 * Film grain: smooth, animated, weighted (shadows are more grainy)
+* Render only few time instances of the scene for the whole frame so each pixel doesn't have to be unique time instance, this will have small impact on quality on subpixel level, but large impact on quality.
 
 # Dependancies
 

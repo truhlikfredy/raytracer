@@ -44,7 +44,7 @@ private:
 
   colors rayStart(Ray ray, Sphere* objects, LightOmni* light, float frame);
 
-  colors rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration, bool inside);
+  colors rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration, int inside);
 
   void renderPartialWindow(float frame, windowType &window);
 

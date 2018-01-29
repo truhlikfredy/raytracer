@@ -15,7 +15,7 @@ Large::Large():Scene(3, BALLS +2, 20.0f) {
     .possition    = Vector3(0.0f, 0.0f,  -80.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 30.0f),
     .apeture      = 0.0f,
-    .shutterSpeed = 0.0f
+    .shutterBlur = 0.0f
   };
 
   const materialStatic squares[6] = {

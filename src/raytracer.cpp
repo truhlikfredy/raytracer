@@ -20,10 +20,10 @@ int main() {
   bool quitRequested = false;
 
   Scene scenes[6] = {
+    Lights(),
     Plain(),
     Large2(),
     Large(),
-    Lights(),
     Dof(),
     Mandelbrot()
   };

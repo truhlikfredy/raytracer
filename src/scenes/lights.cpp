@@ -13,7 +13,7 @@ Lights::Lights(): Scene(2, 4, 120.0f) {
     .possition    = Vector3(0.0f, 0.0f,  -20.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 30.0f),
     .apeture      = 0.0f,
-    .shutterSpeed = 0.0f
+    .shutterBlur = 0.0f
   };
 
   const materialStatic squares[6] = {
@@ -58,8 +58,8 @@ Lights::Lights(): Scene(2, 4, 120.0f) {
   });
 
   objects[1] = SphereGen([](float frame) {
-    return Sphere(Vector3(sinf(frame / 8) * 15,
-                          sinf(frame / 4) * 2 +3,
+    return Sphere(Vector3(sinf(frame / 8)  * 15,
+                          sinf(frame / 4)  * 2  + 3,
                           sinf(frame / 20) * 15 + 25),
                   15,
                   [](Vector3 point, float frame) {

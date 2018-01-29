@@ -9,6 +9,7 @@
 #include <float.h>
 #include "render.h"
 #include "../entities/camera.h"
+#include "../scenes/scene.h"
 
 
 Render::Render(int widthInit, int heightInit): width(widthInit), height(heightInit), scene(nullptr) {
@@ -31,9 +32,11 @@ void Render::getThreadWindow(int thread, windowType &ret) {
 
 
 colors Render::rayStart(Ray ray, Sphere* objects, LightOmni* light, float frame) {
-  scene->evaluateObjects(objects, frame);
+  if (scene->camera.shutterBlur != 0.0f) {
+    scene->evaluateObjects(objects, frame);
+  }
 
-  return rayFollow(ray, objects, light, frame, 1, false);
+  return rayFollow(ray, objects, light, frame, 1, -1);
 }
 
 
@@ -48,7 +51,7 @@ void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionInde
 }
 
 
-colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration, bool inside) {
+colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration, int inside) {
   colors ret = {.average = Color(), .sum = Color() };
 
   if (iteration > MAX_BOUNCES) {
@@ -66,8 +69,16 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
     Sphere object = objects[i];
     float hitDistance;
 
-    if (inside) {
-      hitDistance = object.detectHitMax(ray, hitPoint);
+    if (inside >= 0) {
+      //hitDistance = object.detectHitMax(ray, hitPoint);
+      if (inside == i) {
+        // if we are testing the collision with itslef (inside the object) then find the furtherst point
+        hitDistance = object.detectHitMax(ray, hitPoint);
+      }
+      else {
+        // but for all other objects even including intersecting object do detect closest collision
+        hitDistance = object.detectHit(ray, hitPoint);
+      }
     }
     else {
       hitDistance = object.detectHit(ray, hitPoint);
@@ -110,14 +121,14 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
       Vector3 hitRefracted;
       refract(ray.direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
 
-      colorRefract = rayFollow(Ray(smallestHitPoint, hitRefracted), objects, light, frame, iteration +1, !inside);
+      colorRefract = rayFollow(Ray(smallestHitPoint, hitRefracted), objects, light, frame, iteration +1, (inside == -1) ? smallestObjectIndex : -1 );
       colorRefract.average *= hitMaterial.transparency;
       colorRefract.sum     *= hitMaterial.transparency;
     }
 
-    if (hitMaterial.reflectivity != 0.0f && inside == false) {
+    if (hitMaterial.reflectivity != 0.0f && inside == -1) {
       // If the material is reflective then handle reflection
-      colorReflect = rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1, false);
+      colorReflect = rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1, -1);
       colorReflect.average *= hitMaterial.reflectivity;
       colorReflect.sum     *= hitMaterial.reflectivity;
     }
@@ -165,7 +176,7 @@ void Render::renderPartialWindow(float frame, windowType &window) {
   // things needs to be in local stack or globaly synchronize to be safe
 
   Sampler sampler(SAMPLING_MIN * scene->nLights, SAMPLING_MAX * scene->nLights,
-                  scene->camera.shutterSpeed, scene->camera.apeture, scene->nLights, frame);
+                  scene->camera.shutterBlur, scene->camera.apeture, scene->nLights, frame);
 
   Camera  camera(width,height);
 
@@ -173,6 +184,11 @@ void Render::renderPartialWindow(float frame, windowType &window) {
   LightOmni   light;
   sampleTuple sample;
   Ray         rayForThisPixel;
+
+  if (scene->camera.shutterBlur == 0.0f) {
+    // if there is no blurness due to animation do not evaluate scene per each ray
+    scene->evaluateObjects(objects, frame);
+  }
 
   for (int y = window.yStart; y < window.yEnd; y++) {
     for (int x = window.xStart; x < window.xEnd; x++) {

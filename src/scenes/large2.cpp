@@ -6,6 +6,7 @@
 #include <cmath>
 #include "large2.h"
 #include "../render/sampler.h"
+#include "../utils/utils.h"
 
 #define BALLS 20
 #define BALL_MATERIALS 13
@@ -16,7 +17,7 @@ Large2::Large2():Scene(1, BALLS +7, 25.0f) {
     .possition    = Vector3(0.0f, 0.0f,  -80.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 30.0f),
     .apeture      = 0.0f,
-    .shutterSpeed = 0.0f
+    .shutterBlur = 0.0f
   };
 
   const materialStatic materials[BALL_MATERIALS] = {
@@ -36,8 +37,8 @@ Large2::Large2():Scene(1, BALLS +7, 25.0f) {
   };
 
   lights[0] = LightOmniGen([](float frame) {
-    const float lightRotate = (M_PI * frame) / 11;
-    Vector3 center(25 * cosf(lightRotate)+7, 15 * (sinf(lightRotate*2) - 2 ), 50);
+    const float lightRotate = (M_PI_F * frame) / 11;
+    Vector3 center(25.0f * cosf(lightRotate)+7, 15.0f * (sinf(lightRotate*2) - 2.0f ), 50.0f);
     Color color(0.8f, 0.8f, 0.95f);
 
     return LightOmni(center, color);

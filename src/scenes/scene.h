@@ -27,7 +27,7 @@ public:
     Vector3 possition;    // Possition of the camera
     Vector3 lookAt;       // Loacation where the camera is looking
     float   apeture;      // Affects strenght of the depth of field, 0 = disabled DOF
-    float   shutterSpeed; // Affects motion blur, 0 = disabled blur
+    float   shutterBlur; // Affects motion blur, 0 = disabled blur
   } camera;
 
   Scene(int nlightsInit, int nObjectsInit, float lastFrame);
