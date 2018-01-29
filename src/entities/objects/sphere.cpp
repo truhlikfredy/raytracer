@@ -94,7 +94,7 @@ float Sphere::detectHitMax(Ray ray, Vector3 &hitPoint) {
   Vector3 inRef   = ray.source - this->center;
   float   dotDir  = ray.direction % ray.direction;
 
-  //if (dotDir < 0 ) return -1.0f;
+  if (dotDir < 0 ) return -1.0f;
 
   float   temp1   = (ray.direction % inRef);
   float   temp2   = (inRef % inRef) - this->radius * this->radius;
