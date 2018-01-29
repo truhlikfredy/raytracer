@@ -126,9 +126,9 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
       colorRefract.sum     *= hitMaterial.transparency;
     }
 
-    if (hitMaterial.reflectivity != 0.0f && inside == -1) {
+    if (hitMaterial.reflectivity != 0.0f) {
       // If the material is reflective then handle reflection
-      colorReflect = rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1, -1);
+      colorReflect = rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1, inside);
       colorReflect.average *= hitMaterial.reflectivity;
       colorReflect.sum     *= hitMaterial.reflectivity;
     }
