@@ -58,7 +58,10 @@ Lights::Lights(): Scene(2, 4, 120.0f) {
   });
 
   objects[1] = SphereGen([](float frame) {
-    return Sphere(Vector3(sinf(frame / 8) * 15, sin(frame / 4) * 2 +3, sin(frame / 20) * 15 + 25), 15,
+    return Sphere(Vector3(sinf(frame / 8) * 15,
+                          sinf(frame / 4) * 2 +3,
+                          sinf(frame / 20) * 15 + 25),
+                  15,
                   [](Vector3 point, float frame) {
                     return Materials::brass;
                   });
