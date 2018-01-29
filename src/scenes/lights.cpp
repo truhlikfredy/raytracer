@@ -6,6 +6,7 @@
 #include <cmath>
 #include "lights.h"
 
+//#define LIGHTS_SMALL_BALL
 
 Lights::Lights(): Scene(2, 4, 120.0f) {
 
@@ -58,6 +59,15 @@ Lights::Lights(): Scene(2, 4, 120.0f) {
   });
 
   objects[1] = SphereGen([](float frame) {
+#ifdef LIGHTS_SMALL_BALL
+    return Sphere(Vector3(sinf(frame / 8)  * 15,
+                          sinf(frame / 4)  * 2  + 3,
+                          sinf(frame / 20) * 15 + 16),
+                  2,
+                  [](Vector3 point, float frame) {
+                    return Materials::brass;
+                  });
+#else
     return Sphere(Vector3(sinf(frame / 8)  * 15,
                           sinf(frame / 4)  * 2  + 3,
                           sinf(frame / 20) * 15 + 25),
@@ -65,6 +75,7 @@ Lights::Lights(): Scene(2, 4, 120.0f) {
                   [](Vector3 point, float frame) {
                     return Materials::brass;
                   });
+#endif
   });
 
   objects[2] = SphereGen([](float frame) {
@@ -75,10 +86,17 @@ Lights::Lights(): Scene(2, 4, 120.0f) {
   });
 
   objects[3] = SphereGen([](float frame) {
+#ifdef LIGHTS_SMALL_BALL
+    return Sphere(Vector3( -4, 2, -2), 10,
+                  [](Vector3 point, float frame) {
+                    return Materials::glass;
+                  });
+#else
     return Sphere(Vector3( -4, 2, 0), 8,
                   [](Vector3 point, float frame) {
                     return Materials::glass;
                   });
+#endif
   });
 
 }
