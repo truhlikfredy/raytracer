@@ -38,7 +38,7 @@ private:
   unsigned int height;
   Scene        *scene;
 
-  windowType getThreadWindow(int thread);
+  void getThreadWindow(int thread, windowType &ret);
 
   void refract(Vector3 &incidentVec, Vector3 &normal, float refractionIndex, Vector3 &refractionRay);
 
@@ -46,7 +46,7 @@ private:
 
   colors rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration, bool inside);
 
-  void renderPartialWindow(float frame, windowType window);
+  void renderPartialWindow(float frame, windowType &window);
 
   void clearDynamicPixels();
 

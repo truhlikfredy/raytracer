@@ -17,18 +17,16 @@ Render::Render(int widthInit, int heightInit): width(widthInit), height(heightIn
 }
 
 
-windowType Render::getThreadWindow(int thread) {
+void Render::getThreadWindow(int thread, windowType &ret) {
   // Having 4 cores and 2 segments, will cause to create 4 threads which will together compute half of the screen and
   // then run another 4 threads to finish second segment. Setting segments to 1 will cause all threads to calculate
   // everything in one pass. At the moment the load balancing between the cores is fairly simple and instead of creating
   // small rectangles, this is just creating horizontal slits.
 
-  return {
-    .xStart = 0,
-    .xEnd   = width,
-    .yStart = ( thread    * height) / (threadsMax * SEGMENTS),
-    .yEnd   = ((thread+1) * height) / (threadsMax * SEGMENTS)
-  };
+  ret.xStart = 0;
+  ret.xEnd   = width;
+  ret.yStart = ( thread    * height) / (threadsMax * SEGMENTS);
+  ret.yEnd   = ((thread+1) * height) / (threadsMax * SEGMENTS);
 }
 
 
@@ -162,7 +160,7 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
 }
 
 
-void Render::renderPartialWindow(float frame, windowType window) {
+void Render::renderPartialWindow(float frame, windowType &window) {
   // this will be executed by multiple different threads,
   // things needs to be in local stack or globaly synchronize to be safe
 
@@ -229,7 +227,9 @@ void Render::renderFullWindow(Scene *sceneInit) {
   for (int segment = 0; segment < SEGMENTS; segment++) {
     for (int thread = 0; thread < threadsMax; thread++) {
       workers.emplace_back([this, thread] {
-        this->renderPartialWindow(scene->frame, this->getThreadWindow(thread));
+        windowType partialWindow;
+        this->getThreadWindow(thread, partialWindow);
+        this->renderPartialWindow(scene->frame, partialWindow);
       });
     }
     for (auto& worker: workers) worker.join();
