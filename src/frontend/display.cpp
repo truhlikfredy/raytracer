@@ -110,6 +110,10 @@ void Display::renderLoop(Scene *scene) {
   }
 
   scene->frame+= timeSpeed;
+  if (timeSpeed != 1.0f) {
+    // Display what frame it is, when running atypical speeds
+    printf("Frame: %f \r\n", scene->frame);
+  }
 }
 
 
