@@ -8,7 +8,7 @@
 
 
 Display::Display():
-  showSamplerPatterns(false), onScreenDisplay(false), stdOutLog(false),
+  showSamplerPatterns(false), onScreenDisplay(false), stdOutLog(false), timeSpeed(1.0f),
   benchmarkAllowed(false), benchmarkEnded(false), elapsedTotal(0), videoCapture(false)  {
 
   pixels = new sf::Uint8[WIDTH * HEIGHT * 4];
@@ -109,7 +109,7 @@ void Display::renderLoop(Scene *scene) {
     printf("\r\n");
   }
 
-  scene->frame++;
+  scene->frame+= timeSpeed;
 }
 
 

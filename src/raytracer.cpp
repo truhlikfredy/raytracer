@@ -58,12 +58,14 @@ int main() {
     if (Debounce::isKeyPressed(sf::Keyboard::Right)) {
       // next scene
       sceneIndex++;
+      mainWindow->timeSpeed = 1.0f; // start new scene at default speed
       sceneIndex %= array_size(scenes);
     }
 
     if (Debounce::isKeyPressed(sf::Keyboard::Left)) {
       // previous scene
       sceneIndex--;
+      mainWindow->timeSpeed = 1.0f; // start new scene at default speed
       if (sceneIndex<0)  sceneIndex = array_size(scenes)-1;
     }
 
@@ -81,6 +83,16 @@ int main() {
       // start benchmark
       scenes[sceneIndex].frame = 0;
       mainWindow->benchmarkAllowed = true;
+    }
+
+    if (Debounce::isKeyPressed(sf::Keyboard::Comma)) {
+      // , will halve speed of the time
+      mainWindow->timeSpeed /= 2.0f;
+    }
+
+    if (Debounce::isKeyPressed(sf::Keyboard::Period)) {
+      // . will double speed of the time
+      mainWindow->timeSpeed *= 2.0f;
     }
 
     mainWindow->renderLoop(&scenes[sceneIndex]);

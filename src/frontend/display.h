@@ -62,6 +62,7 @@ public:
   bool             videoCapture;
   sf::Texture      texture;
   long long        elapsedTotal;
+  float            timeSpeed;
   Display();
 
   void renderLoop(Scene *scene);
