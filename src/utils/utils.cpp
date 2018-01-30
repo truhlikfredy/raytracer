@@ -11,6 +11,6 @@ void Utils::getTimeStampFilename(const char *prefix, char *filename) {
   time_t t = time(0);
   struct tm *timestamp;
   timestamp = gmtime(&t);
-  strftime(buf, sizeof(buf), "%Y%m%d-%H%M%S.png", timestamp);
+  strftime(buf, sizeof(buf), "%Y%m%d-%H%M%S", timestamp);
   sprintf(filename, "%s-%s", prefix, buf);
 }

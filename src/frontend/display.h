@@ -59,6 +59,7 @@ public:
   bool             stdOutLog;
   bool             benchmarkAllowed;
   bool             benchmarkEnded;
+  bool             videoCapture;
   sf::Texture      texture;
   long long        elapsedTotal;
   Display();
@@ -69,6 +70,7 @@ public:
   void convertToDisplayMem();
   void log(char *text);
   void benchmarkSummary();
+  void saveScreenshot(char* filename);
 };
 
 #endif //RAYTRACER_DISPLAY_H

@@ -37,11 +37,17 @@ int main() {
       mainWindow->showSamplerPatterns ^= true; // invert the state
     }
 
-    if (Debounce::isKeyPressed(sf::Keyboard::F))  {
+    if (Debounce::isKeyPressed(sf::Keyboard::M))  {
+      // Start video capture
+      mainWindow->videoCapture = ~mainWindow->videoCapture;
+      printf("Video capture status: %d \r\n", mainWindow->videoCapture);
+    }
+
+    if (Debounce::isKeyPressed(sf::Keyboard::F) || mainWindow->videoCapture)  {
       // Capture screenshot and save it to the file
       char filename[120];
       Utils::getTimeStampFilename("images/screenshot", filename);
-      mainWindow->texture.copyToImage().saveToFile(filename);
+      mainWindow->saveScreenshot(filename);
     }
 
     if (Debounce::isKeyPressed(sf::Keyboard::Q))  {

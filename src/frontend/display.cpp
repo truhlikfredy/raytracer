@@ -9,7 +9,7 @@
 
 Display::Display():
   showSamplerPatterns(false), onScreenDisplay(false), stdOutLog(false),
-  benchmarkAllowed(false), benchmarkEnded(false), elapsedTotal(0)  {
+  benchmarkAllowed(false), benchmarkEnded(false), elapsedTotal(0), videoCapture(false)  {
 
   pixels = new sf::Uint8[WIDTH * HEIGHT * 4];
   render = new Render(WIDTH, HEIGHT);
@@ -18,6 +18,15 @@ Display::Display():
   texture.create(WIDTH, HEIGHT);
   sprite.setTexture(Display::texture);
   sprite.setScale(SCALE, SCALE);
+}
+
+void Display::saveScreenshot(char* filename) {
+  static int count = 0;
+  char fullName[120];
+
+  sprintf(fullName, "%s-%04d.png", filename, count);
+  texture.copyToImage().saveToFile(fullName);
+  count++;
 }
 
 
