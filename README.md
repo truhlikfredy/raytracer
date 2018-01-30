@@ -1,5 +1,7 @@
 ![refractions](/images/screenshot13.png)
 
+![reflections inside a refraction](/images/screenshot14.png)
+
 ![refractions](/images/screenshot12.png)
 
 ![refractions](/images/screenshot11.png)
