@@ -15,6 +15,7 @@
 * **Left/Right** switch between scenes
 * **\[** and **\]** jump in time (jump back is smaller than jump forward)
 * **B** will start benchmark of a sellected scne and when finished it will exit
+* **,** and **.** will change speed of time
 
 ## Programing
 
