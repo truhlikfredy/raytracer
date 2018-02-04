@@ -141,7 +141,7 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
     // http://www.paulsprojects.net/tutorials/simplebump/simplebump.html
 
     ret.average = scene->ambient * hitMaterial.ambient;
-    ret.sum     = ( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * light->color;
+    ret.sum     = (( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * light->color) / fmax(0.8f, powf((hitLightLen + smallestHitDistance)/300.0f, 2));
 
     for (int j = 0; j < scene->nObjects; j++) {
       // test all objects if they are casting shadow from this light

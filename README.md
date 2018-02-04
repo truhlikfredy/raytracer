@@ -10,8 +10,9 @@
 
 ## UI
 
-* 320x200 fixed resolution (prepared for TFT screen when ported)
+* Optimized for 320x200 resolution (prepared for TFT screen when ported)
   * Scaling, can be rendered in low-res and then upscaled so the window is decent size
+  * Does work corectly on higher resolutions but, it's mostly tested on low res
 * **S** to display test pattern of the pseudo randomized sampler results
 * **C** capture screenshots
 * **Left/Right** switch between scenes
@@ -45,6 +46,7 @@
 * Mandelbrot fractal as a texture/material with different "shine" properties in different sections
 * Dynamicly adjusting sampler, allowing a range of samples per pixel and ability to stop wheneve desire quality (delta) is achieved
 * Improved performance on scenes where there is no motion blur (means that the scene is evaluated only once and not for each ray in each pixel). Benchmark parameters: Width=320 Height=200 SamplingMin=2 SamplingMax=4 Bounches=4. On complex scenes such as "large2" it decreased from 75 seconds to calculate 25 frames to 48seconds. For "lights" it improved from 73 seconds to calculate 120 frames to 52 seconds. Scenes with motion blur enable do not have any benefit and scene with low complexity have mesurable improvement but not as much as complex scenes.
+* primitive variant of inverse square law
 
 # TODO (More precisely a wish list)
 
