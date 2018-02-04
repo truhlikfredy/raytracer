@@ -15,7 +15,7 @@ Large::Large():Scene(3, BALLS +2, 20.0f) {
     .possition    = Vector3(0.0f, 0.0f,  -80.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 30.0f),
     .apeture      = 0.0f,
-    .shutterBlur = 0.0f
+    .shutterBlur  = 0.0f
   };
 
   const materialStatic squares[6] = {
@@ -78,7 +78,7 @@ Large::Large():Scene(3, BALLS +2, 20.0f) {
           .specular = Color(0.2f),
           .emission = Color(0.0),
           .shininess = 85,
-          .reflectivity = 1.0f-fractal.x,
+          .reflectivity = 0.0f,
           .transparency = 0.0f
         };
       };

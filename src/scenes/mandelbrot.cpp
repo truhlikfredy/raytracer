@@ -8,13 +8,12 @@
 
 
 Mandelbrot::Mandelbrot(): Scene(1, 1, 40.0f) {
-  ambient = Color(0.1f);
 
   camera = {
     .possition    = Vector3(0.0f, 0.0f, 35.0f),
     .lookAt       = Vector3(0.0f,0.0f,60.0f),
     .apeture      = 0.0f,
-    .shutterBlur = 0.0f
+    .shutterBlur  = 0.0f
   };
 
   lights[0] = LightOmniGen([](float frame) {

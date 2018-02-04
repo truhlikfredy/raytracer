@@ -9,10 +9,10 @@
 Dof::Dof(): Scene(1, 5, 60.0f) {
 
   camera = {
-    .possition     = Vector3(0.0f, 0.0f,  0.0f),
+    .possition    = Vector3(0.0f, 0.0f,  0.0f),
     .lookAt       = Vector3(0.0f, 0.0f, 60.0f),
     .apeture      = 8.0f,
-    .shutterBlur = 0.0f
+    .shutterBlur  = 0.0f
   };
 
   const materialStatic balls[5] = {

@@ -17,7 +17,7 @@ Large2::Large2():Scene(1, BALLS +7, 25.0f) {
     .possition    = Vector3(0.0f, 0.0f,  -80.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 30.0f),
     .apeture      = 0.0f,
-    .shutterBlur = 0.0f
+    .shutterBlur  = 0.0f
   };
 
   const materialStatic materials[BALL_MATERIALS] = {
@@ -45,11 +45,11 @@ Large2::Large2():Scene(1, BALLS +7, 25.0f) {
   });
 
   objects[0] = SphereGen([materials](float frame) {
-    Sphere sphere1(Vector3(0.0f, 0.0f, 6000.0f), 5900.0f);
+    Sphere sphere(Vector3(0.0f, 0.0f, 6000.0f), 5900.0f);
 
     std::function<materialStatic(Vector3 point, float frame)> materiaFn =
-      [sphere1](Vector3 point, float frame) mutable {
-        uv points = sphere1.toUv(point);
+      [sphere](Vector3 point, float frame) mutable {
+        uv points = sphere.toUv(point);
 
         if (((int)(points.u*1000) % 2) ^ ((int)(points.v*1000) % 2)) {
           return Materials::red;
@@ -58,8 +58,8 @@ Large2::Large2():Scene(1, BALLS +7, 25.0f) {
           return Materials::yellow;
         }
       };
-    sphere1.materialFn = materiaFn;
-    return sphere1;
+    sphere.materialFn = materiaFn;
+    return sphere;
   });
 
   for (int i=0; i < BALLS; i++) {
