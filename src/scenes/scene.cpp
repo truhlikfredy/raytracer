@@ -33,9 +33,11 @@ void Scene::evaluateLights(LightOmni* result, float frame) {
 }
 
 
-void Scene::evaluateObjects(Sphere* result, float frame) {
+void Scene::evaluateObjects(Object* result, float frame) {
   for (int i = 0; i < nObjects; i ++) {
-    Sphere sphere = objects[i].evaluateFn(frame);
-    result[i] = sphere;
+    Entity entity = objects[i].evaluateFn(frame);
+    Entity *pEntity = &entity;
+    Object *pObject = (Object*) pEntity;
+    result[i] = *pObject;
   }
 }

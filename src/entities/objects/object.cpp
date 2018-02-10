@@ -7,6 +7,9 @@
 
 // Object::Object(std::function<Object(float frame)> propertiesFnInit): Entity(propertiesFnInit), materialFn(nullptr) {
 
+Object::Object(std::function<Object(float frame)> evaluateFnInit): Entity(evaluateFnInit) {
+}
+
 Object::Object(Vector3 centerInit,
                std::function<materialStatic(Vector3 point, float frame)> materialFnInit):
                materialFn(materialFnInit), Entity() {
@@ -25,3 +28,19 @@ Object::Object(Vector3 centerInit) {
 Object::Object() {
 }
 
+
+Vector3 Object::operator ^ (Vector3 pointOnSurface) {
+  return Vector3();
+}
+
+float Object::detectHit(Ray ray) {
+  return -1;
+}
+
+float Object::detectHit(Ray ray, Vector3 &hitPoint) {
+  return -1;
+}
+
+float Object::detectHitMax(Ray ray, Vector3 &hitPoint) {
+  return -1;
+}

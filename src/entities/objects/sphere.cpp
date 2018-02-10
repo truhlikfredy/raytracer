@@ -7,8 +7,8 @@
 #include "sphere.h"
 #include "../../utils/utils.h"
 
-//Sphere::Sphere(std::function<Sphere(float frame)> propertiesFnInit): Object(propertiesFnInit) {
-//}
+// Sphere::Sphere(std::function<Sphere(float frame)> propertiesFnInit): Object(propertiesFnInit) {
+// }
 
 Sphere::Sphere(Vector3 centerInt, float radiusInit):  Object(centerInt) {
   radius = radiusInit;
@@ -19,7 +19,7 @@ Sphere::Sphere(Vector3 centerInt, float radiusInit, std::function<materialStatic
   radius = radiusInit;
 }
 
-Sphere::Sphere(std::function<Sphere(float frame)> evaluateFnInit): evaluateFn(evaluateFnInit) {
+Sphere::Sphere(std::function<Sphere(float frame)> evaluateFnInit): Object(evaluateFnInit) {
 }
 
 Sphere::Sphere():Object() {

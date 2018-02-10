@@ -24,6 +24,9 @@ public:
   //virtual Object(std::function<Entity(float frame)> propertiesFnInit);
 
   //Object(Vector3 centerInit, Materials materialInit);
+
+  Object(std::function<Object(float frame)> evaluateFnInit);
+
   Object(Vector3 centerInit, std::function<materialStatic(Vector3 point, float frame)> materialFnInit);
 
   Object(Vector3 centerInit, materialStatic materialInit);
@@ -34,9 +37,14 @@ public:
 
   //virtual uv toUv(Vector3 point) = 0;
 
-  virtual float detectHit(Ray ray, Vector3 &hitPoint) = 0;
+  float detectHit(Ray ray);
 
-  virtual Vector3 operator ^ (Vector3 pointOnSurface) = 0;
+  float detectHit(Ray ray, Vector3 &hitPoint);
+
+  float detectHitMax(Ray ray, Vector3 &hitPoint);
+
+  Vector3 operator ^ (Vector3 pointOnSurface);
+
 
 };
 

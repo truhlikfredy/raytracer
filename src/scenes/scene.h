@@ -18,7 +18,7 @@ public:
   int           nLights;
   int           nObjects;
   LightOmniGen* lights;
-  Sphere*    objects;
+  Entity*    objects;
   float         frame;
   float         lastFrame;
   Color         ambient;
@@ -37,7 +37,7 @@ public:
   ~Scene();
 
   void evaluateLights(LightOmni* result, float frame);
-  void evaluateObjects(Sphere* result, float frame);
+  void evaluateObjects(Object* result, float frame);
 
 };
 

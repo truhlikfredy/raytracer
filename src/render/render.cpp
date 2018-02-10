@@ -31,7 +31,7 @@ void Render::getThreadWindow(int thread, windowType &ret) {
 }
 
 
-colors Render::rayStart(Ray ray, Sphere* objects, LightOmni* light, float frame) {
+colors Render::rayStart(Ray ray, Object* objects, LightOmni* light, float frame) {
   if (scene->camera.shutterBlur != 0.0f) {
     scene->evaluateObjects(objects, frame);
   }
@@ -51,7 +51,7 @@ void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionInde
 }
 
 
-colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame, int iteration, int inside) {
+colors Render::rayFollow(Ray ray, Object* objects, LightOmni* light, float frame, int iteration, int inside) {
   colors ret = {.average = Color(), .sum = Color() };
 
   if (iteration > MAX_BOUNCES) {
@@ -66,7 +66,7 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
   // Find closest collision
   for (int i = 0; i< scene->nObjects; i++){
     Vector3 hitPoint;
-    Sphere object = objects[i];
+    Object object = objects[i];
     float hitDistance;
 
     if (inside >= 0) {
@@ -96,7 +96,7 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
 
   // Only shade the closes collision
   if (smallestObjectIndex >= 0) {
-    Sphere object = objects[smallestObjectIndex];
+    Object object = objects[smallestObjectIndex];
 
     // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
     Vector3 hitNormal    = object ^smallestHitPoint;
@@ -145,7 +145,7 @@ colors Render::rayFollow(Ray ray, Sphere* objects, LightOmni* light, float frame
 
     for (int j = 0; j < scene->nObjects; j++) {
       // test all objects if they are casting shadow from this light
-      Sphere objectCausingShadow = objects[j];
+      Object objectCausingShadow = objects[j];
       if (j != smallestObjectIndex &&
         objectCausingShadow.detectHit(Ray(smallestHitPoint, hitLight)) != -1 &&
         objectCausingShadow.materialFn(hitLight,frame).castsShadows &&
@@ -180,7 +180,7 @@ void Render::renderPartialWindow(float frame, windowType &window) {
 
   Camera  camera(width,height);
 
-  Sphere      *objects = new Sphere[scene->nObjects];
+  Object     *objects = new Object[scene->nObjects];
   LightOmni   light;
   sampleTuple sample;
   Ray         rayForThisPixel;
