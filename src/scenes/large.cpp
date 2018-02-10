@@ -51,7 +51,7 @@ Large::Large():Scene(3, BALLS +2, 20.0f) {
     return LightOmni(center, color);
   });
 
-  objects[0] = SphereGen([squares](float frame) {
+  objects[0] = Sphere([squares](float frame) {
     Sphere sphere1(Vector3(0.0f, 200.0f, 600.0f), 500.0f);
 
     std::function<materialStatic(Vector3 point, float frame)> materiaFn =
@@ -87,7 +87,7 @@ Large::Large():Scene(3, BALLS +2, 20.0f) {
   });
 
 
-  objects[1] = SphereGen([](float frame) {
+  objects[1] = Sphere([](float frame) {
     Sphere sphere2(Vector3(35.0f, 35.0f, 15.0f), 20.0f);
 
     std::function<materialStatic(Vector3 point, float frame)> materiaFn =
@@ -113,7 +113,7 @@ Large::Large():Scene(3, BALLS +2, 20.0f) {
 
     Sampler::vanDerCoruptSobol2(i, 0, sample);
     float index = Sampler::vanDerCorput(i, 0);
-    objects[i+2] = SphereGen([sample, index, i](float frame) {
+    objects[i+2] = Sphere([sample, index, i](float frame) {
       return Sphere(Vector3( -40 + sample.x * 80, -30 + 60* sample.y, (i% 3)* 7 -0), 8,
                     [index](Vector3 point, float frame) {
                       materialStatic ret = Materials::glass;

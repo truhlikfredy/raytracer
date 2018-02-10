@@ -12,10 +12,14 @@ class Sphere: public Object {
 
 public:
   float   radius;
+  std::function<Sphere(float frame)> evaluateFn;
 
   Sphere(Vector3 centerInt, float radiusInit, std::function<materialStatic(Vector3 point, float frame)> materialFnInit);
 
   Sphere(Vector3 centerInt, float radiusInit);
+
+  Sphere(std::function<Sphere(float frame)> evaluateFnInit);
+
 
   Sphere();
 

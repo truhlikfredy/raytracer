@@ -42,7 +42,7 @@ Lights::Lights(): Scene(2, 4, 120.0f) {
   });
 
 
-  objects[0] = SphereGen([squares](float frame) {
+  objects[0] = Sphere([squares](float frame) {
     std::function<materialStatic(Vector3 point, float frame)> materiaFn =
       [squares](Vector3 point, float frame) {
         const int x = (((int)point.x+400)/15);
@@ -58,7 +58,7 @@ Lights::Lights(): Scene(2, 4, 120.0f) {
     return Sphere(Vector3(0.0f, 2520.0f, 100.0f), 2500.0f, materiaFn);
   });
 
-  objects[1] = SphereGen([](float frame) {
+  objects[1] = Sphere([](float frame) {
 #ifdef LIGHTS_SMALL_BALL
     return Sphere(Vector3(sinf(frame / 8)  * 15,
                           sinf(frame / 4)  * 2  + 3,
@@ -78,14 +78,14 @@ Lights::Lights(): Scene(2, 4, 120.0f) {
 #endif
   });
 
-  objects[2] = SphereGen([](float frame) {
+  objects[2] = Sphere([](float frame) {
     return Sphere(Vector3( 15, 25, 10), 15,
                   [](Vector3 point, float frame) {
                     return Materials::green;
                   });
   });
 
-  objects[3] = SphereGen([](float frame) {
+  objects[3] = Sphere([](float frame) {
 #ifdef LIGHTS_SMALL_BALL
     return Sphere(Vector3( -4, 2, -2), 10,
                   [](Vector3 point, float frame) {

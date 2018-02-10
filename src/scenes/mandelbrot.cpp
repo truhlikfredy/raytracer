@@ -24,7 +24,7 @@ Mandelbrot::Mandelbrot(): Scene(1, 1, 40.0f) {
     return LightOmni(center, color);
   });
 
-  objects[0] = SphereGen([this](float frame) {
+  objects[0] = Sphere([this](float frame) {
     Sphere sphere(Vector3(0.0f, 0.0f, 100.0f), 57.0f);
     std::function<materialStatic(Vector3 point, float frame)> materiaFn =
     [sphere](Vector3 point, float frame) mutable {

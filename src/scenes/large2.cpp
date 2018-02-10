@@ -44,7 +44,7 @@ Large2::Large2():Scene(1, BALLS +7, 25.0f) {
     return LightOmni(center, color);
   });
 
-  objects[0] = SphereGen([materials](float frame) {
+  objects[0] = Sphere([materials](float frame) {
     Sphere sphere(Vector3(0.0f, 0.0f, 6000.0f), 5900.0f);
 
     std::function<materialStatic(Vector3 point, float frame)> materiaFn =
@@ -67,7 +67,7 @@ Large2::Large2():Scene(1, BALLS +7, 25.0f) {
 
     Sampler::vanDerCoruptSobol2(i, 0, sample);
     float index = Sampler::foldedRadicalInverse(i, 2);
-    objects[i+1] = SphereGen([sample, materials, index, i](float frame) {
+    objects[i+1] = Sphere([sample, materials, index, i](float frame) {
       return Sphere(Vector3( -80 + ((float)i / BALLS) * 160, -40 + 120* sample.y, 93), 7+3*(i%3),
                     [index, i, materials](Vector3 point, float frame) {
                       materialStatic ret = materials[i % BALL_MATERIALS];
@@ -80,7 +80,7 @@ Large2::Large2():Scene(1, BALLS +7, 25.0f) {
   for (int x = 0; x < 3; x ++)
     for (int y = 0; y < 2; y++) {
       const int index = (x+ y*3);
-      objects[BALLS + 1 + index] = SphereGen([x, y, index](float frame) {
+      objects[BALLS + 1 + index] = Sphere([x, y, index](float frame) {
         return Sphere(Vector3(x * 40 - 40, -5.0f + 40 * y, 15.0f + (index%2) * 15), 19.0f,
                       [index](Vector3 point, float frame) mutable {
                         if (index % 2) {

@@ -32,7 +32,7 @@ Plain::Plain(): Scene(2, 2, 130.0f) {
   });
 
 
-  objects[0] = SphereGen([](float frame) {
+  objects[0] = Sphere([](float frame) {
     std::function<materialStatic(Vector3 point, float frame)> materiaFn =
       [](Vector3 point, float frame) {
         return materialStatic{
@@ -52,7 +52,7 @@ Plain::Plain(): Scene(2, 2, 130.0f) {
   });
 
 
-  objects[1] = SphereGen([](float frame) {
+  objects[1] = Sphere([](float frame) {
     return Sphere(Vector3(sinf(frame / 8) * 15,
                           sinf(frame / 4) * 2 + 9,
                           sinf(frame / 20) * 45 + 65),

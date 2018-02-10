@@ -19,6 +19,9 @@ Sphere::Sphere(Vector3 centerInt, float radiusInit, std::function<materialStatic
   radius = radiusInit;
 }
 
+Sphere::Sphere(std::function<Sphere(float frame)> evaluateFnInit): evaluateFn(evaluateFnInit) {
+}
+
 Sphere::Sphere():Object() {
 
 }

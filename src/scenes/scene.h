@@ -9,7 +9,7 @@
 #include "../types/vector3.h"
 #include "../entities/entity.h"
 #include "../entities/objects/object.h"
-#include "../entities/objects/sphereGen.h"
+#include "../entities/objects/sphere.h"
 #include "../entities/lights/lightOmni.h"
 #include "../entities/lights/lightOmniGen.h"
 
@@ -18,7 +18,7 @@ public:
   int           nLights;
   int           nObjects;
   LightOmniGen* lights;
-  SphereGen*    objects;
+  Sphere*    objects;
   float         frame;
   float         lastFrame;
   Color         ambient;
