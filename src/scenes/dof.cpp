@@ -31,16 +31,16 @@ Dof::Dof(): Scene(1, 5, 60.0f) {
     return LightOmni(center, color);
   });
 
-  for (int i = 0; i < 5; i++) {
-    objects[i] = Sphere([balls, i](float frame) {
-      int j = i;
-      if (i == 3) j = 2*i;
-      if (i == 4) j = 6*i;
-      return Sphere(Vector3(-20 + j*25, 10 - j*10, 30+ j*20), 15,
-                    [balls, i](Vector3 point, float frame) {
-                      return balls[i];
-                    });
-    });
-  }
+//  for (int i = 0; i < 5; i++) {
+//    objects[i] = Sphere([balls, i](float frame) {
+//      int j = i;
+//      if (i == 3) j = 2*i;
+//      if (i == 4) j = 6*i;
+//      return Sphere(Vector3(-20 + j*25, 10 - j*10, 30+ j*20), 15,
+//                    [balls, i](Vector3 point, float frame) {
+//                      return balls[i];
+//                    });
+//    });
+//  }
 
 }

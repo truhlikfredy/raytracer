@@ -19,13 +19,13 @@ int main() {
   Display *mainWindow = new Display();
   bool quitRequested = false;
 
-  Scene scenes[6] = {
-    Lights(),
-    Plain(),
-    Large2(),
-    Large(),
-    Dof(),
-    Mandelbrot()
+  Scene scenes[1] = {
+    Lights()
+//    Plain(),
+//    Large2(),
+//    Large(),
+//    Dof(),
+//    Mandelbrot()
   };
 
   int sceneIndex = 0;

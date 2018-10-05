@@ -35,6 +35,8 @@ public:
 
   Object();
 
+  std::function<Object(float frame)> evaluateObjFn;
+
   //virtual uv toUv(Vector3 point) = 0;
 
   float detectHit(Ray ray);

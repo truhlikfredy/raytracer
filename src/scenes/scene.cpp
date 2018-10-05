@@ -11,7 +11,9 @@ Scene::Scene(int nlightsInit, int nobjectsInit, float lastFrameInit):
   frame = 0.0f;
   ambient = Color(0.1f);
   this->lights = new LightOmniGen[nlightsInit];
-  this->objects = new Sphere[nobjectsInit];
+//  this->objects = new Object[nobjectsInit];
+//  this->objects = std::vector<std::shared_ptr<Object>>(nobjectsInit);
+  this->objects = std::vector<std::shared_ptr<Object>>(nobjectsInit);
 };
 
 
@@ -33,11 +35,13 @@ void Scene::evaluateLights(LightOmni* result, float frame) {
 }
 
 
-void Scene::evaluateObjects(Object* result, float frame) {
+void Scene::evaluateObjects(std::vector<std::shared_ptr<Object>> result, float frame) {
   for (int i = 0; i < nObjects; i ++) {
-    Entity entity = objects[i].evaluateFn(frame);
-    Entity *pEntity = &entity;
-    Object *pObject = (Object*) pEntity;
-    result[i] = *pObject;
+//    Object entity = objects[i].evaluateObjFn(frame);
+//    Object *pEntity = &entity;
+//    Object *pObject = (Object*) pEntity;
+//    result[i] = *pObject;
+
+    result[i] = std::make_shared(objects[i]->evaluateObjFn(frame));
   }
 }

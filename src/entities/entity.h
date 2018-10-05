@@ -15,8 +15,8 @@ class Entity {
 public:
   Vector3 center;
   bool isEnabled;
-
   std::function<Entity(float frame)> evaluateFn;
+
 
   Entity(Vector3 centerInit);
 

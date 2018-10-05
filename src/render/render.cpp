@@ -14,7 +14,7 @@
 
 Render::Render(int widthInit, int heightInit): width(widthInit), height(heightInit), scene(nullptr) {
   dynamicPixels = new Color[widthInit * heightInit];
-  threadsMax    = std::thread::hardware_concurrency();
+  //threadsMax    = std::thread::hardware_concurrency();
 }
 
 
@@ -31,7 +31,7 @@ void Render::getThreadWindow(int thread, windowType &ret) {
 }
 
 
-colors Render::rayStart(Ray ray, Object* objects, LightOmni* light, float frame) {
+colors Render::rayStart(Ray ray, std::vector<std::shared_ptr<Object>> objects, LightOmni* light, float frame) {
   if (scene->camera.shutterBlur != 0.0f) {
     scene->evaluateObjects(objects, frame);
   }
@@ -51,7 +51,7 @@ void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionInde
 }
 
 
-colors Render::rayFollow(Ray ray, Object* objects, LightOmni* light, float frame, int iteration, int inside) {
+colors Render::rayFollow(Ray ray, std::vector<std::shared_ptr<Object>> objects, LightOmni* light, float frame, int iteration, int inside) {
   colors ret = {.average = Color(), .sum = Color() };
 
   if (iteration > MAX_BOUNCES) {
@@ -66,18 +66,19 @@ colors Render::rayFollow(Ray ray, Object* objects, LightOmni* light, float frame
   // Find closest collision
   for (int i = 0; i< scene->nObjects; i++){
     Vector3 hitPoint;
-    Object object = objects[i];
+//    Object* objectUpcast = objects[i];
+//    Sphere object = dynamic_cast<Sphere &>(objects[i]);
     float hitDistance;
 
     if (inside >= 0) {
       //hitDistance = object.detectHitMax(ray, hitPoint);
       if (inside == i) {
         // if we are testing the collision with itslef (inside the object) then find the furtherst point
-        hitDistance = object.detectHitMax(ray, hitPoint);
+        hitDistance = objects[i].detectHitMax(ray, hitPoint);
       }
       else {
         // but for all other objects even including intersecting object do detect closest collision
-        hitDistance = object.detectHit(ray, hitPoint);
+        hitDistance = objects[i].detectHit(ray, hitPoint);
       }
     }
     else {
@@ -143,25 +144,25 @@ colors Render::rayFollow(Ray ray, Object* objects, LightOmni* light, float frame
     ret.average = scene->ambient * hitMaterial.ambient;
     ret.sum     = (( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * light->color) / fmax(0.8f, powf((hitLightLen + smallestHitDistance)/300.0f, 2));
 
-    for (int j = 0; j < scene->nObjects; j++) {
-      // test all objects if they are casting shadow from this light
-      Object objectCausingShadow = objects[j];
-      if (j != smallestObjectIndex &&
-        objectCausingShadow.detectHit(Ray(smallestHitPoint, hitLight)) != -1 &&
-        objectCausingShadow.materialFn(hitLight,frame).castsShadows &&
-        hitLightLen > (objectCausingShadow.center - smallestHitPoint).lenght() ) {
-
-        // If the following are meet:
-        // 1) can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
-        // 2) ray needs to hit the object which is causing shadows (if it's not hit then it couldn't cause shadow)
-        // 3) object's material needs to have property to cast shadows
-        // 4) object needs to be between the light source and the collision point and not behind the light source
-        // Then do the following:
-
-        ret.sum = Color();    // null the summing factor, leave only average factor ok which is the ambient part
-        break;
-      }
-    }
+//    for (int j = 0; j < scene->nObjects; j++) {
+//      // test all objects if they are casting shadow from this light
+//      Object objectCausingShadow = objects[j];
+//      if (j != smallestObjectIndex &&
+//        objectCausingShadow.detectHit(Ray(smallestHitPoint, hitLight)) != -1 &&
+//        objectCausingShadow.materialFn(hitLight,frame).castsShadows &&
+//        hitLightLen > (objectCausingShadow.center - smallestHitPoint).lenght() ) {
+//
+//        // If the following are meet:
+//        // 1) can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
+//        // 2) ray needs to hit the object which is causing shadows (if it's not hit then it couldn't cause shadow)
+//        // 3) object's material needs to have property to cast shadows
+//        // 4) object needs to be between the light source and the collision point and not behind the light source
+//        // Then do the following:
+//
+//        ret.sum = Color();    // null the summing factor, leave only average factor ok which is the ambient part
+//        break;
+//      }
+//    }
 
     ret.average += colorRefract.average + colorReflect.average;
     ret.sum     += colorRefract.sum     + colorReflect.sum;

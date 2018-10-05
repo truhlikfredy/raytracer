@@ -8,7 +8,7 @@
 
 //#define LIGHTS_SMALL_BALL
 
-Lights::Lights(): Scene(2, 4, 120.0f) {
+Lights::Lights(): Scene(2, 1, 120.0f) {
 
   camera = {
     .possition    = Vector3(0.0f, 0.0f,  -20.0f),
@@ -41,8 +41,7 @@ Lights::Lights(): Scene(2, 4, 120.0f) {
     return LightOmni(center, color);
   });
 
-
-  objects[0] = Sphere([squares](float frame) {
+  Sphere first([squares](float frame) {
     std::function<materialStatic(Vector3 point, float frame)> materiaFn =
       [squares](Vector3 point, float frame) {
         const int x = (((int)point.x+400)/15);
@@ -58,45 +57,61 @@ Lights::Lights(): Scene(2, 4, 120.0f) {
     return Sphere(Vector3(0.0f, 2520.0f, 100.0f), 2500.0f, materiaFn);
   });
 
-  objects[1] = Sphere([](float frame) {
-#ifdef LIGHTS_SMALL_BALL
-    return Sphere(Vector3(sinf(frame / 8)  * 15,
-                          sinf(frame / 4)  * 2  + 3,
-                          sinf(frame / 20) * 15 + 16),
-                  2,
-                  [](Vector3 point, float frame) {
-                    return Materials::brass;
-                  });
-#else
-    return Sphere(Vector3(sinf(frame / 8)  * 15,
-                          sinf(frame / 4)  * 2  + 3,
-                          sinf(frame / 20) * 15 + 25),
-                  15,
-                  [](Vector3 point, float frame) {
-                    return Materials::brass;
-                  });
-#endif
+  objects[0] = std::make_shared<Sphere>([squares](float frame) {
+    std::function<materialStatic(Vector3 point, float frame)> materiaFn =
+      [squares](Vector3 point, float frame) {
+        const int x = (((int)point.x+400)/15);
+        const int z = (((int)point.z+400)/15);
+
+        if ((x % 2) ^ (z % 2)) {
+          return squares[(x+z * 6) % 6];
+        }
+        else {
+          return Materials::mirror;
+        }
+      };
+    return Sphere(Vector3(0.0f, 2520.0f, 100.0f), 2500.0f, materiaFn);
   });
 
-  objects[2] = Sphere([](float frame) {
-    return Sphere(Vector3( 15, 25, 10), 15,
-                  [](Vector3 point, float frame) {
-                    return Materials::green;
-                  });
-  });
-
-  objects[3] = Sphere([](float frame) {
-#ifdef LIGHTS_SMALL_BALL
-    return Sphere(Vector3( -4, 2, -2), 10,
-                  [](Vector3 point, float frame) {
-                    return Materials::glass;
-                  });
-#else
-    return Sphere(Vector3( -4, 2, 0), 8,
-                  [](Vector3 point, float frame) {
-                    return Materials::glass;
-                  });
-#endif
-  });
+//  objects[1] = Sphere([](float frame) {
+//#ifdef LIGHTS_SMALL_BALL
+//    return Sphere(Vector3(sinf(frame / 8)  * 15,
+//                          sinf(frame / 4)  * 2  + 3,
+//                          sinf(frame / 20) * 15 + 16),
+//                  2,
+//                  [](Vector3 point, float frame) {
+//                    return Materials::brass;
+//                  });
+//#else
+//    return Sphere(Vector3(sinf(frame / 8)  * 15,
+//                          sinf(frame / 4)  * 2  + 3,
+//                          sinf(frame / 20) * 15 + 25),
+//                  15,
+//                  [](Vector3 point, float frame) {
+//                    return Materials::brass;
+//                  });
+//#endif
+//  });
+//
+//  objects[2] = Sphere([](float frame) {
+//    return Sphere(Vector3( 15, 25, 10), 15,
+//                  [](Vector3 point, float frame) {
+//                    return Materials::green;
+//                  });
+//  });
+//
+//  objects[3] = Sphere([](float frame) {
+//#ifdef LIGHTS_SMALL_BALL
+//    return Sphere(Vector3( -4, 2, -2), 10,
+//                  [](Vector3 point, float frame) {
+//                    return Materials::glass;
+//                  });
+//#else
+//    return Sphere(Vector3( -4, 2, 0), 8,
+//                  [](Vector3 point, float frame) {
+//                    return Materials::glass;
+//                  });
+//#endif
+//  });
 
 }

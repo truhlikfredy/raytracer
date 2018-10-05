@@ -7,7 +7,7 @@
 
 // Object::Object(std::function<Object(float frame)> propertiesFnInit): Entity(propertiesFnInit), materialFn(nullptr) {
 
-Object::Object(std::function<Object(float frame)> evaluateFnInit): Entity(evaluateFnInit) {
+Object::Object(std::function<Object(float frame)> evaluateFnInit): evaluateObjFn(evaluateFnInit) {
 }
 
 Object::Object(Vector3 centerInit,

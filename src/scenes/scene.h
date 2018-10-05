@@ -6,6 +6,8 @@
 #ifndef RAYTRACER_SCENE_H
 #define RAYTRACER_SCENE_H
 
+#include <memory>
+#include <vector>
 #include "../types/vector3.h"
 #include "../entities/entity.h"
 #include "../entities/objects/object.h"
@@ -18,7 +20,8 @@ public:
   int           nLights;
   int           nObjects;
   LightOmniGen* lights;
-  Entity*    objects;
+//  Object*    objects;
+  std::vector<std::shared_ptr<Object>> objects;
   float         frame;
   float         lastFrame;
   Color         ambient;
@@ -37,7 +40,7 @@ public:
   ~Scene();
 
   void evaluateLights(LightOmni* result, float frame);
-  void evaluateObjects(Object* result, float frame);
+  void evaluateObjects(std::vector<std::shared_ptr<Object>> result, float frame);
 
 };
 

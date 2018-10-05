@@ -42,9 +42,9 @@ private:
 
   void refract(Vector3 &incidentVec, Vector3 &normal, float refractionIndex, Vector3 &refractionRay);
 
-  colors rayStart(Ray ray, Object* objects, LightOmni* light, float frame);
+  colors rayStart(Ray ray, std::vector<std::shared_ptr<Object>> objects, LightOmni* light, float frame);
 
-  colors rayFollow(Ray ray, Object* objects, LightOmni* light, float frame, int iteration, int inside);
+  colors rayFollow(Ray ray, std::vector<std::shared_ptr<Object>> objects, LightOmni* light, float frame, int iteration, int inside);
 
   void renderPartialWindow(float frame, windowType &window);
 
