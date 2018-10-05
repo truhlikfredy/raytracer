@@ -10,8 +10,8 @@
 Plain::Plain(): Scene(2, 2, 130.0f) {
 
   camera = {
-    .possition    = Vector3(0.0f, 0.0f,  0.0f),
-    .lookAt       = Vector3(0.0f, 10.0f, 60.0f),
+    .possition    = Vector3(0.0f, 0.0f,  -170.0f),
+    .lookAt       = Vector3(0.0f, 0.0f, 60.0f),
     .apeture      = 0.0f,
     .shutterBlur  = 1.0f
   };
@@ -19,14 +19,14 @@ Plain::Plain(): Scene(2, 2, 130.0f) {
   lights[0] = LightOmniGen([](float frame) {
     const float lightRotate = (M_PI * frame) / 31;
     Vector3 center(320 * cosf(lightRotate), 0.6 * 200 * (sinf(lightRotate) - 0.5), 20);
-    Color color(0.5f, 0.5f, 0.9f);
+    Color color(0.9f, 0.8f, 0.9f);
 
     return LightOmni(center, color);
   });
 
   lights[1] = LightOmniGen([](float frame) {
     Vector3 center(300, -50, 200);
-    Color color(0.0f, 0.8f, 0.0f);
+    Color color(0.2f, 0.8f, 0.9f);
 
     return LightOmni(center, color);
   });
@@ -37,18 +37,16 @@ Plain::Plain(): Scene(2, 2, 130.0f) {
       [](Vector3 point, float frame) {
         return materialStatic{
           .castsShadows = true,
-          .ambient = Color(0.0f, 0.025f, 0.0f),
-          .diffuse = Color((sinf(point.x / 2 + point.y     + point.z     + frame / 5)  + 0.3f) * 0.5f,
-                           (sinf(point.x / 4 + point.y / 2 + point.z     + frame / 10) + 0.4f) * 0.7f,
-                           (sinf(point.x / 8 + point.y     + point.z / 4 + frame / 20) + 0.2f) * 0.3f),
-          .specular = Color(0.2f),
+          .ambient = Color(0.3f),
+          .diffuse = Color(0.7f),
+          .specular = Color(1.0f),
           .emission = Color(0.0),
           .shininess = point.z,
           .reflectivity = 0.5f,
           .transparency = 0.0f
         };
       };
-    return Sphere(Vector3(0.0f, 0.0f, 100.0f), 25.0f, materiaFn);
+    return Sphere(Vector3(0.0f, 0.0f, 100.0f), 55.0f, materiaFn);
   });
 
 

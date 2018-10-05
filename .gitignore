@@ -1,6 +1,7 @@
 perf.*
 Debug/
 Release/
+cmake-build-debug/
 .cproject
 .project
 .settings

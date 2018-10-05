@@ -19,8 +19,8 @@
   #define SCALE 8.0  // display the window bigger than it really is (render low-res while having large window)
 
 #elif RENDER_COMPLEXITY == 2
-  #define WIDTH  320
-  #define HEIGHT 200
+  #define WIDTH  128
+  #define HEIGHT 64
   #define SCALE 4.0  // display the window bigger than it really is (render low-res while having large window)
 
 #elif RENDER_COMPLEXITY == 3
@@ -52,6 +52,8 @@ private:
   sf::RenderWindow window;
 
   void displaySamplerPattern(float frame);
+  unsigned char getAveragePixel(unsigned int pixel);
+  unsigned char getGetRow(unsigned int x, unsigned y);
 
 public:
   bool             showSamplerPatterns;
