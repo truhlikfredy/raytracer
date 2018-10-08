@@ -7,57 +7,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <errno.h>
-#include <fcntl.h>
-#include <string.h>
-#include <termios.h>
-#include <unistd.h>
-
 #include "display.h"
-
-int fd;
-
-int set_interface_attribs(int fd, int speed, int parity) {
-  struct termios tty;
-  memset(&tty, 0, sizeof tty);
-  if (tcgetattr(fd, &tty) != 0) {
-    printf("error %d from tcgetattr\n", errno);
-    return(-1);
-  }
-
-  cfsetospeed(&tty, speed);
-  cfsetispeed(&tty, speed);
-
-  tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;     // 8-bit chars
-  // disable IGNBRK for mismatched speed tests; otherwise receive break
-  // as \000 chars
-  tty.c_iflag &= ~IGNBRK;         // disable break processing
-  tty.c_lflag = 0;                // no signaling chars, no echo,
-  // no canonical processing
-  tty.c_oflag = 0;                // no remapping, no delays
-  tty.c_cc[VMIN] = 0;            // read doesn't block
-  tty.c_cc[VTIME] = 5;            // 0.5 seconds read timeout
-
-  tty.c_iflag &= ~(IXON | IXOFF | IXANY); // shut off xon/xoff ctrl
-
-  tty.c_cflag |= (CLOCAL | CREAD); // ignore modem controls,
-  // enable reading
-  tty.c_cflag &= ~(PARENB | PARODD);      // shut off parity
-  tty.c_cflag |= parity;
-  tty.c_cflag &= ~CSTOPB;
-  tty.c_cflag &= ~CRTSCTS;
-
-  if (tcsetattr(fd, TCSANOW, &tty) != 0) {
-    printf("error %d from tcsetattr\n", errno);
-    return(-1);
-  }
-  return(0);
-}
-
 
 Display::Display():
   showSamplerPatterns(false), onScreenDisplay(false), stdOutLog(false), timeSpeed(1.0f),
-  benchmarkAllowed(false), benchmarkEnded(false), elapsedTotal(0), videoCapture(false)  {
+  benchmarkAllowed(false), benchmarkEnded(false), elapsedTotal(0), videoCapture(false),
+  vfd("/dev/ttyUSB0")  {
 
   pixels = new sf::Uint8[WIDTH * HEIGHT * 4];
   render = new Render(WIDTH, HEIGHT);
@@ -66,20 +21,6 @@ Display::Display():
   texture.create(WIDTH, HEIGHT);
   sprite.setTexture(Display::texture);
   sprite.setScale(SCALE, SCALE);
-
-  char *portname = "/dev/ttyUSB0";
-  fd = open(portname, O_RDWR | O_NOCTTY | O_SYNC);
-  if (fd < 0) {
-    printf("error %d opening %s: %s\n", errno, portname, strerror(errno));
-  }
-  else {
-    set_interface_attribs(fd, B115200, 0);  // set speed to 115,200 bps, 8n1 (no parity)
-
-    write(fd, "\x00", 1);
-    usleep(30000);
-  }
-
-
 }
 
 void Display::saveScreenshot(char* filename) {
@@ -93,26 +34,8 @@ void Display::saveScreenshot(char* filename) {
 
 
 void Display::clearDisplayMem() {
-  // clean buffer
+  // clean raw
   for (int i = 0; i < HEIGHT * WIDTH *4; i++) pixels[i]=0;
-}
-
-unsigned char Display::getAveragePixel(unsigned int pixel){
-  return ((pixels[pixel*4] + pixels[pixel*4+1] + pixels[pixel*4+2])/3);
-}
-
-unsigned char Display::getGetRow(unsigned int x, unsigned y) {
-  int index = (y *8)*WIDTH +x;
-  unsigned char value = 0;
-  static int error = 0;
-
-  for (int i = 0; i < 8; i++) {
-    unsigned int current = getAveragePixel(index +i *WIDTH);
-    unsigned int rounded = (current + error) / 128;
-    error += current - rounded * 128;
-    if (rounded>0) value |= 1 << i;
-  }
-  return value;
 }
 
 void Display::convertToDisplayMem() {
@@ -123,16 +46,8 @@ void Display::convertToDisplayMem() {
     pixels[i*4 + 2] = (int)(average.z*255);
     pixels[i*4 + 3] = 255;
   }
-  write(fd, "\x06", 1);
-  for (int y = 0; y < HEIGHT/8; y++) {
-    for (int x = 0; x < WIDTH; x++) {
-      unsigned char final = getGetRow(x,y);
-      write(fd, &final, 1);
-    }
-  }
-
+  vfd.memToVFD(pixels);
 }
-
 
 void Display::displaySamplerPattern(float frame) {
   static Sampler sampler(SAMPLING_MAX, SAMPLING_MAX, 0.1f, 0.0f, 1, (int)(frame / 20));

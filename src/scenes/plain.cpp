@@ -53,10 +53,10 @@ Plain::Plain(): Scene(2, 2, 130.0f) {
   objects[1] = SphereGen([](float frame) {
     return Sphere(Vector3(sinf(frame / 8) * 15,
                           sinf(frame / 4) * 2 + 9,
-                          sinf(frame / 20) * 45 + 65),
+                          sinf(frame / 20) * 45 + 15),
                   10,
                   [](Vector3 point, float frame) {
-                    return Materials::red;
+                    return Materials::pollishedCopper;
                   });
   });
 

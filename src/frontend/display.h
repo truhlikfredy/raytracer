@@ -43,6 +43,7 @@
 #include <SFML/Graphics.hpp>
 #include "../render/render.h"
 #include "../scenes/scene.h"
+#include "vfd.h"
 
 class Display {
 private:
@@ -50,10 +51,9 @@ private:
   sf::Uint8*       pixels;
   sf::Sprite       sprite;
   sf::RenderWindow window;
+  VFD              vfd;
 
   void displaySamplerPattern(float frame);
-  unsigned char getAveragePixel(unsigned int pixel);
-  unsigned char getGetRow(unsigned int x, unsigned y);
 
 public:
   bool             showSamplerPatterns;
