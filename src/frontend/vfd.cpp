@@ -13,9 +13,8 @@
 
 // Implementing driver for Futaba TGP1118BA4 VFD display
 
-VFD::VFD(const char *portName) {
-  this->portName   = portName;
-  this->uartHandle = -1;
+VFD::VFD(const char *portName):
+  isBufferA(true), uartHandle(-1), portName(portName)  {
 }
 
 
@@ -70,25 +69,91 @@ int VFD::openHandle() {
 }
 
 
-unsigned char VFD::getGetRow(unsigned int x, unsigned int row) {
+unsigned char VFD::getGetRow(unsigned int x, unsigned int row, unsigned int threashold) {
   unsigned int y = row * 8;
   unsigned char value = 0;
 
   for (int i = 0; i < 8; i++) {
     unsigned int rounded = quantized[y+i][x];
-    if (rounded>0) value |= 1 << i;
+    if (rounded > threashold) value |= 1 << i;
   }
   return value;
 }
 
 
 void VFD::sendToUart() {
-  write(uartHandle, "\x06", 1);
-  for (int row = 0; row < HEIGHT/8; row++) {
-    for (int x = 0; x < WIDTH; x++) {
-      unsigned char final = getGetRow(x, row);
-      write(uartHandle, &final, 1);
+  if (VFD_SHADES == 2) {
+    write(uartHandle, "\x06", 1);
+    for (int row = 0; row < HEIGHT/8; row++) {
+      for (int x = 0; x < WIDTH; x++) {
+        unsigned char final = getGetRow(x, row, 0);
+        write(uartHandle, &final, 1);
+      }
     }
+  } else {
+    // 0, 4, 8, C sameBuffer than display
+    // 1, 5, 9, D bufferA shades
+    // 2, 6, A, E bufferB shades
+    write(uartHandle, "\x04", 1);
+    if (isBufferA) {
+      write(uartHandle, "\x11", 1);
+    }
+    else {
+      write(uartHandle, "\x12", 1);
+    }
+    write(uartHandle, "\x06", 1);
+    for (int row = 0; row < HEIGHT/8; row++) {
+      for (int x = 0; x < WIDTH; x++) {
+        unsigned char final = getGetRow(x, row, 0);
+        write(uartHandle, &final, 1);
+      }
+    }
+    write(uartHandle, "\x04", 1);
+    if (isBufferA) {
+      write(uartHandle, "\x15", 1);
+    }
+    else {
+      write(uartHandle, "\x16", 1);
+    }
+    write(uartHandle, "\x06", 1);
+    for (int row = 0; row < HEIGHT/8; row++) {
+      for (int x = 0; x < WIDTH; x++) {
+        unsigned char final = getGetRow(x, row, 1);
+        write(uartHandle, &final, 1);
+      }
+    }
+
+    write(uartHandle, "\x04", 1);
+    if (isBufferA) {
+      write(uartHandle, "\x19", 1);
+    }
+    else {
+      write(uartHandle, "\x1A", 1);
+    }
+    write(uartHandle, "\x06", 1);
+    for (int row = 0; row < HEIGHT/8; row++) {
+      for (int x = 0; x < WIDTH; x++) {
+        unsigned char final = getGetRow(x, row, 2);
+        write(uartHandle, &final, 1);
+      }
+    }
+
+    write(uartHandle, "\x04", 1);
+    if (isBufferA) {
+      write(uartHandle, "\x1D", 1);
+    }
+    else {
+      write(uartHandle, "\x1E", 1);
+    }
+    write(uartHandle, "\x06", 1);
+    for (int row = 0; row < HEIGHT/8; row++) {
+      for (int x = 0; x < WIDTH; x++) {
+        unsigned char final = getGetRow(x, row, 3);
+        write(uartHandle, &final, 1);
+      }
+    }
+
+    isBufferA = !isBufferA;
   }
 }
 
