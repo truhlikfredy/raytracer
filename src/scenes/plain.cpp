@@ -13,12 +13,12 @@ Plain::Plain(): Scene(2, 2, 130.0f) {
     .possition    = Vector3(0.0f, 0.0f,  -170.0f),
     .lookAt       = Vector3(0.0f, 0.0f, 60.0f),
     .apeture      = 0.0f,
-    .shutterBlur  = 1.0f
+    .shutterBlur  = 0.9f
   };
 
   lights[0] = LightOmniGen([](float frame) {
     const float lightRotate = (M_PI * frame) / 31;
-    Vector3 center(320 * cosf(lightRotate), 0.6 * 200 * (sinf(lightRotate) - 0.5), 20);
+    Vector3 center(60 * cosf(lightRotate), 0.6 * 50 * (sinf(lightRotate) - 0.5), 30);
     Color color(0.9f, 0.9f, 0.9f);
 
     return LightOmni(center, color);
@@ -51,9 +51,9 @@ Plain::Plain(): Scene(2, 2, 130.0f) {
 
 
   objects[1] = SphereGen([](float frame) {
-    return Sphere(Vector3(sinf(frame / 8) * 15,
+    return Sphere(Vector3(sinf(frame / 3) * 45,
                           sinf(frame / 4) * 2 + 9,
-                          sinf(frame / 20) * 45 + 15),
+                          sinf(frame / 20) * 0.1f + 35),
                   10,
                   [](Vector3 point, float frame) {
                     return Materials::pollishedCopper;

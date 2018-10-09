@@ -20,8 +20,8 @@ int main() {
   bool quitRequested = false;
 
   Scene scenes[6] = {
-    Lights(),
     Plain(),
+    Lights(),
     Large2(),
     Large(),
     Dof(),
