@@ -1,6 +1,8 @@
-//
-// Created by fredy on 07/10/18.
-//
+/*
+ * Driver for Futaba TGP1118BA4 VFD display
+ * author: Anton Krug anton.krug@gmail.com
+ * date: 08/01/2018
+ */
 
 #include <errno.h>
 #include <fcntl.h>
@@ -11,14 +13,13 @@
 #include "vfd.h"
 #include "display.h"
 
-// Implementing driver for Futaba TGP1118BA4 VFD display
 
 VFD::VFD(const char *portName):
   isBufferA(true), uartHandle(-1), portName(portName)  {
 }
 
 
-int VFD::set_interface_attribs(int speed, int parity) {
+int VFD::set_interface_attribs(int speed) {
   struct termios tty;
   memset(&tty, 0, sizeof tty);
   if (tcgetattr(uartHandle, &tty) != 0) {
@@ -35,15 +36,15 @@ int VFD::set_interface_attribs(int speed, int parity) {
   tty.c_lflag = 0;                // no signaling chars, no echo,
   // no canonical processing
   tty.c_oflag = 0;                // no remapping, no delays
-  tty.c_cc[VMIN] = 0;            // read doesn't block
+  tty.c_cc[VMIN]  = 0;            // read doesn't block
   tty.c_cc[VTIME] = 5;            // 0.5 seconds read timeout
 
   tty.c_iflag &= ~(IXON | IXOFF | IXANY); // shut off xon/xoff ctrl
 
-  tty.c_cflag |= (CLOCAL | CREAD); // ignore modem controls,
+  tty.c_cflag |= (CLOCAL | CREAD);        // ignore modem controls,
+
   // enable reading
   tty.c_cflag &= ~(PARENB | PARODD);      // shut off parity
-  tty.c_cflag |= parity;
   tty.c_cflag &= ~CSTOPB;
   tty.c_cflag &= ~CRTSCTS;
 
@@ -61,7 +62,7 @@ int VFD::openHandle() {
     printf("error %d opening %s: %s\n", errno, portName, strerror(errno));
   }
   else {
-    set_interface_attribs(B115200, 0);  // set speed to 115,200 bps, 8n1 (no parity)
+    set_interface_attribs(B115200);  // set speed to 115,200 bps, 8n1 (no parity)
 
     write(uartHandle, "\x00", 1);
     usleep(30000);
@@ -82,79 +83,35 @@ unsigned char VFD::getGetRow(unsigned int x, unsigned int row, unsigned int thre
 
 
 void VFD::sendToUart() {
-  if (VFD_SHADES == 2) {
-    write(uartHandle, "\x06", 1);
-    for (int row = 0; row < HEIGHT/8; row++) {
-      for (int x = 0; x < WIDTH; x++) {
-        unsigned char final = getGetRow(x, row, 0);
-        write(uartHandle, &final, 1);
-      }
-    }
-  } else {
-    // 0, 4, 8, C sameBuffer than display
-    // 1, 5, 9, D bufferA shades
-    // 2, 6, A, E bufferB shades
-    write(uartHandle, "\x04", 1);
-    if (isBufferA) {
-      write(uartHandle, "\x11", 1);
-    }
-    else {
-      write(uartHandle, "\x12", 1);
-    }
-    write(uartHandle, "\x06", 1);
-    for (int row = 0; row < HEIGHT/8; row++) {
-      for (int x = 0; x < WIDTH; x++) {
-        unsigned char final = getGetRow(x, row, 0);
-        write(uartHandle, &final, 1);
-      }
-    }
-    write(uartHandle, "\x04", 1);
-    if (isBufferA) {
-      write(uartHandle, "\x15", 1);
-    }
-    else {
-      write(uartHandle, "\x16", 1);
-    }
-    write(uartHandle, "\x06", 1);
-    for (int row = 0; row < HEIGHT/8; row++) {
-      for (int x = 0; x < WIDTH; x++) {
-        unsigned char final = getGetRow(x, row, 1);
-        write(uartHandle, &final, 1);
-      }
-    }
+  const unsigned char bankSelectCodes[4] = { 0x11, 0x15, 0x19, 0x1D };
+  unsigned char packetBuffer[(128*64)/8+3];
 
-    write(uartHandle, "\x04", 1);
-    if (isBufferA) {
-      write(uartHandle, "\x19", 1);
+  // The 4 shade (5 shade if black is included) mode has to write to 4 different 128x64 bit buffer banks
+  // there are two sets of these sets to allow double buffering and with 0x04 command you can select which
+  // bank is display and to which the write
+  // 0x10, 0x14, 0x18, 0x1C sameBuffer than display
+  // 0x11, 0x15, 0x19, 0x1D bufferA shades
+  // 0x12, 0x16, 0x1A, 0x1E bufferB shades
+  // and then you can write whole bank with 0x06 command
+
+
+  for (int bankIndex = 0; bankIndex < VFD_SHADES-1; bankIndex++) {
+    unsigned int index = 0;
+    if (VFD_SHADES > 2) {
+      // do not use double buffering with 1bit mode as it is fast enough
+      packetBuffer[index++] = 0x04;
+      packetBuffer[index++] = bankSelectCodes[bankIndex] + isBufferA;
     }
-    else {
-      write(uartHandle, "\x1A", 1);
-    }
-    write(uartHandle, "\x06", 1);
+    packetBuffer[index++] = 0x06;
+
     for (int row = 0; row < HEIGHT/8; row++) {
       for (int x = 0; x < WIDTH; x++) {
-        unsigned char final = getGetRow(x, row, 2);
-        write(uartHandle, &final, 1);
+        packetBuffer[index++] = getGetRow(x, row, bankIndex);
       }
     }
-
-    write(uartHandle, "\x04", 1);
-    if (isBufferA) {
-      write(uartHandle, "\x1D", 1);
-    }
-    else {
-      write(uartHandle, "\x1E", 1);
-    }
-    write(uartHandle, "\x06", 1);
-    for (int row = 0; row < HEIGHT/8; row++) {
-      for (int x = 0; x < WIDTH; x++) {
-        unsigned char final = getGetRow(x, row, 3);
-        write(uartHandle, &final, 1);
-      }
-    }
-
-    isBufferA = !isBufferA;
+    write(uartHandle, packetBuffer, index);
   }
+  isBufferA = !isBufferA;
 }
 
 
@@ -170,9 +127,16 @@ void VFD::normalizeRaw(unsigned x, unsigned y) {
 
 void VFD::memToVFD(sf::Uint8* pixels) {
   if (uartHandle == -1) {
+    // UART is not opened, try to open it (for example using this call for the first time)
     openHandle();
   }
 
+  if (uartHandle == -1) {
+    // If the UART is still not opened, then give up on sending data to the display
+    return;
+  }
+
+  // Copying RGB data to Grayscale buffer
   for (int y=0; y < VFD_HEIGHT; y++) {
     for (int x=0; x < VFD_WIDTH; x++) {
       int index = (y*VFD_WIDTH) + x;
@@ -180,55 +144,41 @@ void VFD::memToVFD(sf::Uint8* pixels) {
     }
   }
 
+  // Quantize and apply dithering
   for (int y=0; y < VFD_HEIGHT; y++) {
     for (int x=0; x < VFD_WIDTH; x++) {
-      normalizeRaw(x, y);
-      unsigned char shade = (raw[y][x] + VFD_SHADE_ROUND) / VFD_SHADE_DIVIDER;
+      normalizeRaw(x, y);  // make sure the original raw value do not overflow nor underflow
+      const unsigned char shade = (raw[y][x] + VFD_SHADE_ROUND) / VFD_SHADE_DIVIDER;
       quantized[y][x] = shade;
-      int error = raw[y][x] - (shade * VFD_SHADE_DIVIDER);
+
+#ifdef VFD_DITHER
+      const int error = raw[y][x] - (shade * VFD_SHADE_DIVIDER);
+
+      const int error1 = (error * 1)/48;
+      const int error3 = (error * 3)/48;
+      const int error5 = (error * 5)/48;
+      const int error7 = (error * 7)/48;
+
+      const int errors[3][5] = {
+        {0,      0,      0,      error7, error5 },
+        {error3, error5, error7, error5, error3 },
+        {error1, error3, error5, error3, error1 }
+      };
 
       // http://www.tannerhelland.com/4660/dithering-eleven-algorithms-source-code/
       // Jarvis, Judice, and Ninke Dithering
-      if (x < (VFD_WIDTH-1)) {
-        raw[y][x+1] += (error * 7)/48;
-      }
-      if (x < (VFD_WIDTH-2)) {
-        raw[y][x+2] += (error * 5)/48;
-      }
 
-      if (y < (VFD_HEIGHT-1)) {
-        if (x > 2) {
-          raw[y+1][x-2] += (error * 3)/48;
-        }
-        if (x > 1) {
-          raw[y+1][x-1] += (error * 5)/48;
-        }
-        raw[y+1][x] += (error * 7)/48;
+      // Make sure to NOT apply the error outside boundaries
+      const int startX = ( x > 2 ? 0 : 2 - x );
+      const int endX   = ( x < (VFD_WIDTH  - 2) ? 4 : (VFD_WIDTH  - x) + 1 );
+      const int endY   = ( y < (VFD_HEIGHT - 2) ? 2 : (VFD_HEIGHT - y) - 1 );
 
-        if (x < (VFD_WIDTH-1)) {
-          raw[y+1][x+1] += (error * 5)/48;
-        }
-        if (x < (VFD_WIDTH-2)) {
-          raw[y+1][x+2] += (error * 3)/48;
+      for (int row = 0; row <= endY; row++) {
+        for (int col = startX; col <= endX; col++) {
+          raw[y+row][x+col-2] += errors[row][col];
         }
       }
-
-      if (y < (VFD_HEIGHT-2)) {
-        if (x > 2) {
-          raw[y+2][x-2] += (error * 1)/48;
-        }
-        if (x > 1) {
-          raw[y+2][x-1] += (error * 3)/48;
-        }
-        raw[y+2][x] += (error * 5)/48;
-
-        if (x < (VFD_WIDTH-1)) {
-          raw[y+2][x+1] += (error * 3)/48;
-        }
-        if (x < (VFD_WIDTH-2)) {
-          raw[y+2][x+2] += (error * 1)/48;
-        }
-      }
+#endif
 
     }
   }
