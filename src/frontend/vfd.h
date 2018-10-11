@@ -32,9 +32,11 @@ private:
   void normalizeRaw(unsigned x, unsigned y);
   unsigned char getGetRow(unsigned int x, unsigned y, unsigned int threashold);
   void sendToUart();
+  void reset();
 
 public:
   VFD(const char *portName);
+  ~VFD();
   void memToVFD(sf::Uint8* pixels);
 };
 

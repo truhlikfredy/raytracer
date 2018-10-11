@@ -19,6 +19,16 @@ VFD::VFD(const char *portName):
 }
 
 
+VFD::~VFD() {
+  if (uartHandle != -1) {
+    reset();
+    close(uartHandle);
+    uartHandle = -1;
+    printf("VFD display closed\n");
+  }
+}
+
+
 int VFD::set_interface_attribs(int speed) {
   struct termios tty;
   memset(&tty, 0, sizeof tty);
@@ -55,6 +65,10 @@ int VFD::set_interface_attribs(int speed) {
   return(0);
 }
 
+void VFD::reset() {
+  write(uartHandle, "\x00", 1);
+  usleep(30000);
+}
 
 int VFD::openHandle() {
   uartHandle = open(portName, O_RDWR | O_NOCTTY | O_SYNC);
@@ -63,9 +77,7 @@ int VFD::openHandle() {
   }
   else {
     set_interface_attribs(B115200);  // set speed to 115,200 bps, 8n1 (no parity)
-
-    write(uartHandle, "\x00", 1);
-    usleep(30000);
+    reset();
   }
 }
 
