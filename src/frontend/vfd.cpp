@@ -104,9 +104,15 @@ void VFD::sendToUart() {
     }
     packetBuffer[index++] = 0x06;
 
-    for (int row = 0; row < HEIGHT/8; row++) {
-      for (int x = 0; x < WIDTH; x++) {
+    for (int row = 0; row < VFD_HEIGHT/8; row++) {
+      for (int x = 0; x < VFD_WIDTH; x++) {
+#ifdef VFD_DITHER_FLIP
+        // flips back the flip done before dithering
+        packetBuffer[index++] = getGetRow(((isBufferA) ? (VFD_WIDTH-x-1) : x), row, bankIndex);
+#else
         packetBuffer[index++] = getGetRow(x, row, bankIndex);
+#endif
+//        packetBuffer[index++] = getGetRow(x, row, bankIndex);
       }
     }
     write(uartHandle, packetBuffer, index);
@@ -139,7 +145,16 @@ void VFD::memToVFD(sf::Uint8* pixels) {
   // Copying RGB data to Grayscale buffer
   for (int y=0; y < VFD_HEIGHT; y++) {
     for (int x=0; x < VFD_WIDTH; x++) {
+#ifdef VFD_DITHER_FLIP
+      // for every second image do the flip.
+      // image is now and then after dithering, the resulting image is
+      // in correct orientation, but the dithering was effectively
+      // applied right to left and on next frame left to right
+      // which dithers a bit over time, not just over x,y dimensions
+      int index = (y*VFD_WIDTH) + ((isBufferA) ? (VFD_WIDTH-x-1) : x);
+#else
       int index = (y*VFD_WIDTH) + x;
+#endif
       raw[y][x] = (pixels[index*4] + pixels[index*4+1] + pixels[index*4+2])/3;
     }
   }
@@ -153,6 +168,10 @@ void VFD::memToVFD(sf::Uint8* pixels) {
 
 #ifdef VFD_DITHER
       const int error = raw[y][x] - (shade * VFD_SHADE_DIVIDER);
+      // http://www.tannerhelland.com/4660/dithering-eleven-algorithms-source-code/
+
+#if VFD_DITHER == 1
+      // Jarvis, Judice, and Ninke Dithering
 
       const int error1 = (error * 1)/48;
       const int error3 = (error * 3)/48;
@@ -165,8 +184,31 @@ void VFD::memToVFD(sf::Uint8* pixels) {
         {error1, error3, error5, error3, error1 }
       };
 
-      // http://www.tannerhelland.com/4660/dithering-eleven-algorithms-source-code/
-      // Jarvis, Judice, and Ninke Dithering
+      // Make sure to NOT apply the error outside boundaries
+      const int startX = ( x > 2 ? 0 : 2 - x );
+      const int endX   = ( x < (VFD_WIDTH  - 2) ? 4 : (VFD_WIDTH  - x) + 1 );
+      const int endY   = ( y < (VFD_HEIGHT - 2) ? 2 : (VFD_HEIGHT - y) - 1 );
+
+      for (int row = 0; row <= endY; row++) {
+        for (int col = startX; col <= endX; col++) {
+          raw[y+row][x+col-2] += errors[row][col];
+        }
+      }
+#endif
+
+#if VFD_DITHER == 2
+      // Sierra-3
+      const int error2 = (error * 2)/32;
+      const int error3 = (error * 3)/32;
+      const int error4 = (error * 4)/32;
+      const int error5 = (error * 5)/32;
+
+      const int errors[3][5] = {
+        {0,      0,      0,      error5, error3 },
+        {error2, error4, error5, error4, error2 },
+        {0,      error2, error3, error2, 0      }
+      };
+
 
       // Make sure to NOT apply the error outside boundaries
       const int startX = ( x > 2 ? 0 : 2 - x );
@@ -178,6 +220,8 @@ void VFD::memToVFD(sf::Uint8* pixels) {
           raw[y+row][x+col-2] += errors[row][col];
         }
       }
+#endif
+
 #endif
 
     }

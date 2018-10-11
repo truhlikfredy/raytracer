@@ -13,7 +13,8 @@
 #define VFD_HEIGHT 64
 
 #define VFD_SHADES 5
-#define VFD_DITHER 1
+#define VFD_DITHER 2      // undefined = no dithering, 1 = JJN, 2 = Sierra-3
+#define VFD_DITHER_FLIP
 #define VFD_SHADE_DIVIDER (256/VFD_SHADES)
 #define VFD_SHADE_ROUND (VFD_SHADE_DIVIDER/2)
 
