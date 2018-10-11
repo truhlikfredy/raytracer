@@ -11,7 +11,6 @@
 #include <unistd.h>
 
 #include "vfd.h"
-#include "display.h"
 
 
 VFD::VFD(const char *portName):
@@ -83,11 +82,11 @@ int VFD::openHandle() {
 
 
 unsigned char VFD::getGetRow(unsigned int x, unsigned int row, unsigned int threashold) {
-  unsigned int y = row * 8;
+  const unsigned int y = row * 8;
   unsigned char value = 0;
 
   for (int i = 0; i < 8; i++) {
-    unsigned int rounded = quantized[y+i][x];
+    const unsigned int rounded = quantized[y+i][x];
     if (rounded > threashold) value |= 1 << i;
   }
   return value;
@@ -124,7 +123,6 @@ void VFD::sendToUart() {
 #else
         packetBuffer[index++] = getGetRow(x, row, bankIndex);
 #endif
-//        packetBuffer[index++] = getGetRow(x, row, bankIndex);
       }
     }
     write(uartHandle, packetBuffer, index);
