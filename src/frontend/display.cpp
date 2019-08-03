@@ -4,12 +4,15 @@
  */
 
 #include <chrono>
-#include "display.h"
+#include <stdio.h>
+#include <stdlib.h>
 
+#include "display.h"
 
 Display::Display():
   showSamplerPatterns(false), onScreenDisplay(false), stdOutLog(false), timeSpeed(1.0f),
-  benchmarkAllowed(false), benchmarkEnded(false), elapsedTotal(0), videoCapture(false)  {
+  benchmarkAllowed(false), benchmarkEnded(false), elapsedTotal(0), videoCapture(false),
+  vfd("/dev/ttyUSB0")  {
 
   pixels = new sf::Uint8[WIDTH * HEIGHT * 4];
   render = new Render(WIDTH, HEIGHT);
@@ -31,10 +34,9 @@ void Display::saveScreenshot(char* filename) {
 
 
 void Display::clearDisplayMem() {
-  // clean buffer
+  // clean raw
   for (int i = 0; i < HEIGHT * WIDTH *4; i++) pixels[i]=0;
 }
-
 
 void Display::convertToDisplayMem() {
   for (int i = 0; i < HEIGHT * WIDTH; i++) {
@@ -44,8 +46,8 @@ void Display::convertToDisplayMem() {
     pixels[i*4 + 2] = (int)(average.z*255);
     pixels[i*4 + 3] = 255;
   }
+  vfd.memToVFD(pixels);
 }
-
 
 void Display::displaySamplerPattern(float frame) {
   static Sampler sampler(SAMPLING_MAX, SAMPLING_MAX, 0.1f, 0.0f, 1, (int)(frame / 20));
