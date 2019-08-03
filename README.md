@@ -50,6 +50,7 @@
 
 # TODO (More precisely a wish list)
 
+* Rays should detect hits for AABBs (Axis-aligned bounding boxes) first to save on resources
 * More agresive private methods
 * Improve test pattern of the jitter results
 * Support different objects (plane, box, donut)
