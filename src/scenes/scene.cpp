@@ -42,6 +42,6 @@ void Scene::evaluateObjects(std::vector<std::shared_ptr<Object>> result, float f
 //    Object *pObject = (Object*) pEntity;
 //    result[i] = *pObject;
 
-    result[i] = std::make_shared(objects[i]->evaluateObjFn(frame));
+//    result[i] = std::make_shared(objects[i]->evaluateObjFn(frame));
   }
 }
