@@ -8,10 +8,10 @@
 
 #include "scene.h"
 
-class Dof: public Scene {
-public:
-  Dof();
-};
+//class Dof: public Scene {
+//public:
+//  Dof();
+//};
 
 
 #endif //RAYTRACER_SCENES_DOF_H
