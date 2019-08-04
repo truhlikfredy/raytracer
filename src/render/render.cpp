@@ -10,6 +10,7 @@
 #include "render.h"
 #include "../entities/camera.h"
 #include "../scenes/scene.h"
+#include "../scenes/sceneGenerator.h"
 
 
 Render::Render(int widthInit, int heightInit): width(widthInit), height(heightInit), scene(nullptr) {
@@ -31,12 +32,9 @@ void Render::getThreadWindow(int thread, windowType &ret) {
 }
 
 
-colors Render::rayStart(Ray ray, std::vector<std::shared_ptr<Object>> objects, LightOmni* light, float frame) {
-  if (scene->camera.shutterBlur != 0.0f) {
-    scene->evaluateObjects(objects, frame);
-  }
+colors Render::rayStart(Ray ray, Scene *scene) {
 
-  return rayFollow(ray, objects, light, frame, 1, -1);
+  return rayFollow(ray, scene, 1, nullptr);
 }
 
 
@@ -51,7 +49,7 @@ void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionInde
 }
 
 
-colors Render::rayFollow(Ray ray, std::vector<std::shared_ptr<Object>> objects, LightOmni* light, float frame, int iteration, int inside) {
+colors Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
   colors ret = {.average = Color(), .sum = Color() };
 
   if (iteration > MAX_BOUNCES) {
@@ -59,56 +57,54 @@ colors Render::rayFollow(Ray ray, std::vector<std::shared_ptr<Object>> objects, 
   }
 
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
-  float smallestHitDistance = FLT_MAX;  // set it to maximum at first
-  int smallestObjectIndex = -1;
-  Vector3 smallestHitPoint;
+  float shortestHitDistance = FLT_MAX;  // set it to maximum at first
+  Object *shortestObject = nullptr;
+  Vector3 shortestHitPoint;
 
   // Find closest collision
-  for (int i = 0; i< scene->nObjects; i++){
+  for (Object *object: *scene->objects) {
     Vector3 hitPoint;
 //    Object* objectUpcast = objects[i];
 //    Sphere object = dynamic_cast<Sphere &>(objects[i]);
     float hitDistance;
 
-    if (inside >= 0) {
+    if (inside) {
       //hitDistance = object.detectHitMax(ray, hitPoint);
-      if (inside == i) {
+      if (inside == object) {
         // if we are testing the collision with itslef (inside the object) then find the furtherst point
-        hitDistance = objects[i].detectHitMax(ray, hitPoint);
+        hitDistance = object->detectHitMax(ray, hitPoint);
       }
       else {
         // but for all other objects even including intersecting object do detect closest collision
-        hitDistance = objects[i].detectHit(ray, hitPoint);
+        hitDistance = object->detectHit(ray, hitPoint);
       }
     }
     else {
-      hitDistance = object.detectHit(ray, hitPoint);
+      hitDistance = object->detectHit(ray, hitPoint);
     }
 
     if (hitDistance != -1.0f) {
-      if (smallestHitDistance > hitDistance) {
+      if (shortestHitDistance > hitDistance) {
         // It's the shortest hit yet, let's save it, if it will win then calculate it's color by shading it depending on the bounce angle
-        smallestObjectIndex = i;
-        smallestHitDistance = hitDistance;
-        smallestHitPoint    = hitPoint;
+        shortestObject      = object;
+        shortestHitDistance = hitDistance;
+        shortestHitPoint    = hitPoint;
       }
     }
   }
 
   // Only shade the closes collision
-  if (smallestObjectIndex >= 0) {
-    Object object = objects[smallestObjectIndex];
-
+  if (shortestObject) {
     // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
-    Vector3 hitNormal    = object ^smallestHitPoint;
+    Vector3 hitNormal    = shortestObject ^shortestHitPoint;
     Vector3 hitReflected = ray.direction - (hitNormal * 2 * (ray.direction % hitNormal));
-    Vector3 hitLight     = Vector3(light->center - smallestHitPoint);
+    Vector3 hitLight     = Vector3(light->center - shortestHitPoint);
 
     // calculate lenght from the collision point to light source and then normalize the vector pointing to it
     float hitLightLen    = hitLight.lenght();
     hitLight = ~hitLight;
 
-    materialStatic hitMaterial = object.materialFn(smallestHitPoint, frame);
+    materialStatic hitMaterial = shortestObject->materialFn(shortestHitPoint, scene->frame);
 
     float diffuse  = fmaxf(0, hitLight % hitNormal); // how similar are they?
     float specular = fmaxf(0, hitLight % hitReflected);
@@ -122,14 +118,14 @@ colors Render::rayFollow(Ray ray, std::vector<std::shared_ptr<Object>> objects, 
       Vector3 hitRefracted;
       refract(ray.direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
 
-      colorRefract = rayFollow(Ray(smallestHitPoint, hitRefracted), objects, light, frame, iteration +1, (inside == -1) ? smallestObjectIndex : -1 );
+      colorRefract = rayFollow(Ray(shortestHitPoint, hitRefracted), scene, iteration + 1, (inside) ? nullptr : shortestObject);
       colorRefract.average *= hitMaterial.transparency;
       colorRefract.sum     *= hitMaterial.transparency;
     }
 
     if (hitMaterial.reflectivity != 0.0f) {
       // If the material is reflective then handle reflection
-      colorReflect = rayFollow(Ray(smallestHitPoint, hitReflected), objects, light, frame, iteration +1, inside);
+      colorReflect = rayFollow(Ray(shortestHitPoint, hitReflected), scene, iteration + 1, inside);
       colorReflect.average *= hitMaterial.reflectivity;
       colorReflect.sum     *= hitMaterial.reflectivity;
     }
@@ -137,20 +133,20 @@ colors Render::rayFollow(Ray ray, std::vector<std::shared_ptr<Object>> objects, 
     // diffuse = similarity (dot product) of hitLight and hitNormal
     // https://youtu.be/KDHuWxy53uM
     // And use the diffuse / specular only when they are positive
-    // shadeOfTheRay = specular + diffuse + ambient
+    // shadeOfTheRay = specular + diffuse + ambientStatic
     // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
     // http://www.paulsprojects.net/tutorials/simplebump/simplebump.html
 
-    ret.average = scene->ambient * hitMaterial.ambient;
-    ret.sum     = (( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * light->color) / fmax(0.8f, powf((hitLightLen + smallestHitDistance)/300.0f, 2));
+    ret.average = scene->ambientStatic * hitMaterial.ambient;
+    ret.sum     = (( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * light->color) / fmax(0.8f, powf((hitLightLen + shortestHitDistance) / 300.0f, 2));
 
 //    for (int j = 0; j < scene->nObjects; j++) {
 //      // test all objects if they are casting shadow from this light
 //      Object objectCausingShadow = objects[j];
 //      if (j != smallestObjectIndex &&
-//        objectCausingShadow.detectHit(Ray(smallestHitPoint, hitLight)) != -1 &&
+//        objectCausingShadow.detectHit(Ray(shortestHitPoint, hitLight)) != -1 &&
 //        objectCausingShadow.materialFn(hitLight,frame).castsShadows &&
-//        hitLightLen > (objectCausingShadow.center - smallestHitPoint).lenght() ) {
+//        hitLightLen > (objectCausingShadow.center - shortestHitPoint).lenght() ) {
 //
 //        // If the following are meet:
 //        // 1) can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
@@ -159,7 +155,7 @@ colors Render::rayFollow(Ray ray, std::vector<std::shared_ptr<Object>> objects, 
 //        // 4) object needs to be between the light source and the collision point and not behind the light source
 //        // Then do the following:
 //
-//        ret.sum = Color();    // null the summing factor, leave only average factor ok which is the ambient part
+//        ret.sum = Color();    // null the summing factor, leave only average factor ok which is the ambientStatic part
 //        break;
 //      }
 //    }
@@ -172,24 +168,16 @@ colors Render::rayFollow(Ray ray, std::vector<std::shared_ptr<Object>> objects, 
 }
 
 
-void Render::renderPartialWindow(float frame, windowType &window) {
+void Render::renderPartialWindow(windowType &window) {
   // this will be executed by multiple different threads,
   // things needs to be in local stack or globaly synchronize to be safe
 
-  Sampler sampler(SAMPLING_MIN * scene->nLights, SAMPLING_MAX * scene->nLights,
-                  scene->camera.shutterBlur, scene->camera.apeture, scene->nLights, frame);
+  Sampler sampler(scenes[0], SAMPLING_MIN, SAMPLING_MAX);
 
   Camera  camera(width,height);
 
-  Object     *objects = new Object[scene->nObjects];
-  LightOmni   light;
   sampleTuple sample;
   Ray         rayForThisPixel;
-
-  if (scene->camera.shutterBlur == 0.0f) {
-    // if there is no blurness due to animation do not evaluate scene per each ray
-    scene->evaluateObjects(objects, frame);
-  }
 
   for (int y = window.yStart; y < window.yEnd; y++) {
     for (int x = window.xStart; x < window.xEnd; x++) {
@@ -199,12 +187,12 @@ void Render::renderPartialWindow(float frame, windowType &window) {
 
       sampler.nextPixel();
       while (sampler.isNext()) {
+        static unsigned int count = 0;
 
         sampler.getNextSample(&sample);
 
-        camera.getRay(x, y, sample, scene, rayForThisPixel);
-        light = scene->lights[sample.light].evaluateFn(frame);
-        lastColor = rayStart(rayForThisPixel, objects, &light, frame + sample.time);
+        camera.getRay(x, y, sample, scenes[count], rayForThisPixel);
+        lastColor = rayStart(rayForThisPixel, scenes);
 
         totalColor.average += ~lastColor.average;
         totalColor.sum     += ~lastColor.sum;
@@ -217,14 +205,12 @@ void Render::renderPartialWindow(float frame, windowType &window) {
           }
         }
 
+        count++;
       }
-      const float raysPerLight = ((float)colorsCount/scene->nLights);
-      dynamicPixels[x + (y * width)] = ~Color( (totalColor.sum     / raysPerLight) +
-                                               (totalColor.average / colorsCount));
+      dynamicPixels[x + (y * width)] = ~Color( (totalColor.sum / colorsCount);
     }
   }
 
-  delete[] objects;
 }
 
 
@@ -235,20 +221,38 @@ void Render::clearDynamicPixels() {
 }
 
 
-void Render::renderFullWindow(Scene *sceneInit) {
-  scene = sceneInit;
+void Render::renderFullWindow(SceneGenerator *sceneGenerator) {
   std::vector<std::thread> workers;
 
   clearDynamicPixels();
 
+  /* Create scenes in all the time samples */
+  Sampler sampler(sceneGenerator, SAMPLING_MIN, SAMPLING_MAX);
+  int timeSamples = (sceneGenerator->camera.shutterBlur == 0.0f) ? 1 : sampler.indexMaximum;
+  scenes = new Scene*[timeSamples];
+  for (int i = 0; i < sampler.indexMaximum; i++) {
+    sampleTuple sample;
+    sampler.getNextSample(&sample);
+
+    scenes[i] = sceneGenerator->generateScene(sample.time);
+    sampler.nextPixel();
+  }
+
+  /* Give work to all threads to render part of the screen */
   for (int segment = 0; segment < SEGMENTS; segment++) {
     for (int thread = 0; thread < threadsMax; thread++) {
       workers.emplace_back([this, thread] {
         windowType partialWindow;
         this->getThreadWindow(thread, partialWindow);
-        this->renderPartialWindow(scene->frame, partialWindow);
+        this->renderPartialWindow(partialWindow);
       });
     }
     for (auto& worker: workers) worker.join();
   }
+
+  /* Delete scenes in all the motion blur time samples */
+  for (int i = 0; i < timeSamples; i++) {
+    delete scenes[i];
+  }
+  delete scenes;
 }

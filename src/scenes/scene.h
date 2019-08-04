@@ -13,34 +13,35 @@
 #include "../entities/objects/object.h"
 #include "../entities/objects/sphere.h"
 #include "../entities/lights/lightOmni.h"
-#include "../entities/lights/lightOmniGen.h"
+#include "../entities/lights/lightOmniGenerator.h"
 
 class Scene {
 public:
-  int           nLights;
-  int           nObjects;
-  LightOmniGen* lights;
+  std::vector<Light*> *lights;
+//  LightOmniGen* lights[];
 //  Object*    objects;
-  std::vector<std::shared_ptr<Object>> objects;
+  std::vector<Object*> *objects;
   float         frame;
-  float         lastFrame;
-  Color         ambient;
+  int           lightVariations;
+  Color         ambientStatic;
+  std::function<Color(float frame)> ambientFn;
+
 
   struct {
-    Vector3 possition;    // Possition of the camera
-    Vector3 lookAt;       // Loacation where the camera is looking
-    float   apeture;      // Affects strenght of the depth of field, 0 = disabled DOF
+    Vector3 position;    // Position of the camera
+    Vector3 lookAt;      // Location where the camera is looking
+    float   aperture;    // Affects strength of the depth of field, 0 = disabled DOF
     float   shutterBlur; // Affects motion blur, 0 = disabled blur
   } camera;
 
-  Scene(int nlightsInit, int nObjectsInit, float lastFrame);
+  Scene();
 
-  Scene(int nlightsInit, int nObjectsInit);
+  Scene(Color ambientStaticInit);
 
   ~Scene();
 
-  void evaluateLights(LightOmni* result, float frame);
-  void evaluateObjects(std::vector<std::shared_ptr<Object>> result, float frame);
+//  void evaluateLights(LightOmni* result, float frame);
+//  void evaluateObjects(std::vector<std::shared_ptr<Object>> result, float frame);
 
 };
 

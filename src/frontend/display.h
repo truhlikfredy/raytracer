@@ -44,6 +44,7 @@
 #include "../render/render.h"
 #include "../scenes/scene.h"
 #include "vfd.h"
+#include "../scenes/sceneGenerator.h"
 
 class Display {
 private:
@@ -67,7 +68,7 @@ public:
   float            timeSpeed;
   Display();
 
-  void renderLoop(Scene *scene);
+  void renderLoop(SceneGenerator *scene);
   bool keepLooping();
   void clearDisplayMem();
   void convertToDisplayMem();

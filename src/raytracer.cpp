@@ -8,6 +8,7 @@
 #include "utils/utils.h"
 
 #include "scenes/plain.h"
+#include "scenes/generated.h"
 #include "scenes/dof.h"
 #include "scenes/mandelbrot.h"
 #include "scenes/lights.h"
@@ -19,8 +20,8 @@ int main() {
   Display *mainWindow = new Display();
   bool quitRequested = false;
 
-  Scene scenes[1] = {
-    Lights()
+  SceneGenerator sceneGenerators[1] = {
+    Generated()
 //    Plain(),
 //    Large2(),
 //    Large(),
@@ -71,17 +72,17 @@ int main() {
 
     if (Debounce::isKeyPressed(sf::Keyboard::RBracket)) {
       // jump forward in time
-      scenes[sceneIndex].frame += 30;
+      sceneGenerators[sceneIndex].frame += 30;
     }
 
     if (Debounce::isKeyPressed(sf::Keyboard::LBracket)) {
       // jump backward in time
-      scenes[sceneIndex].frame -= 15;
+      sceneGenerators[sceneIndex].frame -= 15;
     }
 
     if (Debounce::isKeyPressed(sf::Keyboard::B)) {
       // start benchmark
-      scenes[sceneIndex].frame = 0;
+      sceneGenerators[sceneIndex].frame = 0;
       mainWindow->benchmarkAllowed = true;
     }
 
@@ -95,7 +96,7 @@ int main() {
       mainWindow->timeSpeed *= 2.0f;
     }
 
-    mainWindow->renderLoop(&scenes[sceneIndex]);
+    mainWindow->renderLoop(&sceneGenerators[sceneIndex]);
   }
 
   if (mainWindow->benchmarkEnded) {

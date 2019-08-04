@@ -12,9 +12,9 @@
 Large::Large():Scene(3, BALLS +2, 20.0f) {
 
   camera = {
-    .possition    = Vector3(0.0f, 0.0f,  -80.0f),
+    .position    = Vector3(0.0f, 0.0f, -80.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 30.0f),
-    .apeture      = 0.0f,
+    .aperture      = 0.0f,
     .shutterBlur  = 0.0f
   };
 
@@ -73,7 +73,7 @@ Large::Large():Scene(3, BALLS +2, 20.0f) {
 //
 //        return materialStatic{
 //          .castsShadows = true,
-//          .ambient = fractal / 10,
+//          .ambientStatic = fractal / 10,
 //          .diffuse = fractal,
 //          .specular = Color(0.2f),
 //          .emission = Color(0.0),

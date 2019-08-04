@@ -34,7 +34,7 @@
 * Instead of calculating the scene for given time, it calculates the scene per each ray, this will allow for each ray to be in different time (motion blur) and even subpixels in a single pixel be sampled from slightly different time. Allowing easy multi dimensional sampling.
 * Randomized multi dimensional sampling in space and time (instead of aliasing it creates noise which is much more pleasing for the eyes, the lens, time jitter is not implemented)
     * Moved from jittered sampler to radical inverse functions.
-* Phong shading (ambient + difuse + specular lighting)
+* Phong shading (ambientStatic + difuse + specular lighting)
 * Animated light and objects (they are lamba functions depending on time)
 * Using well known predefined materials
 * Depth of field effect

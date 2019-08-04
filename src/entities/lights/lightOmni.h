@@ -9,13 +9,11 @@
 #include "../../types/vector3.h"
 #include "../../types/color.h"
 #include "../entity.h"
+#include "light.h"
 
-class LightOmni: public Entity {
+class LightOmni: public Light {
 public:
-  LightOmni(std::function<Entity(float frame)> propertiesInit);
   LightOmni(Vector3 centerInit, Color colorInit);
-  LightOmni();
-  Color color;
 };
 
 

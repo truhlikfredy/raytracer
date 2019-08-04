@@ -273,7 +273,7 @@ Color Materials::mandelbrot(mandelbrotSet &set, uv &pixel) {
 //);
 //
 ///* Multiply this color by the diffusely reflected light. */
-//Ci *= Ka*ambient() + Kd*diffuse(Nf);
+//Ci *= Ka*ambientStatic() + Kd*diffuse(Nf);
 //
 ///* Adjust for opacity. */
 //Oi = Os;

@@ -17,9 +17,6 @@ public:
 
   Sphere(Vector3 centerInt, float radiusInit);
 
-  Sphere(std::function<Sphere(float frame)> evaluateFnInit);
-
-
   Sphere();
 
   float detectHit(Ray ray);

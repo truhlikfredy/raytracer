@@ -67,15 +67,16 @@ void Display::displaySamplerPattern(float frame) {
 }
 
 
-void Display::renderLoop(Scene *scene) {
+void Display::renderLoop(SceneGenerator *sceneGenerator) {
   sf::Event event;
 
-  if (scene->frame == 0.0f) {
+  if (sceneGenerator->frame == 0.0f) {
     elapsedTotal = 0;
 
     if (benchmarkAllowed) {
-      printf("\r\nBenchmark started, wait for results (will do %f frames):\r\n", scene->lastFrame);
-      printf("%d, %d, %f", scene->nLights, scene->nObjects, scene->lastFrame);
+      printf("\r\nBenchmark started, wait for results (will do %f frames):\r\n", sceneGenerator->lastFrame);
+      printf("%d, %d, %f", sceneGenerator->lightGenerators->size(), sceneGenerator->objectGenerators->size(),
+        sceneGenerator->lastFrame);
     }
   }
 
@@ -87,14 +88,14 @@ void Display::renderLoop(Scene *scene) {
 
   // measure how much time is passed while rendering of a whole frame happened
   auto start = std::chrono::high_resolution_clock::now();
-  render->renderFullWindow(scene);
+  render->renderFullWindow(sceneGenerator);
   auto elapsed = std::chrono::high_resolution_clock::now() - start;
   long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
   elapsedTotal += microseconds;
 
   convertToDisplayMem();
   if (showSamplerPatterns) {
-    displaySamplerPattern(scene->frame);
+    displaySamplerPattern(sceneGenerator->frame);
   }
 
   window.clear();
@@ -106,16 +107,17 @@ void Display::renderLoop(Scene *scene) {
     printf(", %d", microseconds);
   }
 
-  if ( (scene->lastFrame < scene->frame) && benchmarkAllowed){
+  if ( (sceneGenerator->lastFrame < sceneGenerator->frame) && benchmarkAllowed){
     benchmarkEnded = true;
     printf("\r\n");
   }
 
-  scene->frame+= timeSpeed;
   if (timeSpeed != 1.0f) {
     // Display what frame it is, when running atypical speeds
-    printf("Frame: %f \r\n", scene->frame);
+    printf("Frame: %f \r\n", sceneGenerator->frame);
   }
+
+  sceneGenerator->frame += timeSpeed;
 }
 
 

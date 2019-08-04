@@ -36,17 +36,18 @@ class Render {
 private:
   unsigned int width;
   unsigned int height;
-  Scene        *scene;
+  Scene        **scenes;
+  unsigned int scenesCount;
 
   void getThreadWindow(int thread, windowType &ret);
 
   void refract(Vector3 &incidentVec, Vector3 &normal, float refractionIndex, Vector3 &refractionRay);
 
-  colors rayStart(Ray ray, std::vector<std::shared_ptr<Object>> objects, LightOmni* light, float frame);
+  colors rayStart(Ray ray, Scene *scene);
 
-  colors rayFollow(Ray ray, std::vector<std::shared_ptr<Object>> objects, LightOmni* light, float frame, int iteration, int inside);
+  colors rayFollow(Ray ray, Scene *scene, int iteration, Object *inside);
 
-  void renderPartialWindow(float frame, windowType &window);
+  void renderPartialWindow(windowType &window);
 
   void clearDynamicPixels();
 
@@ -56,7 +57,7 @@ public:
 
   Render(int width, int height);
 
-  void renderFullWindow(Scene *sceneInit);
+  void renderFullWindow(SceneGenerator *scene);
 };
 
 

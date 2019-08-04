@@ -10,9 +10,9 @@
 Mandelbrot::Mandelbrot(): Scene(1, 1, 40.0f) {
 
   camera = {
-    .possition    = Vector3(0.0f, 0.0f, 35.0f),
+    .position    = Vector3(0.0f, 0.0f, 35.0f),
     .lookAt       = Vector3(0.0f,0.0f,60.0f),
-    .apeture      = 0.0f,
+    .aperture      = 0.0f,
     .shutterBlur  = 0.0f
   };
 
@@ -41,7 +41,7 @@ Mandelbrot::Mandelbrot(): Scene(1, 1, 40.0f) {
 //
 //      return materialStatic{
 //        .castsShadows = true,
-//        .ambient = glow,
+//        .ambientStatic = glow,
 //        .diffuse = fractal,
 //        .specular = Color(0.2f),
 //        .emission = Color(0.0),

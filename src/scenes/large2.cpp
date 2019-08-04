@@ -14,9 +14,9 @@
 Large2::Large2():Scene(1, BALLS +7, 25.0f) {
 
   camera = {
-    .possition    = Vector3(0.0f, 0.0f,  -80.0f),
+    .position    = Vector3(0.0f, 0.0f, -80.0f),
     .lookAt       = Vector3(0.0f, 10.0f, 30.0f),
-    .apeture      = 0.0f,
+    .aperture      = 0.0f,
     .shutterBlur  = 0.0f
   };
 
