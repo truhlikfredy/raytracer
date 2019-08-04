@@ -10,6 +10,8 @@
 class Generated: public SceneGenerator {
 public:
   Generated();
+
+  ~Generated();
 };
 
 #endif //RAYTRACER_GENERATED_H

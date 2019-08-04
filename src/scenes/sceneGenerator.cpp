@@ -11,6 +11,11 @@
 SceneGenerator::SceneGenerator() {
   lightStep = 1.0f;
   lightEnd  = 1.0f;
+  frame = 0.0f;
+  lastFrame = 1.0f;
+  ambientStatic = Color(0.1f);
+
+  //TODO: background static/fn
 
   lightGenerators  = new std::vector<LightGenerator*>();
   objectGenerators = new std::vector<ObjectGenerator*>();
