@@ -7,14 +7,11 @@
 
 #include "functional"
 #include "../entity.h"
-#include "../entityGenerator.h"
 #include "../../types/color.h"
 #include "light.h"
 
-class LightGenerator: public EntityGenerator {
+class LightGenerator: public Light {
 public:
-  Color color;
-
   std::function<Light*(float frame)> evaluateFn;
 
   LightGenerator(Vector3 centerInit, Color colorInit);

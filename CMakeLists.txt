@@ -58,7 +58,7 @@ set(SOURCE_FILES
         src/utils/utils.cpp
         src/entities/camera.h
         src/entities/camera.cpp
-        src/entities/entityGenerator.cpp src/entities/entityGenerator.h src/entities/objects/objectGenerator.cpp src/entities/objects/objectGenerator.h src/scenes/sceneGenerator.cpp src/scenes/sceneGenerator.h src/scenes/generated.cpp src/scenes/generated.h src/entities/lights/light.cpp src/entities/lights/light.h src/entities/lights/lightGenerator.cpp src/entities/lights/lightGenerator.h)
+        src/entities/objects/objectGenerator.cpp src/entities/objects/objectGenerator.h src/scenes/sceneGenerator.cpp src/scenes/sceneGenerator.h src/scenes/generated.cpp src/scenes/generated.h src/entities/lights/light.cpp src/entities/lights/light.h src/entities/lights/lightGenerator.cpp src/entities/lights/lightGenerator.h)
 
 add_executable(raytracer ${SOURCE_FILES} src/types/triple.cpp src/types/triple.h)
 

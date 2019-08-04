@@ -29,8 +29,8 @@
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="raytracer" targetName="raytracer" />
       <config projectName="raytracer" targetName="raycaster" />
+      <config projectName="raytracer" targetName="raytracer" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -42,33 +42,24 @@
     <list default="true" id="f8968a0b-82e1-4221-bcce-b654fbc2a009" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/camera.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/camera.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/entities/entity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/entity.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/entity.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/entity.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/lights/lightOmni.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/lights/lightOmni.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/lights/lightOmni.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/lights/lightOmni.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/lights/lightOmniGen.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/lights/lightOmniGenerator.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/lights/lightOmniGen.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/lights/lightOmniGenerator.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/objects/materials.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/objects/materials.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/objects/objectGenerator.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/objects/sphere.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/objects/sphere.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/objects/sphere.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/objects/sphere.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/entityGenerator.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/entityGenerator.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/lights/light.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/lights/light.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/lights/lightGenerator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/lights/lightGenerator.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/lights/lightGenerator.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/lights/lightGenerator.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/lights/lightOmniGenerator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/lights/lightOmniGenerator.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/objects/object.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/objects/object.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/objects/object.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/objects/object.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/objects/objectGenerator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/objects/objectGenerator.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/objects/objectGenerator.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/objects/objectGenerator.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/objects/sphereGenerator.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/objects/sphereGenerator.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/display.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/display.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/display.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/display.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/raytracer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/raytracer.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/render.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/render.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/render.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/render.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/sampler.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sampler.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/sampler.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sampler.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/dof.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/dof.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/large.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/large.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/large2.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/large2.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/lights.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/lights.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/mandelbrot.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/mandelbrot.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/plain.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/plain.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/scene.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/scene.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/scene.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/scene.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/sceneGenerator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/sceneGenerator.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/sceneGenerator.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/sceneGenerator.h" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -209,7 +200,7 @@
       <updated>1513983910722</updated>
       <workItem from="1564836229489" duration="24107000" />
       <workItem from="1564887110163" duration="9684000" />
-      <workItem from="1564931253642" duration="7992000" />
+      <workItem from="1564931253642" duration="15143000" />
     </task>
     <servers />
   </component>

@@ -8,3 +8,7 @@
 Entity::Entity(Vector3 centerInit): center(centerInit)  {
 }
 
+Entity::Entity(): center(Vector3()) {
+
+}
+

@@ -8,7 +8,6 @@
 
 #include "objectGenerator.h"
 #include "sphereGenerator.h"
-#include "../entityGenerator.h"
 
 class SphereGenerator: public ObjectGenerator {
 

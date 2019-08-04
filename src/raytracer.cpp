@@ -7,13 +7,13 @@
 #include "utils/debounce.h"
 #include "utils/utils.h"
 
-#include "scenes/plain.h"
+//#include "scenes/plain.h"
 #include "scenes/generated.h"
-#include "scenes/dof.h"
-#include "scenes/mandelbrot.h"
-#include "scenes/lights.h"
-#include "scenes/large.h"
-#include "scenes/large2.h"
+//#include "scenes/dof.h"
+//#include "scenes/mandelbrot.h"
+//#include "scenes/lights.h"
+//#include "scenes/large.h"
+//#include "scenes/large2.h"
 
 
 int main() {
@@ -60,14 +60,14 @@ int main() {
       // next scene
       sceneIndex++;
       mainWindow->timeSpeed = 1.0f; // start new scene at default speed
-      sceneIndex %= array_size(scenes);
+      sceneIndex %= array_size(sceneGenerators);
     }
 
     if (Debounce::isKeyPressed(sf::Keyboard::Left)) {
       // previous scene
       sceneIndex--;
       mainWindow->timeSpeed = 1.0f; // start new scene at default speed
-      if (sceneIndex<0)  sceneIndex = array_size(scenes)-1;
+      if (sceneIndex<0)  sceneIndex = array_size(sceneGenerators)-1;
     }
 
     if (Debounce::isKeyPressed(sf::Keyboard::RBracket)) {

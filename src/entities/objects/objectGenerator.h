@@ -5,16 +5,13 @@
 #ifndef RAYTRACER_OBJECTGENERATOR_H
 #define RAYTRACER_OBJECTGENERATOR_H
 
-#include "../entityGenerator.h"
 #include "../../types/vector3.h"
 #include "materials.h"
 #include "object.h"
 
-class ObjectGenerator: public EntityGenerator {
+class ObjectGenerator: public Object {
 
 public:
-  std::function<materialStatic(Vector3 point, float frame)> materialFn;
-  materialStatic material;
   std::function<Object*(float frame)> evaluateFn;
 
   ObjectGenerator(Vector3 centerInt);

@@ -18,7 +18,7 @@ SceneGenerator::SceneGenerator() {
 
 
 Scene* SceneGenerator::generateScene() {
-  generateScene(frame);
+  return generateScene(frame);
 }
 
 
@@ -34,7 +34,7 @@ Scene* SceneGenerator::generateScene(float frame) {
 
   auto currentLights = new Light[scene->lightVariations];
   for(auto const& generator: *lightGenerators) {
-    LightOmniGenerator *lightOmniGenerator = dynamic_cast<LightOmniGenerator*>((EntityGenerator*)(generator));
+    LightOmniGenerator *lightOmniGenerator = dynamic_cast<LightOmniGenerator*>((LightGenerator*)(generator));
     if (lightOmniGenerator) {
       Light *lightOmnit = lightOmniGenerator->eval(frame);
       for (int i = 0; i < scene->lightVariations; i++) {
@@ -47,7 +47,7 @@ Scene* SceneGenerator::generateScene(float frame) {
 //  scene->lights.push_back(nullptr);
 
   for(auto const& generator: *objectGenerators) {
-    SphereGenerator *sphereGenerator = dynamic_cast<SphereGenerator*>((EntityGenerator*)(generator));
+    SphereGenerator *sphereGenerator = dynamic_cast<SphereGenerator*>((ObjectGenerator*)(generator));
     if (sphereGenerator) {
       Object *object = sphereGenerator->eval(frame);
       scene->objects->push_back(object);
@@ -57,4 +57,10 @@ Scene* SceneGenerator::generateScene(float frame) {
 //  scene->objects.push_back(nullptr);
 
   return scene;
+}
+
+SceneGenerator::~SceneGenerator() {
+  delete lightGenerators;
+  delete objectGenerators;
+  // scene should delete itself, and not generator deleting instanciated scene
 }

@@ -17,15 +17,6 @@ class Object: public Entity {
 public:
   std::function<materialStatic(Vector3 point, float frame)> materialFn;
   materialStatic material;
-  // when hit was detected store the following:
-  // float hitDistance; // distance from ray origin
-  // Color hitColor;    // calculated color for that hit point
-
-  //virtual Object(std::function<Entity(float frame)> propertiesFnInit);
-
-  //Object(Vector3 centerInit, Materials materialInit);
-
-  Object(std::function<Object(float frame)> evaluateFnInit);
 
   Object(Vector3 centerInit, std::function<materialStatic(Vector3 point, float frame)> materialFnInit);
 

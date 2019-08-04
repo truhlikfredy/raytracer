@@ -11,8 +11,7 @@
 
 Display::Display():
   showSamplerPatterns(false), onScreenDisplay(false), stdOutLog(false), timeSpeed(1.0f),
-  benchmarkAllowed(false), benchmarkEnded(false), elapsedTotal(0), videoCapture(false),
-  vfd("/dev/ttyUSB0")  {
+  benchmarkAllowed(false), benchmarkEnded(false), elapsedTotal(0), videoCapture(false) {
 
   pixels = new sf::Uint8[WIDTH * HEIGHT * 4];
   render = new Render(WIDTH, HEIGHT);
@@ -46,7 +45,6 @@ void Display::convertToDisplayMem() {
     pixels[i*4 + 2] = (int)(average.z*255);
     pixels[i*4 + 3] = 255;
   }
-  vfd.memToVFD(pixels);
 }
 
 void Display::displaySamplerPattern(float frame) {

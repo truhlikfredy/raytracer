@@ -5,24 +5,16 @@
 
 #include "object.h"
 
-// Object::Object(std::function<Object(float frame)> propertiesFnInit): Entity(propertiesFnInit), materialFn(nullptr) {
-
-Object::Object(std::function<Object(float frame)> evaluateFnInit): evaluateObjFn(evaluateFnInit) {
-}
-
 Object::Object(Vector3 centerInit,
                std::function<materialStatic(Vector3 point, float frame)> materialFnInit):
-               materialFn(materialFnInit), Entity() {
-  center = centerInit;
+               materialFn(materialFnInit), Entity(centerInit) {
 }
 
 Object::Object(Vector3 centerInit, materialStatic materialInit):
-  material(materialInit), materialFn(nullptr), Entity() {
-  center = centerInit;
+  material(materialInit), materialFn(nullptr), Entity(centerInit) {
 }
 
-Object::Object(Vector3 centerInit) {
-  center = centerInit;
+Object::Object(Vector3 centerInit): Entity(centerInit) {
 }
 
 Object::Object() {

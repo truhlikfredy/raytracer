@@ -52,7 +52,6 @@ private:
   sf::Uint8*       pixels;
   sf::Sprite       sprite;
   sf::RenderWindow window;
-  VFD              vfd;
 
   void displaySamplerPattern(float frame);
 

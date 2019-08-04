@@ -13,9 +13,9 @@
 #include "../scenes/sceneGenerator.h"
 
 
-Render::Render(int widthInit, int heightInit): width(widthInit), height(heightInit), scene(nullptr) {
+Render::Render(int widthInit, int heightInit): width(widthInit), height(heightInit) {
   dynamicPixels = new Color[widthInit * heightInit];
-  //threadsMax    = std::thread::hardware_concurrency();
+  threadsMax    = std::thread::hardware_concurrency();
 }
 
 
@@ -96,19 +96,10 @@ colors Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
   // Only shade the closes collision
   if (shortestObject) {
     // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
-    Vector3 hitNormal    = shortestObject ^shortestHitPoint;
+    Vector3 hitNormal    = *shortestObject ^shortestHitPoint;
     Vector3 hitReflected = ray.direction - (hitNormal * 2 * (ray.direction % hitNormal));
-    Vector3 hitLight     = Vector3(light->center - shortestHitPoint);
-
-    // calculate lenght from the collision point to light source and then normalize the vector pointing to it
-    float hitLightLen    = hitLight.lenght();
-    hitLight = ~hitLight;
 
     materialStatic hitMaterial = shortestObject->materialFn(shortestHitPoint, scene->frame);
-
-    float diffuse  = fmaxf(0, hitLight % hitNormal); // how similar are they?
-    float specular = fmaxf(0, hitLight % hitReflected);
-
 
     colors colorRefract = {.average = Color(), .sum = Color() };
     colors colorReflect = {.average = Color(), .sum = Color() };
@@ -130,15 +121,25 @@ colors Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
       colorReflect.sum     *= hitMaterial.reflectivity;
     }
 
-    // diffuse = similarity (dot product) of hitLight and hitNormal
-    // https://youtu.be/KDHuWxy53uM
-    // And use the diffuse / specular only when they are positive
-    // shadeOfTheRay = specular + diffuse + ambientStatic
-    // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
-    // http://www.paulsprojects.net/tutorials/simplebump/simplebump.html
+    for (Light *lightSet : *scene->lights) {
 
-    ret.average = scene->ambientStatic * hitMaterial.ambient;
-    ret.sum     = (( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * light->color) / fmax(0.8f, powf((hitLightLen + shortestHitDistance) / 300.0f, 2));
+      Vector3 hitLight = Vector3(lightSet[0].center - shortestHitPoint);
+      float diffuse    = fmaxf(0, hitLight % hitNormal); // how similar are they?
+      float specular   = fmaxf(0, hitLight % hitReflected);
+
+      // calculate length from the collision point to light source and then normalize the vector pointing to it
+      float hitLightLen    = hitLight.lenght();
+      hitLight = ~hitLight;
+
+      // diffuse = similarity (dot product) of hitLight and hitNormal
+      // https://youtu.be/KDHuWxy53uM
+      // And use the diffuse / specular only when they are positive
+      // shadeOfTheRay = specular + diffuse + ambientStatic
+      // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
+      // http://www.paulsprojects.net/tutorials/simplebump/simplebump.html
+
+      ret.average = scene->ambientStatic * hitMaterial.ambient;
+      ret.sum     = (( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * lightSet[0].color) / fmax(0.8f, powf((hitLightLen + shortestHitDistance) / 300.0f, 2));
 
 //    for (int j = 0; j < scene->nObjects; j++) {
 //      // test all objects if they are casting shadow from this light
@@ -160,8 +161,9 @@ colors Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
 //      }
 //    }
 
-    ret.average += colorRefract.average + colorReflect.average;
-    ret.sum     += colorRefract.sum     + colorReflect.sum;
+      ret.average += colorRefract.average + colorReflect.average;
+      ret.sum     += colorRefract.sum     + colorReflect.sum;
+    }
   }
 
   return ret;
@@ -170,7 +172,7 @@ colors Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
 
 void Render::renderPartialWindow(windowType &window) {
   // this will be executed by multiple different threads,
-  // things needs to be in local stack or globaly synchronize to be safe
+  // things needs to be in local stack or globally synchronize to be safe
 
   Sampler sampler(scenes[0], SAMPLING_MIN, SAMPLING_MAX);
 
@@ -192,7 +194,7 @@ void Render::renderPartialWindow(windowType &window) {
         sampler.getNextSample(&sample);
 
         camera.getRay(x, y, sample, scenes[count], rayForThisPixel);
-        lastColor = rayStart(rayForThisPixel, scenes);
+        lastColor = rayStart(rayForThisPixel, scenes[0]);
 
         totalColor.average += ~lastColor.average;
         totalColor.sum     += ~lastColor.sum;
@@ -207,7 +209,7 @@ void Render::renderPartialWindow(windowType &window) {
 
         count++;
       }
-      dynamicPixels[x + (y * width)] = ~Color( (totalColor.sum / colorsCount);
+      dynamicPixels[x + (y * width)] = ~Color(totalColor.sum / colorsCount);
     }
   }
 

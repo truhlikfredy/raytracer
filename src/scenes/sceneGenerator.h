@@ -5,7 +5,6 @@
 #ifndef RAYTRACER_SCENEGENERATOR_H
 #define RAYTRACER_SCENEGENERATOR_H
 
-#include "../entities/entityGenerator.h"
 #include "../types/color.h"
 #include "scene.h"
 #include "../entities/objects/objectGenerator.h"
