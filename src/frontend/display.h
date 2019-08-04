@@ -43,7 +43,6 @@
 #include <SFML/Graphics.hpp>
 #include "../render/render.h"
 #include "../scenes/scene.h"
-#include "vfd.h"
 #include "../scenes/sceneGenerator.h"
 
 class Display {
