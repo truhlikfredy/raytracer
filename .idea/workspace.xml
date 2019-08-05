@@ -29,8 +29,8 @@
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="raytracer" targetName="raycaster" />
       <config projectName="raytracer" targetName="raytracer" />
+      <config projectName="raytracer" targetName="raycaster" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -42,20 +42,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f8968a0b-82e1-4221-bcce-b654fbc2a009" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/objects/materials.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/objects/materials.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raytracer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/raytracer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/dof.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/dof.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/dof.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/dof.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/large.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/large.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/large.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/large.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/large2.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/large2.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/large2.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/large2.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/lights.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/lights.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/lights.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/lights.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/mandelbrot.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/mandelbrot.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/mandelbrot.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/mandelbrot.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/sceneGenerator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/sceneGenerator.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -196,6 +182,7 @@
       <workItem from="1564931253642" duration="20227000" />
       <workItem from="1564970350041" duration="31147000" />
       <workItem from="1565035400479" duration="8093000" />
+      <workItem from="1565046818125" duration="1015000" />
     </task>
     <servers />
   </component>
