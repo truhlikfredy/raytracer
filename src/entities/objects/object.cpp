@@ -5,27 +5,19 @@
 
 #include "object.h"
 
-// Object::Object(std::function<Object(float frame)> propertiesFnInit): Entity(propertiesFnInit), materialFn(nullptr) {
-
-Object::Object(std::function<Object(float frame)> evaluateFnInit): evaluateObjFn(evaluateFnInit) {
-}
-
 Object::Object(Vector3 centerInit,
                std::function<materialStatic(Vector3 point, float frame)> materialFnInit):
-               materialFn(materialFnInit), Entity() {
-  center = centerInit;
+               Entity(centerInit), materialFn(materialFnInit), material(Materials::lightGray) {
 }
 
-Object::Object(Vector3 centerInit, materialStatic materialInit):
-  material(materialInit), materialFn(nullptr), Entity() {
-  center = centerInit;
+Object::Object(Vector3 centerInit, materialStatic materialInit): Entity(centerInit),
+  material(materialInit), materialFn(nullptr) {
 }
 
-Object::Object(Vector3 centerInit) {
-  center = centerInit;
+Object::Object(Vector3 centerInit): Object(centerInit, Materials::lightGray) {
 }
 
-Object::Object() {
+Object::Object(): Object(Vector3()) {
 }
 
 
@@ -43,4 +35,8 @@ float Object::detectHit(Ray ray, Vector3 &hitPoint) {
 
 float Object::detectHitMax(Ray ray, Vector3 &hitPoint) {
   return -1;
+}
+
+uv Object::toUv(Vector3 point) {
+  return uv();
 }

@@ -17,35 +17,27 @@ class Object: public Entity {
 public:
   std::function<materialStatic(Vector3 point, float frame)> materialFn;
   materialStatic material;
-  // when hit was detected store the following:
-  // float hitDistance; // distance from ray origin
-  // Color hitColor;    // calculated color for that hit point
-
-  //virtual Object(std::function<Entity(float frame)> propertiesFnInit);
-
-  //Object(Vector3 centerInit, Materials materialInit);
-
-  Object(std::function<Object(float frame)> evaluateFnInit);
 
   Object(Vector3 centerInit, std::function<materialStatic(Vector3 point, float frame)> materialFnInit);
 
   Object(Vector3 centerInit, materialStatic materialInit);
 
-  Object(Vector3 centerInit);
+  // https://rules.sonarsource.com/cpp/RSPEC-1709
+  explicit Object(Vector3 centerInit);
 
   Object();
 
   std::function<Object(float frame)> evaluateObjFn;
 
-  //virtual uv toUv(Vector3 point) = 0;
+  virtual uv toUv(Vector3 point);
 
-  float detectHit(Ray ray);
+  virtual float detectHit(Ray ray);
 
-  float detectHit(Ray ray, Vector3 &hitPoint);
+  virtual float detectHit(Ray ray, Vector3 &hitPoint);
 
-  float detectHitMax(Ray ray, Vector3 &hitPoint);
+  virtual float detectHitMax(Ray ray, Vector3 &hitPoint);
 
-  Vector3 operator ^ (Vector3 pointOnSurface);
+  virtual Vector3 operator ^ (Vector3 pointOnSurface);
 
 
 };

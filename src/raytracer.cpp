@@ -19,13 +19,13 @@ int main() {
   Display *mainWindow = new Display();
   bool quitRequested = false;
 
-  Scene scenes[1] = {
-    Lights()
-//    Plain(),
-//    Large2(),
-//    Large(),
-//    Dof(),
-//    Mandelbrot()
+  SceneGenerator *sceneGenerators[] = {
+    new Plain(),
+    new Large2(),
+    new Large(),
+    new Lights(),
+    new Dof(),
+    new Mandelbrot()
   };
 
   int sceneIndex = 0;
@@ -59,29 +59,29 @@ int main() {
       // next scene
       sceneIndex++;
       mainWindow->timeSpeed = 1.0f; // start new scene at default speed
-      sceneIndex %= array_size(scenes);
+      sceneIndex %= array_size(sceneGenerators);
     }
 
     if (Debounce::isKeyPressed(sf::Keyboard::Left)) {
       // previous scene
       sceneIndex--;
       mainWindow->timeSpeed = 1.0f; // start new scene at default speed
-      if (sceneIndex<0)  sceneIndex = array_size(scenes)-1;
+      if (sceneIndex<0)  sceneIndex = array_size(sceneGenerators)-1;
     }
 
     if (Debounce::isKeyPressed(sf::Keyboard::RBracket)) {
       // jump forward in time
-      scenes[sceneIndex].frame += 30;
+      sceneGenerators[sceneIndex]->frame += 30;
     }
 
     if (Debounce::isKeyPressed(sf::Keyboard::LBracket)) {
       // jump backward in time
-      scenes[sceneIndex].frame -= 15;
+      sceneGenerators[sceneIndex]->frame -= 15;
     }
 
     if (Debounce::isKeyPressed(sf::Keyboard::B)) {
       // start benchmark
-      scenes[sceneIndex].frame = 0;
+      sceneGenerators[sceneIndex]->frame = sceneGenerators[sceneIndex]->frameFirst;
       mainWindow->benchmarkAllowed = true;
     }
 
@@ -95,7 +95,7 @@ int main() {
       mainWindow->timeSpeed *= 2.0f;
     }
 
-    mainWindow->renderLoop(&scenes[sceneIndex]);
+    mainWindow->renderLoop(sceneGenerators[sceneIndex]);
   }
 
   if (mainWindow->benchmarkEnded) {

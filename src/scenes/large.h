@@ -6,9 +6,9 @@
 #ifndef RAYTRACER_SCENES_LARGE_H
 #define RAYTRACER_SCENES_LARGE_H
 
-#include "scene.h"
+#include "sceneGenerator.h"
 
-class Large: public Scene {
+class Large: public SceneGenerator {
 public:
   Large();
 };

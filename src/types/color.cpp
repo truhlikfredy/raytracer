@@ -90,3 +90,7 @@ float Color::labDifference(Color secondColor) {
   // return distance between the colors after converting them to lab
   return this->toLab().distance(secondColor.toLab());
 }
+
+bool Color::isBlack() {
+  return x == 0.0f && y == 0.0f && z == 0.0f;
+}

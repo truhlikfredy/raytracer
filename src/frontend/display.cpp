@@ -11,8 +11,7 @@
 
 Display::Display():
   showSamplerPatterns(false), onScreenDisplay(false), stdOutLog(false), timeSpeed(1.0f),
-  benchmarkAllowed(false), benchmarkEnded(false), elapsedTotal(0), videoCapture(false),
-  vfd("/dev/ttyUSB0")  {
+  benchmarkAllowed(false), benchmarkEnded(false), elapsedTotal(0), videoCapture(false) {
 
   pixels = new sf::Uint8[WIDTH * HEIGHT * 4];
   render = new Render(WIDTH, HEIGHT);
@@ -46,7 +45,6 @@ void Display::convertToDisplayMem() {
     pixels[i*4 + 2] = (int)(average.z*255);
     pixels[i*4 + 3] = 255;
   }
-  vfd.memToVFD(pixels);
 }
 
 void Display::displaySamplerPattern(float frame) {
@@ -67,15 +65,24 @@ void Display::displaySamplerPattern(float frame) {
 }
 
 
-void Display::renderLoop(Scene *scene) {
+void Display::renderLoop(SceneGenerator *sceneGenerator) {
   sf::Event event;
 
-  if (scene->frame == 0.0f) {
+  if (sceneGenerator->frame == sceneGenerator->frameFirst) {
     elapsedTotal = 0;
+  }
 
-    if (benchmarkAllowed) {
-      printf("\r\nBenchmark started, wait for results (will do %f frames):\r\n", scene->lastFrame);
-      printf("%d, %d, %f", scene->nLights, scene->nObjects, scene->lastFrame);
+  if (benchmarkAllowed) {
+    static float frameLastUpdate = sceneGenerator->frameFirst;
+    if (sceneGenerator->frame == sceneGenerator->frameFirst) {
+      printf("\r\nBenchmark started, wait for results (will do %f frames)\r\n", sceneGenerator->frameLast - sceneGenerator->frameFirst);
+      printf("Scene has %d light(s) and %d object(s)\r\n", sceneGenerator->lightGenerators->size(), sceneGenerator->objectGenerators->size());
+    } else {
+//      if ( frameLastUpdate < (sceneGenerator->frame + 10)) {
+//        // Display update every 10 frames
+//        printf("Finished frame %f\r\n", sceneGenerator->frame);
+//        frameLastUpdate = sceneGenerator->frame; // Frames can go non-linear and not doing whole even steps and using modulus wouldn't work work
+//      }
     }
   }
 
@@ -87,14 +94,14 @@ void Display::renderLoop(Scene *scene) {
 
   // measure how much time is passed while rendering of a whole frame happened
   auto start = std::chrono::high_resolution_clock::now();
-  render->renderFullWindow(scene);
+  render->renderFullWindow(sceneGenerator);
   auto elapsed = std::chrono::high_resolution_clock::now() - start;
   long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
   elapsedTotal += microseconds;
 
   convertToDisplayMem();
   if (showSamplerPatterns) {
-    displaySamplerPattern(scene->frame);
+    displaySamplerPattern(sceneGenerator->frame);
   }
 
   window.clear();
@@ -103,19 +110,20 @@ void Display::renderLoop(Scene *scene) {
   window.display();
 
   if (benchmarkAllowed) {
-    printf(", %d", microseconds);
+    printf("#%f=%dus\r\n", sceneGenerator->frame, microseconds);
   }
 
-  if ( (scene->lastFrame < scene->frame) && benchmarkAllowed){
+  if ((sceneGenerator->frameLast < sceneGenerator->frame) && benchmarkAllowed){
     benchmarkEnded = true;
     printf("\r\n");
   }
 
-  scene->frame+= timeSpeed;
   if (timeSpeed != 1.0f) {
     // Display what frame it is, when running atypical speeds
-    printf("Frame: %f \r\n", scene->frame);
+    printf("Frame: %f \r\n", sceneGenerator->frame);
   }
+
+  sceneGenerator->frame += timeSpeed;
 }
 
 
@@ -124,6 +132,6 @@ bool Display::keepLooping() {
 }
 
 void Display::benchmarkSummary() {
-  printf("%d ms elapsed (Width=%d Height=%d SamplingMin=%d SamplingMax=%d Bounches=%d)",
+  printf("%d ms elapsed (Width=%d Height=%d SamplingMin=%d SamplingMax=%d Bounces=%d)",
          elapsedTotal / 1000, WIDTH, HEIGHT, SAMPLING_MIN, SAMPLING_MAX, MAX_BOUNCES);
 }

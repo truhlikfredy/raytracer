@@ -19,8 +19,8 @@
   #define SCALE 8.0  // display the window bigger than it really is (render low-res while having large window)
 
 #elif RENDER_COMPLEXITY == 2
-  #define WIDTH  128
-  #define HEIGHT 64
+  #define WIDTH  320
+  #define HEIGHT 200
   #define SCALE 4.0  // display the window bigger than it really is (render low-res while having large window)
 
 #elif RENDER_COMPLEXITY == 3
@@ -43,7 +43,7 @@
 #include <SFML/Graphics.hpp>
 #include "../render/render.h"
 #include "../scenes/scene.h"
-#include "vfd.h"
+#include "../scenes/sceneGenerator.h"
 
 class Display {
 private:
@@ -51,7 +51,6 @@ private:
   sf::Uint8*       pixels;
   sf::Sprite       sprite;
   sf::RenderWindow window;
-  VFD              vfd;
 
   void displaySamplerPattern(float frame);
 
@@ -67,7 +66,7 @@ public:
   float            timeSpeed;
   Display();
 
-  void renderLoop(Scene *scene);
+  void renderLoop(SceneGenerator *scene);
   bool keepLooping();
   void clearDisplayMem();
   void convertToDisplayMem();

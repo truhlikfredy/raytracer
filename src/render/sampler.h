@@ -9,6 +9,8 @@
 #define RAYTRACER_SAMPLER_H
 
 #include <utility>
+#include "../scenes/scene.h"
+#include "../scenes/sceneGenerator.h"
 
 struct sampleTuple {
   float        spaceX;
@@ -48,6 +50,10 @@ public:
 
   Sampler(unsigned int minSamples, unsigned int maxSamples, float shutterInit, float apetureInit, unsigned int lightsInit,
           unsigned int patternInit);
+
+  Sampler(Scene *scene, unsigned int minSampleAmp, unsigned int maxSamplesAmp);
+
+  Sampler(SceneGenerator *sceneGen, unsigned int minSampleAmp, unsigned int maxSamplesAmp);
 
   void nextPixel();
 

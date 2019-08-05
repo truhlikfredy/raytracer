@@ -13,17 +13,29 @@
  */
 
 #include "sampler.h"
+#include "../scenes/scene.h"
 #include <cstdlib>
 
 
 Sampler::Sampler(unsigned int minSamples, unsigned int maxSamples, float shutterInit, float apetureInit, unsigned int lightsInit,
                  unsigned int patternInit) {
+  this->index        = 0;
   this->indexMinimum = minSamples;      // Dynamic sampling
   this->indexMaximum = maxSamples;
   this->shutter      = shutterInit;     // Speed of the shutter of the camera
   this->apeture      = apetureInit;
   this->lights       = lightsInit;
   this->pattern      = patternInit;     // Initial seed value
+}
+
+Sampler::Sampler(Scene *scene, unsigned int minSampleAmp, unsigned int maxSamplesAmp)
+:Sampler(minSampleAmp, maxSamplesAmp,
+  scene->camera.shutterBlur, scene->camera.aperture, scene->lights->size(), scene->frame) {
+}
+
+Sampler::Sampler(SceneGenerator *sceneGen, unsigned int minSampleAmp, unsigned int maxSamplesAmp)
+:Sampler(minSampleAmp, maxSamplesAmp,
+  sceneGen->camera.shutterBlur, sceneGen->camera.aperture, sceneGen->lightGenerators->size(), sceneGen->frame) {
 }
 
 
@@ -170,4 +182,5 @@ void Sampler::vanDerCoruptSobol2(unsigned int sampleIndex, unsigned int pattern,
   sample.x = vanDerCorput(sampleIndex, pattern);
   sample.y = sobol2(sampleIndex, pattern);
 }
+
 

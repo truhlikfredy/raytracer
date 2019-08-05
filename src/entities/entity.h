@@ -8,19 +8,14 @@
 
 #include <functional>
 #include "../types/vector3.h"
-#include "../render/ray.h"
 
 class Entity {
 
 public:
   Vector3 center;
-  bool isEnabled;
-  std::function<Entity(float frame)> evaluateFn;
 
-
-  Entity(Vector3 centerInit);
-
-  Entity(std::function<Entity(float frame)> evaluateFnInit);
+  // https://rules.sonarsource.com/cpp/RSPEC-1709
+  explicit Entity(Vector3 centerInit);
 
   Entity();
 

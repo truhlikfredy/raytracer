@@ -6,9 +6,9 @@
 #ifndef RAYTRACER_SCENES_MANDELBROT_H
 #define RAYTRACER_SCENES_MANDELBROT_H
 
-#include "scene.h"
+#include "sceneGenerator.h"
 
-class Mandelbrot: public Scene {
+class Mandelbrot: public SceneGenerator {
 private:
   Color mandelbrot(float lookAtX, float lookAtY, float width, float height, float gamma, uv pixel);
 

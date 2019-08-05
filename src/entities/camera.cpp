@@ -17,7 +17,7 @@ void Camera::getRay(int x, int y, sampleTuple &sample, Scene *scene, Ray &ray) {
   const float recenterX = ( x + sample.spaceX - width  / 2.0f ) / ( 2.0 * width  );
   const float recenterY = ( y + sample.spaceY - height / 2.0f ) / ( 2.0 * height );
 
-  Vector3 start  = scene->camera.possition + Vector3(sample.lensX, sample.lensY, 0);
+  Vector3 start  = scene->camera.position + Vector3(sample.lensX, sample.lensY, 0);
   Vector3 lookAt = scene->camera.lookAt;
   Vector3 right  = (~Vector3(lookAt & down))  * 320;
   Vector3 up     = (~Vector3(lookAt & right)) * 200;

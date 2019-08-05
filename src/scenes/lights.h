@@ -6,9 +6,9 @@
 #ifndef RAYTRACER_SCENES_LIGHTS_H
 #define RAYTRACER_SCENES_LIGHTS_H
 
-#include "scene.h"
+#include "sceneGenerator.h"
 
-class Lights: public Scene {
+class Lights: public SceneGenerator {
 public:
   Lights();
 };

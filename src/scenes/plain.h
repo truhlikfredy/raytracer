@@ -6,9 +6,9 @@
 #ifndef RAYTRACER_SCENE_PLAIN_H
 #define RAYTRACER_SCENE_PLAIN_H
 
-#include "scene.h"
+#include "sceneGenerator.h"
 
-class Plain: public Scene {
+class Plain: public SceneGenerator {
 public:
   Plain();
 };

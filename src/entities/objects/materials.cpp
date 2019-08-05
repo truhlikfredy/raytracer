@@ -107,7 +107,7 @@ materialStatic Materials::black= {
 
 materialStatic Materials::mediumGray= {
   .castsShadows    = true,
-  .ambient         = Color(),
+  .ambient         = Color(0.1f),
   .diffuse         = Color(0.454902f),
   .specular        = Color(0.0225f),
   .emission        = Color(),
@@ -131,8 +131,8 @@ materialStatic Materials::lightGray= {
 
 materialStatic Materials::mirror = {
   .castsShadows    = true,
-  .ambient         = Color(0.1f),
-  .diffuse         = Color(0.1f),
+  .ambient         = Color(0.02f),
+  .diffuse         = Color(0.03f),
   .specular        = Color(0.8f),
   .emission        = Color(),
   .shininess       = 77.0f,
@@ -168,7 +168,7 @@ materialStatic Materials::pollishedCopper= {
 materialStatic Materials::glass= {
   .castsShadows    = true,
   .ambient         = Color(),
-  .diffuse         = Color(0.588235f, 0.670588f, 0.729412f),
+  .diffuse         = Color(0.0588235f, 0.0670588f, 0.0729412f),
   .specular        = Color(0.9f),
   .emission        = Color(),
   .shininess       = 96.0f,
@@ -273,7 +273,7 @@ Color Materials::mandelbrot(mandelbrotSet &set, uv &pixel) {
 //);
 //
 ///* Multiply this color by the diffusely reflected light. */
-//Ci *= Ka*ambient() + Kd*diffuse(Nf);
+//Ci *= Ka*ambientStatic() + Kd*diffuse(Nf);
 //
 ///* Adjust for opacity. */
 //Oi = Os;
