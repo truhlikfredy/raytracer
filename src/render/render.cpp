@@ -48,60 +48,54 @@ void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionInde
 
 
 Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
+  // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
+  float closestHitDistance = FLT_MAX;  // set it to maximum at first
+  Object *closestObject = nullptr;
+  Vector3 closestHitPoint;
   Color ret;
 
   if (iteration > MAX_BOUNCES) {
     return ret;
   }
 
-  // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
-  float shortestHitDistance = FLT_MAX;  // set it to maximum at first
-  Object *shortestObject = nullptr;
-  Vector3 shortestHitPoint;
-
   // Find closest collision
   for (Object *object: *scene->objects) {
     Vector3 hitPoint;
-//    Object* objectUpcast = objects[i];
-//    Sphere object = dynamic_cast<Sphere &>(objects[i]);
     float hitDistance;
 
     if (inside) {
-      //hitDistance = object.detectHitMax(ray, hitPoint);
       if (inside == object) {
         // if we are testing the collision with itslef (inside the object) then find the furtherst point
         hitDistance = object->detectHitMax(ray, hitPoint);
-      }
-      else {
+      } else {
         // but for all other objects even including intersecting object do detect closest collision
         hitDistance = object->detectHit(ray, hitPoint);
       }
-    }
-    else {
+    } else {
       hitDistance = object->detectHit(ray, hitPoint);
     }
 
     if (hitDistance != -1.0f) {
-      if (shortestHitDistance > hitDistance) {
+      if (closestHitDistance > hitDistance) {
         // It's the shortest hit yet, let's save it, if it will win then calculate it's color by shading it depending on the bounce angle
-        shortestObject      = object;
-        shortestHitDistance = hitDistance;
-        shortestHitPoint    = hitPoint;
+        closestObject      = object;
+        closestHitDistance = hitDistance;
+        closestHitPoint    = hitPoint;
       }
     }
   }
 
   // Only shade the closes collision
-  if (shortestObject) {
+  if (closestObject) {
     // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
-    Vector3 hitNormal    = *shortestObject ^shortestHitPoint;
+    Vector3 hitNormal    = *closestObject ^closestHitPoint;
     Vector3 hitReflected = ray.direction - (hitNormal * 2 * (ray.direction % hitNormal));
 
     materialStatic hitMaterial;
-    if (shortestObject->materialFn) {
-      hitMaterial = shortestObject->materialFn(shortestHitPoint, scene->frame);
+    if (closestObject->materialFn) {
+      hitMaterial = closestObject->materialFn(closestHitPoint, scene->frame);
     } else {
-      hitMaterial = shortestObject->material;
+      hitMaterial = closestObject->material;
     }
 
     Color colorRefract;
@@ -112,16 +106,16 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
       Vector3 hitRefracted;
       refract(ray.direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
 
-      colorRefract = rayFollow(Ray(shortestHitPoint, hitRefracted), scene, iteration + 1, (inside) ? nullptr : shortestObject);
+      colorRefract = rayFollow(Ray(closestHitPoint, hitRefracted), scene, iteration + 1, (inside) ? nullptr : closestObject);
     }
 
     if (hitMaterial.reflectivity != 0.0f) {
       // If the material is reflective then handle reflection
-      colorReflect = rayFollow(Ray(shortestHitPoint, hitReflected), scene, iteration + 1, inside);
+      colorReflect = rayFollow(Ray(closestHitPoint, hitReflected), scene, iteration + 1, inside);
     }
 
     for (std::vector<Light*> lightSet : *scene->lights) {
-      Vector3 hitLight = Vector3(lightSet[0]->center - shortestHitPoint);
+      Vector3 hitLight = Vector3(lightSet[0]->center - closestHitPoint);
 
       // calculate length from the collision point to light source and then normalize the vector pointing to it
       float hitLightLen    = hitLight.lenght();
@@ -143,9 +137,9 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
       bool inShadow = false;
       for (Object *oCS: *scene->objects) {
         // test all objects if they are casting shadow from this light
-        if (oCS != shortestObject &&
-            oCS->detectHit(Ray(shortestHitPoint, hitLight)) != -1 &&
-            hitLightLen > (oCS->center - shortestHitPoint).lenght() &&
+        if (oCS != closestObject &&
+            oCS->detectHit(Ray(closestHitPoint, hitLight)) != -1 &&
+            hitLightLen > (oCS->center - closestHitPoint).lenght() &&
             ((oCS->materialFn && oCS->materialFn(hitLight, scene->frame).castsShadows ) || (!oCS->materialFn && oCS->material.castsShadows)) ) {
           // If the following are meet:
           // 1) can't cast shadow on yourself through bounded rays, at least not yet with simple shapes (so test only all other objects)
@@ -162,7 +156,7 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
       if (!inShadow) {
         // Do not calculate these unless they are going to be used (i.e. not in the shadow)
 
-        auto lightStrength = fmax(0.8f, powf((hitLightLen + shortestHitDistance) / 350.0f, 2));
+        auto lightStrength = fmax(0.8f, powf((hitLightLen + closestHitDistance) / 350.0f, 2));
         // TODO: lights property should be able to dictate the strength and these properties
         colorLight = ((hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * lightSet[0]->color) / lightStrength;
       }
