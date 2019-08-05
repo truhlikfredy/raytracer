@@ -12,7 +12,7 @@ Plain::Plain(): SceneGenerator() {
     .position    = Vector3(0.1f, 0.2f, 0.3f),
     .lookAt      = Vector3(0.0f, 10.0f, 60.0f),
     .aperture    = 0.0f,
-    .shutterBlur = 0.5f
+    .shutterBlur = 1.0f
   };
 
   frameFirst = 760.0f;
