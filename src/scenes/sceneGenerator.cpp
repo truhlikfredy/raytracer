@@ -45,9 +45,9 @@ Scene* SceneGenerator::generateScene(float frame) {
       for (int i = 0; i < scene->lightVariations; i++) {
         currentLights->push_back(lightOmnit);
       }
-      break;
+      scene->lights->push_back(*currentLights);
+      continue;
     }
-    scene->lights->push_back(*currentLights);
   }
 
   for(auto const& generator: *objectGenerators) {
@@ -55,7 +55,7 @@ Scene* SceneGenerator::generateScene(float frame) {
     if (sphereGenerator) {
       Object *object = sphereGenerator->eval(frame);
       scene->objects->push_back(object);
-      break;
+      continue;
     }
   }
 
