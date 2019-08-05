@@ -15,10 +15,11 @@ public:
   std::vector<ObjectGenerator*>     *objectGenerators;
   Color                             ambientStatic;
   std::function<Color(float frame)> ambientFn;
-  float                             lastFrame;
+  float                             frame;
+  float                             frameFirst;
+  float                             frameLast;
   float                             lightStep;
   float                             lightEnd;
-  float                             frame;
 
   /* TODO: Make cameras generic */
   struct {

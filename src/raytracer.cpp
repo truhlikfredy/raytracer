@@ -82,7 +82,7 @@ int main() {
 
     if (Debounce::isKeyPressed(sf::Keyboard::B)) {
       // start benchmark
-      sceneGenerators[sceneIndex]->frame = 0;
+      sceneGenerators[sceneIndex]->frame = sceneGenerators[sceneIndex]->frameFirst;
       mainWindow->benchmarkAllowed = true;
     }
 

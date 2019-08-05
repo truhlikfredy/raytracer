@@ -13,21 +13,22 @@ Generated::Generated(): SceneGenerator() {
     .position    = Vector3(0.1f, 0.2f, 0.3f),
     .lookAt      = Vector3(0.0f, 10.0f, 60.0f),
     .aperture    = 0.0f,
-    .shutterBlur = 0.3f
+    .shutterBlur = 0.5f
   };
 
+  frameFirst = 760.0f;
+  frameLast = frameFirst + 430.0f;
   lightEnd = 2.0f;
-  lastFrame = 130.0f;
 
 //  auto animatedLight = new LightOmniGenerator(Vector3(32, 0.6, 20), Color(0.9f, 0.9f, 1.0f));
-//  auto animatedLight = new LightOmniGenerator([](float frame) {
-//    const float lightRotate = (M_PI * frame) / 31;
-//    Vector3 center(320 * cosf(lightRotate), 0.6 * 200 * (sinf(lightRotate) - 0.5), 20);
-//    Color color(0.5f, 0.5f, 0.9f);
-//
-//    return new LightOmni(center, color);
-//  });
-//  lightGenerators->push_back(animatedLight);
+  auto animatedLight = new LightOmniGenerator([](float frame) {
+    const float lightRotate = (M_PI * frame) / 31;
+    Vector3 center(320 * cosf(lightRotate), 0.6 * 200 * (sinf(lightRotate) - 0.5), 20);
+    Color color(0.5f, 0.5f, 0.9f);
+
+    return new LightOmni(center, color);
+  });
+  lightGenerators->push_back(animatedLight);
 
   lightGenerators->push_back(new LightOmniGenerator(Vector3(600, -50, 200),Color(0.0f, 0.8f, 0.0f) ));
 

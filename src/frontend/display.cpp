@@ -68,13 +68,21 @@ void Display::displaySamplerPattern(float frame) {
 void Display::renderLoop(SceneGenerator *sceneGenerator) {
   sf::Event event;
 
-  if (sceneGenerator->frame == 0.0f) {
+  if (sceneGenerator->frame == sceneGenerator->frameFirst) {
     elapsedTotal = 0;
+  }
 
-    if (benchmarkAllowed) {
-      printf("\r\nBenchmark started, wait for results (will do %f frames):\r\n", sceneGenerator->lastFrame);
-      printf("%d, %d, %f", sceneGenerator->lightGenerators->size(), sceneGenerator->objectGenerators->size(),
-        sceneGenerator->lastFrame);
+  if (benchmarkAllowed) {
+    static float frameLastUpdate = sceneGenerator->frameFirst;
+    if (sceneGenerator->frame == sceneGenerator->frameFirst) {
+      printf("\r\nBenchmark started, wait for results (will do %f frames)\r\n", sceneGenerator->frameLast - sceneGenerator->frameFirst);
+      printf("Scene has %d light(s) and %d object(s)\r\n", sceneGenerator->lightGenerators->size(), sceneGenerator->objectGenerators->size());
+    } else {
+//      if ( frameLastUpdate < (sceneGenerator->frame + 10)) {
+//        // Display update every 10 frames
+//        printf("Finished frame %f\r\n", sceneGenerator->frame);
+//        frameLastUpdate = sceneGenerator->frame; // Frames can go non-linear and not doing whole even steps and using modulus wouldn't work work
+//      }
     }
   }
 
@@ -102,10 +110,10 @@ void Display::renderLoop(SceneGenerator *sceneGenerator) {
   window.display();
 
   if (benchmarkAllowed) {
-    printf(", %d", microseconds);
+    printf("#%f=%dus\r\n", sceneGenerator->frame, microseconds);
   }
 
-  if ( (sceneGenerator->lastFrame < sceneGenerator->frame) && benchmarkAllowed){
+  if ((sceneGenerator->frameLast < sceneGenerator->frame) && benchmarkAllowed){
     benchmarkEnded = true;
     printf("\r\n");
   }

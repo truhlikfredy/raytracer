@@ -12,7 +12,8 @@ SceneGenerator::SceneGenerator() {
   lightStep = 1.0f;
   lightEnd  = 1.0f;
   frame = 0.0f;
-  lastFrame = 1.0f;
+  frameFirst = 0.0f;
+  frameLast = 1.0f;
   ambientStatic = Color(0.1f);
 
   //TODO: background static/fn
@@ -33,7 +34,7 @@ Scene* SceneGenerator::generateScene(float frame) {
   scene->lightVariations =  lightEnd / lightStep;
   scene->ambientFn       = ambientFn;
   scene->ambientStatic   = ambientStatic;
-  scene->frame           = frame;
+  scene->frame           = frameFirst;
 
   memcpy(&scene->camera, &camera, sizeof(camera));
 
