@@ -7,8 +7,7 @@
 #include "utils/debounce.h"
 #include "utils/utils.h"
 
-//#include "scenes/plain.h"
-#include "scenes/generated.h"
+#include "scenes/plain.h"
 //#include "scenes/dof.h"
 //#include "scenes/mandelbrot.h"
 //#include "scenes/lights.h"
@@ -21,7 +20,7 @@ int main() {
   bool quitRequested = false;
 
   SceneGenerator *sceneGenerators[1] = {
-    new Generated()
+    new Plain()
 //    Plain(),
 //    Large2(),
 //    Large(),

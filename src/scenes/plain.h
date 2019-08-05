@@ -6,12 +6,12 @@
 #ifndef RAYTRACER_SCENE_PLAIN_H
 #define RAYTRACER_SCENE_PLAIN_H
 
-//#include "scene.h"
-//
-//class Plain: public Scene {
-//public:
-//  Plain();
-//};
+#include "sceneGenerator.h"
+
+class Plain: public SceneGenerator {
+public:
+  Plain();
+};
 
 
 #endif //RAYTRACER_SCENE_PLAIN_H
