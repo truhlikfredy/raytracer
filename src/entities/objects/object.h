@@ -30,11 +30,11 @@ public:
 
   //virtual uv toUv(Vector3 point) = 0;
 
-  float detectHit(Ray ray);
+  virtual float detectHit(Ray ray);
 
-  float detectHit(Ray ray, Vector3 &hitPoint);
+  virtual float detectHit(Ray ray, Vector3 &hitPoint);
 
-  float detectHitMax(Ray ray, Vector3 &hitPoint);
+  virtual float detectHitMax(Ray ray, Vector3 &hitPoint);
 
   Vector3 operator ^ (Vector3 pointOnSurface);
 
