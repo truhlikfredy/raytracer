@@ -34,7 +34,7 @@ Scene* SceneGenerator::generateScene(float frame) {
   scene->lightVariations =  lightEnd / lightStep;
   scene->ambientFn       = ambientFn;
   scene->ambientStatic   = ambientStatic;
-  scene->frame           = frameFirst;
+  scene->frame           = frame;
 
   memcpy(&scene->camera, &camera, sizeof(camera));
 

@@ -17,6 +17,7 @@ Generated::Generated(): SceneGenerator() {
   };
 
   frameFirst = 760.0f;
+  frame = frameFirst;
   frameLast = frameFirst + 430.0f;
   lightEnd = 2.0f;
 
