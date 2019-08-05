@@ -36,8 +36,7 @@ class Render {
 private:
   unsigned int width;
   unsigned int height;
-  Scene        **scenes;
-  unsigned int scenesCount;
+  std::vector<Scene*> *scenes;
 
   void getThreadWindow(int thread, windowType &ret);
 

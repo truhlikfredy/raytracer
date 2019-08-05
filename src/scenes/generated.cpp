@@ -13,7 +13,7 @@ Generated::Generated(): SceneGenerator() {
     .position    = Vector3(0.2f, 1.0f, 0.3f),
     .lookAt      = Vector3(0.0f, 0.0f, 60.0f),
     .aperture    = 8.0f,
-    .shutterBlur = 0.0f
+    .shutterBlur = 0.3f
   };
 
   lightEnd = 2.0f;

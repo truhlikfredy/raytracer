@@ -19,6 +19,7 @@
 
 Sampler::Sampler(unsigned int minSamples, unsigned int maxSamples, float shutterInit, float apetureInit, unsigned int lightsInit,
                  unsigned int patternInit) {
+  this->index        = 0;
   this->indexMinimum = minSamples;      // Dynamic sampling
   this->indexMaximum = maxSamples;
   this->shutter      = shutterInit;     // Speed of the shutter of the camera

@@ -9,13 +9,12 @@
 #include <float.h>
 #include "render.h"
 #include "../entities/camera.h"
-#include "../scenes/scene.h"
 #include "../scenes/sceneGenerator.h"
 
 
 Render::Render(int widthInit, int heightInit): width(widthInit), height(heightInit) {
   dynamicPixels = new Color[widthInit * heightInit];
-  threadsMax    = std::thread::hardware_concurrency();
+//  threadsMax    = std::thread::hardware_concurrency();
 }
 
 
@@ -99,7 +98,8 @@ colors Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
     Vector3 hitNormal    = *shortestObject ^shortestHitPoint;
     Vector3 hitReflected = ray.direction - (hitNormal * 2 * (ray.direction % hitNormal));
 
-    materialStatic hitMaterial = shortestObject->materialFn(shortestHitPoint, scene->frame);
+    materialStatic hitMaterial = shortestObject->material;
+//    materialStatic hitMaterial = shortestObject->materialFn(shortestHitPoint, scene->frame);
 
     colors colorRefract = {.average = Color(), .sum = Color() };
     colors colorReflect = {.average = Color(), .sum = Color() };
@@ -174,7 +174,7 @@ void Render::renderPartialWindow(windowType &window) {
   // this will be executed by multiple different threads,
   // things needs to be in local stack or globally synchronize to be safe
 
-  Sampler sampler(scenes[0], SAMPLING_MIN, SAMPLING_MAX);
+  Sampler sampler((*scenes)[0], SAMPLING_MIN, SAMPLING_MAX);
 
   Camera  camera(width,height);
 
@@ -190,11 +190,12 @@ void Render::renderPartialWindow(windowType &window) {
       sampler.nextPixel();
       while (sampler.isNext()) {
         static unsigned int count = 0;
+        auto scene = (*scenes)[count];
 
         sampler.getNextSample(&sample);
 
-        camera.getRay(x, y, sample, scenes[count], rayForThisPixel);
-        lastColor = rayStart(rayForThisPixel, scenes[0]);
+        camera.getRay(x, y, sample, scene, rayForThisPixel);
+        lastColor = rayStart(rayForThisPixel, scene);
 
         totalColor.average += ~lastColor.average;
         totalColor.sum     += ~lastColor.sum;
@@ -231,13 +232,12 @@ void Render::renderFullWindow(SceneGenerator *sceneGenerator) {
   /* Create scenes in all the time samples */
   Sampler sampler(sceneGenerator, SAMPLING_MIN, SAMPLING_MAX);
   int timeSamples = (sceneGenerator->camera.shutterBlur == 0.0f) ? 1 : sampler.indexMaximum;
-  scenes = new Scene*[timeSamples];
-  for (int i = 0; i < sampler.indexMaximum; i++) {
+  scenes = new std::vector<Scene*>(timeSamples);
+  for (int i = 0; i < timeSamples; i++) {
     sampleTuple sample;
     sampler.getNextSample(&sample);
 
-    scenes[i] = sceneGenerator->generateScene(sample.time);
-    sampler.nextPixel();
+    (*scenes)[i] = sceneGenerator->generateScene(sample.time);
   }
 
   /* Give work to all threads to render part of the screen */
@@ -254,7 +254,7 @@ void Render::renderFullWindow(SceneGenerator *sceneGenerator) {
 
   /* Delete scenes in all the motion blur time samples */
   for (int i = 0; i < timeSamples; i++) {
-    delete scenes[i];
+    delete (*scenes)[i];
   }
   delete scenes;
 }
