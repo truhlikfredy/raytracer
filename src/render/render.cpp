@@ -31,8 +31,7 @@ void Render::getThreadWindow(int thread, windowType &ret) {
 }
 
 
-colors Render::rayStart(Ray ray, Scene *scene) {
-
+Color Render::rayStart(Ray ray, Scene *scene) {
   return rayFollow(ray, scene, 1, nullptr);
 }
 
@@ -48,8 +47,8 @@ void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionInde
 }
 
 
-colors Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
-  colors ret = {.average = Color(), .sum = Color() };
+Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
+  Color ret;
 
   if (iteration > MAX_BOUNCES) {
     return ret;
@@ -101,8 +100,8 @@ colors Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
     materialStatic hitMaterial = shortestObject->material;
 //    materialStatic hitMaterial = shortestObject->materialFn(shortestHitPoint, scene->frame);
 
-    colors colorRefract = {.average = Color(), .sum = Color() };
-    colors colorReflect = {.average = Color(), .sum = Color() };
+    Color colorRefract;
+    Color colorReflect;
 
     if (hitMaterial.transparency != 0.0f) {
       // If transparency is enabled then handle refraction
@@ -110,15 +109,11 @@ colors Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
       refract(ray.direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
 
       colorRefract = rayFollow(Ray(shortestHitPoint, hitRefracted), scene, iteration + 1, (inside) ? nullptr : shortestObject);
-      colorRefract.average *= hitMaterial.transparency;
-      colorRefract.sum     *= hitMaterial.transparency;
     }
 
     if (hitMaterial.reflectivity != 0.0f) {
       // If the material is reflective then handle reflection
       colorReflect = rayFollow(Ray(shortestHitPoint, hitReflected), scene, iteration + 1, inside);
-      colorReflect.average *= hitMaterial.reflectivity;
-      colorReflect.sum     *= hitMaterial.reflectivity;
     }
 
     for (std::vector<Light*> lightSet : *scene->lights) {
@@ -138,36 +133,43 @@ colors Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
       // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
       // http://www.paulsprojects.net/tutorials/simplebump/simplebump.html
 
-      Color ambient = scene->ambientStatic * hitMaterial.ambient;
+      Color colorAmbient = scene->ambientStatic * hitMaterial.ambient;
+      Color colorLight;
 
-      auto lightStrength = fmax(0.8f, powf((hitLightLen + shortestHitDistance) / 350.0f, 2));
-      // TODO: lights property should be able to dictate the strength and these properties
-//      lightStrength = 1.0f;
-
-      Color fromLight = (( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * lightSet[0]->color) / lightStrength;
-
+      bool inShadow = false;
       for (Object *oCS: *scene->objects) {
         // test all objects if they are casting shadow from this light
         if (oCS != shortestObject &&
             oCS->detectHit(Ray(shortestHitPoint, hitLight)) != -1 &&
-            ((oCS->materialFn && oCS->materialFn(hitLight, scene->frame).castsShadows ) || (!oCS->materialFn && oCS->material.castsShadows)) &&
-            hitLightLen > (oCS->center - shortestHitPoint).lenght() ) {
-            // If the following are meet:
-            // 1) can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
-            // 2) ray needs to hit the object which is causing shadows (if it's not hit then it couldn't cause shadow)
-            // 3) object's material needs to have property to cast shadows (either a function or static material)
-            // 4) object needs to be between the light source and the collision point and not behind the light source
-            // Then do the following:
+            hitLightLen > (oCS->center - shortestHitPoint).lenght() &&
+            ((oCS->materialFn && oCS->materialFn(hitLight, scene->frame).castsShadows ) || (!oCS->materialFn && oCS->material.castsShadows)) ) {
+          // If the following are meet:
+          // 1) can't cast shadow on yourself through bounded rays, at least not yet with simple shapes (so test only all other objects)
+          // 2) ray needs to hit the object which is causing shadows (if it's not hit then it couldn't cause shadow)
+          // 3) object needs to be between the light source and the collision point and not behind the light source
+          // 4) object's material needs to have property to cast shadows (either a function or static material)
+          // Then do the following:
 
-          fromLight = Color();    // null the summing factor, leave only average factor ok which is the ambientStatic part
+          inShadow = true;
           break;
         }
       }
-      ret.sum += ambient + fromLight;
+
+      if (!inShadow) {
+        // Do not calculate these unless they are going to be used (i.e. not in the shadow)
+
+        auto lightStrength = fmax(0.8f, powf((hitLightLen + shortestHitDistance) / 350.0f, 2));
+        // TODO: lights property should be able to dictate the strength and these properties
+        colorLight = ((hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * lightSet[0]->color) / lightStrength;
+      }
+
+      ret += colorAmbient + colorLight;
     }
-//      ret.average += colorRefract.average + colorReflect.average;
-//      ret.sum     += colorRefract.sum     + colorReflect.sum;
-//    ret.sum /= scene->lights->size();
+
+    // Combine the current result with the reflective and refractive results
+    ret =
+      (ret * (1.0f - fmin(1.0f, hitMaterial.reflectivity + hitMaterial.transparency)) ) +
+      colorReflect * hitMaterial.reflectivity + colorRefract * hitMaterial.transparency;
   }
 
   return ret;
@@ -188,8 +190,7 @@ void Render::renderPartialWindow(windowType &window) {
   for (int y = window.yStart; y < window.yEnd; y++) {
     for (int x = window.xStart; x < window.xEnd; x++) {
       unsigned int sampleCount = 0;
-      colors totalColor = {.average = Color(), .sum = Color() };
-      colors lastColor;
+      Color totalColor;
 
       sampler.nextPixel();
       while (sampler.isNext()) {
@@ -198,22 +199,19 @@ void Render::renderPartialWindow(windowType &window) {
         sampler.getNextSample(&sample);
 
         camera.getRay(x, y, sample, scene, rayForThisPixel);
-        lastColor = rayStart(rayForThisPixel, scene);
-
-//        totalColor.average += ~lastColor.average;
-        totalColor.sum     += ~lastColor.sum;
+        totalColor += ~rayStart(rayForThisPixel, scene);
 
         if (sampler.index == sampler.indexMinimum) {
           // detect black parts of the scene after few sample rays
           // TODO: When background is used different algorithm has to be used
-          if (totalColor.sum.isBlack()) {
+          if (totalColor.isBlack()) {
             sampler.finish();
           }
         }
 
         sampleCount++;
       }
-      dynamicPixels[x + (y * width)] = Color(totalColor.sum / sampleCount);
+      dynamicPixels[x + (y * width)] = Color(totalColor / sampleCount);
     }
   }
 

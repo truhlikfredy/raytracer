@@ -9,7 +9,7 @@
 #define SEGMENTS 1  // how many partitions the screen should be split
 #define SAMPLING_MIN 2  // Samples per light, the final sampling will change depending on the lights present in the scene
 #define SAMPLING_MAX 4
-#define MAX_BOUNCES 4
+#define MAX_BOUNCES 3
 
 #include "../types/color.h"
 #include "../entities/lights/lightOmni.h"
@@ -26,12 +26,6 @@ struct windowType {
 };
 
 
-struct colors {
-  Color average;
-  Color sum;
-};
-
-
 class Render {
 private:
   unsigned int width;
@@ -42,9 +36,9 @@ private:
 
   void refract(Vector3 &incidentVec, Vector3 &normal, float refractionIndex, Vector3 &refractionRay);
 
-  colors rayStart(Ray ray, Scene *scene);
+  Color rayStart(Ray ray, Scene *scene);
 
-  colors rayFollow(Ray ray, Scene *scene, int iteration, Object *inside);
+  Color rayFollow(Ray ray, Scene *scene, int iteration, Object *inside);
 
   void renderPartialWindow(windowType &window);
 
