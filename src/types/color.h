@@ -16,6 +16,7 @@ public:
   Color(const Triple& base);
 
   Color operator~();
+  bool isBlack();
   Color toLab();
   float labDifference(Color secondColor);
 };
