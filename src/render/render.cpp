@@ -167,9 +167,7 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
     }
 
     // Combine the current result with the reflective and refractive results
-    ret =
-      (ret * (1.0f - fmin(1.0f, hitMaterial.reflectivity + hitMaterial.transparency)) ) +
-      colorReflect * hitMaterial.reflectivity + colorRefract * hitMaterial.transparency;
+    ret += colorReflect * hitMaterial.reflectivity + colorRefract * hitMaterial.transparency;
   }
 
   return ret;
