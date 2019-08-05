@@ -231,9 +231,8 @@ void Render::renderFullWindow(SceneGenerator *sceneGenerator) {
 
   /* Create scenes in all the time samples */
   Sampler sampler(sceneGenerator, SAMPLING_MIN, SAMPLING_MAX);
-  int timeSamples = (sceneGenerator->camera.shutterBlur == 0.0f) ? 1 : sampler.indexMaximum;
-  scenes = new std::vector<Scene*>(timeSamples);
-  for (int i = 0; i < timeSamples; i++) {
+  scenes = new std::vector<Scene*>(sampler.indexMaximum);
+  for (int i = 0; i < sampler.indexMaximum; i++) {
     sampleTuple sample;
     sampler.getNextSample(&sample);
 
@@ -253,7 +252,7 @@ void Render::renderFullWindow(SceneGenerator *sceneGenerator) {
   }
 
   /* Delete scenes in all the motion blur time samples */
-  for (int i = 0; i < timeSamples; i++) {
+  for (int i = 0; i < sampler.indexMaximum; i++) {
     delete (*scenes)[i];
   }
   delete scenes;
