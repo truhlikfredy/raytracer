@@ -41,12 +41,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f8968a0b-82e1-4221-bcce-b654fbc2a009" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/objects/materials.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/objects/materials.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/raytracer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/raytracer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/render.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/render.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/dof.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/dof.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/dof.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/dof.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/large.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/large.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/large.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/large.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/scenes/large2.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/large2.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/scenes/large2.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/large2.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/lights.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/lights.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/lights.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/lights.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/mandelbrot.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/mandelbrot.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/mandelbrot.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/mandelbrot.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/sceneGenerator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/sceneGenerator.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -74,7 +83,7 @@
     <expand />
     <select />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
   <component name="FavoritesManager">
     <favorites_list name="raycaster">
       <favorite_root url="file://$PROJECT_DIR$/../raycaster/CMakeLists.txt" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
@@ -186,7 +195,7 @@
       <workItem from="1564887110163" duration="9684000" />
       <workItem from="1564931253642" duration="20227000" />
       <workItem from="1564970350041" duration="31147000" />
-      <workItem from="1565035400479" duration="1978000" />
+      <workItem from="1565035400479" duration="8093000" />
     </task>
     <servers />
   </component>
@@ -220,6 +229,11 @@
         <breakpoint enabled="true" type="CidrExceptionBreakpoint">
           <option name="timeStamp" value="80" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/render/render.cpp</url>
+          <line>199</line>
+          <option name="timeStamp" value="82" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
