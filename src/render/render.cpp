@@ -122,14 +122,14 @@ colors Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
     }
 
     for (std::vector<Light*> lightSet : *scene->lights) {
-
       Vector3 hitLight = Vector3(lightSet[0]->center - shortestHitPoint);
-      float diffuse    = fmaxf(0, hitLight % hitNormal); // how similar are they?
-      float specular   = fmaxf(0, hitLight % hitReflected);
 
       // calculate length from the collision point to light source and then normalize the vector pointing to it
       float hitLightLen    = hitLight.lenght();
-      hitLight = ~hitLight;
+      hitLight = ~hitLight; // After we got the distance, then normalize it for angle calculation
+
+      float diffuse    = fmaxf(0, hitLight % hitNormal); // how similar are they?
+      float specular   = fmaxf(0, hitLight % hitReflected);
 
       // diffuse = similarity (dot product) of hitLight and hitNormal
       // https://youtu.be/KDHuWxy53uM
@@ -138,32 +138,36 @@ colors Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
       // https://qph.ec.quoracdn.net/main-qimg-dbc0172ecc9127a3a6b36c4d7f634277
       // http://www.paulsprojects.net/tutorials/simplebump/simplebump.html
 
-      ret.average = scene->ambientStatic * hitMaterial.ambient;
-      ret.sum     = (( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * lightSet[0]->color) / fmax(0.8f, powf((hitLightLen + shortestHitDistance) / 300.0f, 2));
+      Color ambient = scene->ambientStatic * hitMaterial.ambient;
 
-//    for (int j = 0; j < scene->nObjects; j++) {
-//      // test all objects if they are casting shadow from this light
-//      Object objectCausingShadow = objects[j];
-//      if (j != smallestObjectIndex &&
-//        objectCausingShadow.detectHit(Ray(shortestHitPoint, hitLight)) != -1 &&
-//        objectCausingShadow.materialFn(hitLight,frame).castsShadows &&
-//        hitLightLen > (objectCausingShadow.center - shortestHitPoint).lenght() ) {
-//
-//        // If the following are meet:
-//        // 1) can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
-//        // 2) ray needs to hit the object which is causing shadows (if it's not hit then it couldn't cause shadow)
-//        // 3) object's material needs to have property to cast shadows
-//        // 4) object needs to be between the light source and the collision point and not behind the light source
-//        // Then do the following:
-//
-//        ret.sum = Color();    // null the summing factor, leave only average factor ok which is the ambientStatic part
-//        break;
-//      }
-//    }
+      auto lightStrength = fmax(0.8f, powf((hitLightLen + shortestHitDistance) / 350.0f, 2));
+      // TODO: lights property should be able to dictate the strength and these properties
+//      lightStrength = 1.0f;
 
-      ret.average += colorRefract.average + colorReflect.average;
-      ret.sum     += colorRefract.sum     + colorReflect.sum;
+      Color fromLight = (( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * lightSet[0]->color) / lightStrength;
+
+      for (Object *oCS: *scene->objects) {
+        // test all objects if they are casting shadow from this light
+        if (oCS != shortestObject &&
+            oCS->detectHit(Ray(shortestHitPoint, hitLight)) != -1 &&
+            ((oCS->materialFn && oCS->materialFn(hitLight, scene->frame).castsShadows ) || (!oCS->materialFn && oCS->material.castsShadows)) &&
+            hitLightLen > (oCS->center - shortestHitPoint).lenght() ) {
+            // If the following are meet:
+            // 1) can't cast shadow on yourself through bounded rays, at least not yet with simple shapes
+            // 2) ray needs to hit the object which is causing shadows (if it's not hit then it couldn't cause shadow)
+            // 3) object's material needs to have property to cast shadows (either a function or static material)
+            // 4) object needs to be between the light source and the collision point and not behind the light source
+            // Then do the following:
+
+          fromLight = Color();    // null the summing factor, leave only average factor ok which is the ambientStatic part
+          break;
+        }
+      }
+      ret.sum += ambient + fromLight;
     }
+//      ret.average += colorRefract.average + colorReflect.average;
+//      ret.sum     += colorRefract.sum     + colorReflect.sum;
+//    ret.sum /= scene->lights->size();
   }
 
   return ret;
@@ -183,34 +187,33 @@ void Render::renderPartialWindow(windowType &window) {
 
   for (int y = window.yStart; y < window.yEnd; y++) {
     for (int x = window.xStart; x < window.xEnd; x++) {
-      unsigned int colorsCount = 0;
+      unsigned int sampleCount = 0;
       colors totalColor = {.average = Color(), .sum = Color() };
       colors lastColor;
 
       sampler.nextPixel();
-      unsigned int count = 0;
       while (sampler.isNext()) {
-        auto scene = (*scenes)[count];
+        auto scene = (*scenes)[sampleCount];
 
         sampler.getNextSample(&sample);
 
         camera.getRay(x, y, sample, scene, rayForThisPixel);
         lastColor = rayStart(rayForThisPixel, scene);
 
-        totalColor.average += ~lastColor.average;
+//        totalColor.average += ~lastColor.average;
         totalColor.sum     += ~lastColor.sum;
-        colorsCount++;
 
         if (sampler.index == sampler.indexMinimum) {
           // detect black parts of the scene after few sample rays
-          if (Color((totalColor.average + totalColor.sum)/ colorsCount).sum() == 0) {
+          // TODO: When background is used different algorithm has to be used
+          if (totalColor.sum.isBlack()) {
             sampler.finish();
           }
         }
 
-        count++;
+        sampleCount++;
       }
-      dynamicPixels[x + (y * width)] = ~Color(totalColor.sum / colorsCount);
+      dynamicPixels[x + (y * width)] = Color(totalColor.sum / sampleCount);
     }
   }
 
