@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/truhlikfredy/raytracer.svg?branch=master)](https://travis-ci.org/truhlikfredy/raytracer)
+
 ![refractions](/images/screenshot13.png)
 
 ![reflections inside a refraction](/images/screenshot14.png)
