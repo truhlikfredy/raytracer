@@ -44,9 +44,22 @@
 * Shadows
 * Reflection
 * Mandelbrot fractal as a texture/material with different "shine" properties in different sections
-* Dynamicly adjusting sampler, allowing a range of samples per pixel and ability to stop wheneve desire quality (delta) is achieved
+* Dynamically adjusting sampler, allowing a range of samples per pixel and ability to stop whenever desire quality (delta) is achieved (needs to be re-implemented)
+  * Detect empty background and stop sampling
 * Improved performance on scenes where there is no motion blur (means that the scene is evaluated only once and not for each ray in each pixel). Benchmark parameters: Width=320 Height=200 SamplingMin=2 SamplingMax=4 Bounches=4. On complex scenes such as "large2" it decreased from 75 seconds to calculate 25 frames to 48seconds. For "lights" it improved from 73 seconds to calculate 120 frames to 52 seconds. Scenes with motion blur enable do not have any benefit and scene with low complexity have mesurable improvement but not as much as complex scenes.
 * primitive variant of inverse square law
+* Do not shade object until it's for sure it's the winning depth (could be falsely rendered just for different object and depth wining the final result)
+* Different materials with different roughfness and textures
+  *  Checkerboard
+  *  Results of lamba functions
+* Refraction
+* Render all lights per hit
+* Render only few time instances of the scene for the whole frame so each pixel doesn't have to be unique time instance, this will have small impact on quality on subpixel level, but large impact on quality.
+  * Significant performance boost 1.75x for very primitive scene, 5.75x boost for medium complexity scene, **550x boost** for very complex scenes (despite scene having multiple lights and now rendering all of them)
+  * Added necessary framework to support soft-shadows, each sceneGenerated for many sub-frame timeSamples and each timeSample has multiple Lights instances for softShadowSamples
+* Added necessary framework to support different lights and objects (Generators are polymorphic (at last))
+
+
 
 # TODO (More precisely a wish list)
 
@@ -58,15 +71,10 @@
 * Soft shadows
 * Save videos as well.
 * Different light types: Spot light, Area flood light.
-* Do not shade object until it's for sure it's the winning depth (could be falsely rendered just for different object and depth wining the final result)
-* Refraction
-* Different materials with different roughfness and textures
-  *  Checkerboard
+* Different materials with different roughness and textures
   *  Random 3D noise bump mapping
-  *  Results of lamba functions
-* Inverse square law to fade off the light with hitDistance
+* More proper Inverse square law to fade off the light with hitDistance
 * Film grain: smooth, animated, weighted (shadows are more grainy)
-* Render only few time instances of the scene for the whole frame so each pixel doesn't have to be unique time instance, this will have small impact on quality on subpixel level, but large impact on quality.
 
 # Dependancies
 
