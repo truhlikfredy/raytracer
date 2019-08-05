@@ -31,6 +31,8 @@ public:
 
   SceneGenerator();
 
+  explicit SceneGenerator(float frameEndInit);
+
   ~SceneGenerator();
 
   Scene* generateScene();

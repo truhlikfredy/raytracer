@@ -8,12 +8,14 @@
 #include "../entities/objects/sphereGenerator.h"
 
 
-SceneGenerator::SceneGenerator() {
+SceneGenerator::SceneGenerator(): SceneGenerator(1.0f) { }
+
+SceneGenerator::SceneGenerator(float frameEndInit) {
   lightStep = 1.0f;
   lightEnd  = 1.0f;
   frame = 0.0f;
   frameFirst = 0.0f;
-  frameLast = 1.0f;
+  frameLast = frameEndInit;
   ambientStatic = Color(0.1f);
 
   //TODO: background static/fn
@@ -21,7 +23,6 @@ SceneGenerator::SceneGenerator() {
   lightGenerators  = new std::vector<LightGenerator*>();
   objectGenerators = new std::vector<ObjectGenerator*>();
 }
-
 
 Scene* SceneGenerator::generateScene() {
   return generateScene(frame);
