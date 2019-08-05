@@ -6,7 +6,7 @@
 #ifndef RAYTRACER_DISPLAY_H
 #define RAYTRACER_DISPLAY_H
 
-#define RENDER_COMPLEXITY 2
+#define RENDER_COMPLEXITY 1
 
 #if RENDER_COMPLEXITY == 0
   #define WIDTH  80
@@ -19,8 +19,8 @@
   #define SCALE 8.0  // display the window bigger than it really is (render low-res while having large window)
 
 #elif RENDER_COMPLEXITY == 2
-  #define WIDTH  128
-  #define HEIGHT 64
+  #define WIDTH  320
+  #define HEIGHT 200
   #define SCALE 4.0  // display the window bigger than it really is (render low-res while having large window)
 
 #elif RENDER_COMPLEXITY == 3
