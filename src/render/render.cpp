@@ -237,7 +237,7 @@ void Render::renderFullWindow(SceneGenerator *sceneGenerator) {
     sampleTuple sample;
     sampler.getNextSample(&sample);
 
-    (*scenes)[i] = sceneGenerator->generateScene(sample.time);
+    (*scenes)[i] = sceneGenerator->generateScene(sceneGenerator-> frame + sample.time);
   }
 
   /* Give work to all threads to render part of the screen */
