@@ -14,7 +14,9 @@
 
 Render::Render(int widthInit, int heightInit): width(widthInit), height(heightInit) {
   dynamicPixels = new Color[widthInit * heightInit];
-//  threadsMax    = std::thread::hardware_concurrency();
+#ifdef NDEBUG
+  threadsMax    = std::thread::hardware_concurrency();
+#endif
 }
 
 
