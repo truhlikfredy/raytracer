@@ -37,7 +37,7 @@ public:
 
   virtual float detectHitMax(Ray ray, Vector3 &hitPoint);
 
-  Vector3 operator ^ (Vector3 pointOnSurface);
+  virtual Vector3 operator ^ (Vector3 pointOnSurface);
 
 
 };

@@ -29,7 +29,7 @@ public:
 
   uv toUv(Vector3 point);
 
-  Vector3 operator ^ (Vector3 pointOnSurface);
+  Vector3 operator ^ (Vector3 pointOnSurface) override ;
 
 
 };
