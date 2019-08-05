@@ -172,8 +172,8 @@ materialStatic Materials::glass= {
   .specular        = Color(0.9f),
   .emission        = Color(),
   .shininess       = 96.0f,
-  .reflectivity    = 0.2f,
-  .transparency    = 0.95f,
+  .reflectivity    = 0.12f,
+  .transparency    = 0.9f,
   .refractiveIndex = 1.9f
 };
 
