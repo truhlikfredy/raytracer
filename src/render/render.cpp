@@ -188,8 +188,8 @@ void Render::renderPartialWindow(windowType &window) {
       colors lastColor;
 
       sampler.nextPixel();
+      unsigned int count = 0;
       while (sampler.isNext()) {
-        static unsigned int count = 0;
         auto scene = (*scenes)[count];
 
         sampler.getNextSample(&sample);
