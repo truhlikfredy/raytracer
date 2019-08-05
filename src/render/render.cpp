@@ -97,8 +97,12 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
     Vector3 hitNormal    = *shortestObject ^shortestHitPoint;
     Vector3 hitReflected = ray.direction - (hitNormal * 2 * (ray.direction % hitNormal));
 
-    materialStatic hitMaterial = shortestObject->material;
-//    materialStatic hitMaterial = shortestObject->materialFn(shortestHitPoint, scene->frame);
+    materialStatic hitMaterial;
+    if (shortestObject->materialFn) {
+      hitMaterial = shortestObject->materialFn(shortestHitPoint, scene->frame);
+    } else {
+      hitMaterial = shortestObject->material;
+    }
 
     Color colorRefract;
     Color colorReflect;

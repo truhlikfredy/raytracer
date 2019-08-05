@@ -31,11 +31,26 @@ Generated::Generated(): SceneGenerator() {
   });
   lightGenerators->push_back(animatedLight);
 
-  lightGenerators->push_back(new LightOmniGenerator(Vector3(600, -50, 200),Color(0.0f, 0.8f, 0.0f) ));
+  lightGenerators->push_back(new LightOmniGenerator(Vector3(100, -50, 200),Color(0.0f, 0.8f, 0.0f) ));
 
 
   objectGenerators->push_back(new SphereGenerator([](float frame) {
-    return new Sphere(Vector3(0.0f, 0.0f, 100.0f), 25.0f, Materials::green);
+    std::function<materialStatic(Vector3 point, float frame)> materialFn =
+      [](Vector3 point, float frame) {
+        return materialStatic{
+          .castsShadows = true,
+          .ambient = Color(0.1f, 0.025f, 0.1f),
+          .diffuse = Color((sinf(point.x / 2 + point.y     + point.z     + frame / 5)  + 0.3f) * 0.5f,
+                           (sinf(point.x / 4 + point.y / 2 + point.z     + frame / 10) + 0.4f) * 0.7f,
+                           (sinf(point.x / 8 + point.y     + point.z / 4 + frame / 20) + 0.2f) * 0.3f),
+          .specular = Color(0.2f),
+          .emission = Color(0.0),
+          .shininess = point.z,
+          .reflectivity = 0.55f,
+          .transparency = 0.0f
+        };
+      };
+    return new Sphere(Vector3(0.0f, 0.0f, 100.0f), 25.0f, materialFn);
   }));
 
   objectGenerators->push_back(new SphereGenerator([](float frame) {
