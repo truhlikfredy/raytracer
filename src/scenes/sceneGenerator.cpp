@@ -37,19 +37,18 @@ Scene* SceneGenerator::generateScene(float frame) {
 
   memcpy(&scene->camera, &camera, sizeof(camera));
 
-  auto currentLights = new Light[scene->lightVariations];
   for(auto const& generator: *lightGenerators) {
+    auto currentLights = new std::vector<Light*>;
     LightOmniGenerator *lightOmniGenerator = dynamic_cast<LightOmniGenerator*>((LightGenerator*)(generator));
     if (lightOmniGenerator) {
       Light *lightOmnit = lightOmniGenerator->eval(frame);
       for (int i = 0; i < scene->lightVariations; i++) {
-        currentLights[i] = *lightOmnit;
+        currentLights->push_back(lightOmnit);
       }
       break;
     }
+    scene->lights->push_back(*currentLights);
   }
-  scene->lights->push_back(currentLights);
-//  scene->lights.push_back(nullptr);
 
   for(auto const& generator: *objectGenerators) {
     SphereGenerator *sphereGenerator = dynamic_cast<SphereGenerator*>((ObjectGenerator*)(generator));
@@ -59,7 +58,6 @@ Scene* SceneGenerator::generateScene(float frame) {
       break;
     }
   }
-//  scene->objects.push_back(nullptr);
 
   return scene;
 }

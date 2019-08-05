@@ -7,7 +7,7 @@
 
 
 Scene::Scene(Color ambientStaticInit) {
-  lights = new std::vector<Light*>;  // 2D array of lights
+  lights  = new std::vector<std::vector<Light*>>;  // 2D array of lights
   objects = new std::vector<Object*>;  // 1D array to pointers
 
   frame = 0.0f;

@@ -121,9 +121,9 @@ colors Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
       colorReflect.sum     *= hitMaterial.reflectivity;
     }
 
-    for (Light *lightSet : *scene->lights) {
+    for (std::vector<Light*> lightSet : *scene->lights) {
 
-      Vector3 hitLight = Vector3(lightSet[0].center - shortestHitPoint);
+      Vector3 hitLight = Vector3(lightSet[0]->center - shortestHitPoint);
       float diffuse    = fmaxf(0, hitLight % hitNormal); // how similar are they?
       float specular   = fmaxf(0, hitLight % hitReflected);
 
@@ -139,7 +139,7 @@ colors Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
       // http://www.paulsprojects.net/tutorials/simplebump/simplebump.html
 
       ret.average = scene->ambientStatic * hitMaterial.ambient;
-      ret.sum     = (( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * lightSet[0].color) / fmax(0.8f, powf((hitLightLen + shortestHitDistance) / 300.0f, 2));
+      ret.sum     = (( hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * lightSet[0]->color) / fmax(0.8f, powf((hitLightLen + shortestHitDistance) / 300.0f, 2));
 
 //    for (int j = 0; j < scene->nObjects; j++) {
 //      // test all objects if they are casting shadow from this light

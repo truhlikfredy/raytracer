@@ -17,7 +17,7 @@
 
 class Scene {
 public:
-  std::vector<Light*> *lights;
+  std::vector<std::vector<Light*>> *lights;
 //  LightOmniGen* lights[];
 //  Object*    objects;
   std::vector<Object*> *objects;

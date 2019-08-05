@@ -11,8 +11,8 @@
 
 class SceneGenerator {
 public:
-  std::vector<LightGenerator*>*     lightGenerators;
-  std::vector<ObjectGenerator*>*    objectGenerators;
+  std::vector<LightGenerator*>      *lightGenerators;
+  std::vector<ObjectGenerator*>     *objectGenerators;
   Color                             ambientStatic;
   std::function<Color(float frame)> ambientFn;
   float                             lastFrame;
