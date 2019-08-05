@@ -16,8 +16,10 @@ Generated::Generated(): SceneGenerator() {
     .shutterBlur = 0.0f
   };
 
-  auto onlyLight = new LightOmniGenerator(Vector3(32, 0.6, 20), Color(0.9f, 0.9f, 1.0f));
-  lightGenerators->push_back(onlyLight);
+  lightEnd = 2.0f;
+
+  //  auto onlyLight = new LightOmniGenerator(Vector3(32, 0.6, 20), Color(0.9f, 0.9f, 1.0f));
+  lightGenerators->push_back(new LightOmniGenerator(Vector3(32, 0.6, 20), Color(0.9f, 0.9f, 1.0f)));
 
   auto sphere = new SphereGenerator(Vector3(), 10.0f);
   objectGenerators->push_back(sphere);
