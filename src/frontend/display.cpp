@@ -132,6 +132,6 @@ bool Display::keepLooping() {
 }
 
 void Display::benchmarkSummary() {
-  printf("%d ms elapsed (Width=%d Height=%d SamplingMin=%d SamplingMax=%d Bounches=%d)",
+  printf("%d ms elapsed (Width=%d Height=%d SamplingMin=%d SamplingMax=%d Bounces=%d)",
          elapsedTotal / 1000, WIDTH, HEIGHT, SAMPLING_MIN, SAMPLING_MAX, MAX_BOUNCES);
 }
