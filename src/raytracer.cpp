@@ -8,24 +8,24 @@
 #include "utils/utils.h"
 
 #include "scenes/plain.h"
-//#include "scenes/dof.h"
-//#include "scenes/mandelbrot.h"
-//#include "scenes/lights.h"
-//#include "scenes/large.h"
-//#include "scenes/large2.h"
+#include "scenes/dof.h"
+#include "scenes/mandelbrot.h"
+#include "scenes/lights.h"
+#include "scenes/large.h"
+#include "scenes/large2.h"
 
 
 int main() {
   Display *mainWindow = new Display();
   bool quitRequested = false;
 
-  SceneGenerator *sceneGenerators[1] = {
-    new Plain()
-//    Plain(),
-//    Large2(),
-//    Large(),
-//    Dof(),
-//    Mandelbrot()
+  SceneGenerator *sceneGenerators[] = {
+    new Plain(),
+    new Large2(),
+    new Large(),
+    new Lights(),
+    new Dof(),
+    new Mandelbrot()
   };
 
   int sceneIndex = 0;

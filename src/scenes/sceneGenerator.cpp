@@ -18,7 +18,7 @@ SceneGenerator::SceneGenerator(float frameEndInit) {
   frameLast = frameEndInit;
   ambientStatic = Color(0.1f);
 
-  //TODO: background static/fn
+  //TODO: background static/fn or no backgrounds and let the object act as background
 
   lightGenerators  = new std::vector<LightGenerator*>();
   objectGenerators = new std::vector<ObjectGenerator*>();

@@ -6,12 +6,12 @@
 #ifndef RAYTRACER_SCENES_DOF_H
 #define RAYTRACER_SCENES_DOF_H
 
-#include "scene.h"
+#include "sceneGenerator.h"
 
-//class Dof: public Scene {
-//public:
-//  Dof();
-//};
+class Dof: public SceneGenerator {
+public:
+  Dof();
+};
 
 
 #endif //RAYTRACER_SCENES_DOF_H
