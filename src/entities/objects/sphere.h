@@ -27,9 +27,9 @@ public:
 
   float detectHitMax(Ray ray, Vector3 &hitPoint) override;
 
-  uv toUv(Vector3 point);
+  uv toUv(Vector3 point) override;
 
-  Vector3 operator ^ (Vector3 pointOnSurface) override ;
+  Vector3 operator ^ (Vector3 pointOnSurface) override;
 
 
 };

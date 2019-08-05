@@ -29,7 +29,7 @@ public:
 
   std::function<Object(float frame)> evaluateObjFn;
 
-  //virtual uv toUv(Vector3 point) = 0;
+  virtual uv toUv(Vector3 point);
 
   virtual float detectHit(Ray ray);
 

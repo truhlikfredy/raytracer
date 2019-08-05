@@ -36,3 +36,7 @@ float Object::detectHit(Ray ray, Vector3 &hitPoint) {
 float Object::detectHitMax(Ray ray, Vector3 &hitPoint) {
   return -1;
 }
+
+uv Object::toUv(Vector3 point) {
+  return uv();
+}
