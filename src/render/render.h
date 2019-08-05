@@ -7,8 +7,8 @@
 #define RAYTRACER_RENDER_H
 
 #define SEGMENTS 1  // how many partitions the screen should be split
-#define SAMPLING_MIN 2  // Samples per light, the final sampling will change depending on the lights present in the scene
-#define SAMPLING_MAX 4
+#define SAMPLING_MIN 3  // Samples per light, the final sampling will change depending on the lights present in the scene
+#define SAMPLING_MAX 5
 #define MAX_BOUNCES 3
 
 #include "../types/color.h"
