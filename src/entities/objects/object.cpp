@@ -7,17 +7,17 @@
 
 Object::Object(Vector3 centerInit,
                std::function<materialStatic(Vector3 point, float frame)> materialFnInit):
-               materialFn(materialFnInit), Entity(centerInit) {
+               Entity(centerInit), materialFn(materialFnInit), material(Materials::lightGray) {
 }
 
-Object::Object(Vector3 centerInit, materialStatic materialInit):
-  material(materialInit), materialFn(nullptr), Entity(centerInit) {
+Object::Object(Vector3 centerInit, materialStatic materialInit): Entity(centerInit),
+  material(materialInit), materialFn(nullptr) {
 }
 
-Object::Object(Vector3 centerInit): Entity(centerInit) {
+Object::Object(Vector3 centerInit): Object(centerInit, Materials::lightGray) {
 }
 
-Object::Object() {
+Object::Object(): Object(Vector3()) {
 }
 
 

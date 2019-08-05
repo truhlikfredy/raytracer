@@ -18,7 +18,8 @@ public:
 
   SphereGenerator(Vector3 centerInt, float radiusInit, std::function<materialStatic(Vector3 point, float frame)> materialFnInit);
 
-  SphereGenerator(std::function<Object*(float frame)> evaluateFnInit);
+  // https://rules.sonarsource.com/cpp/RSPEC-1709
+  explicit SphereGenerator(std::function<Object*(float frame)> evaluateFnInit);
 
   Object* eval(float frame) override;
 };

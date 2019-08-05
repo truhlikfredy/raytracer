@@ -14,8 +14,8 @@ class Entity {
 public:
   Vector3 center;
 
-
-  Entity(Vector3 centerInit);
+  // https://rules.sonarsource.com/cpp/RSPEC-1709
+  explicit Entity(Vector3 centerInit);
 
   Entity();
 

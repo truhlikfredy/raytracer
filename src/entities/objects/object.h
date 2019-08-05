@@ -22,7 +22,8 @@ public:
 
   Object(Vector3 centerInit, materialStatic materialInit);
 
-  Object(Vector3 centerInit);
+  // https://rules.sonarsource.com/cpp/RSPEC-1709
+  explicit Object(Vector3 centerInit);
 
   Object();
 

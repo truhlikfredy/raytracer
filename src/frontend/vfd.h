@@ -29,15 +29,19 @@ private:
   int openHandle();
   int set_interface_attribs(int speed);
 
-  void normalizeRaw(unsigned x, unsigned y);
   unsigned char getGetRow(unsigned int x, unsigned y, unsigned int threashold);
-  void sendToUart();
-  void reset();
+  void          normalizeRaw(unsigned x, unsigned y);
+  void          sendToUart();
+  void          reset();
 
 public:
-  VFD(const char *portName);
+  // https://rules.sonarsource.com/cpp/RSPEC-1709
+  explicit VFD(const char *portName);
+
   ~VFD();
+
   void memToVFD(sf::Uint8* pixels);
+
 };
 
 #endif //RAYTRACER_VFD_H

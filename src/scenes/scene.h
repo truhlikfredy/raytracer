@@ -36,7 +36,8 @@ public:
 
   Scene();
 
-  Scene(Color ambientStaticInit);
+  // https://rules.sonarsource.com/cpp/RSPEC-1709
+  explicit Scene(Color ambientStaticInit);
 
   ~Scene();
 

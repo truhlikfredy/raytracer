@@ -14,11 +14,12 @@ class ObjectGenerator: public Object {
 public:
   std::function<Object*(float frame)> evaluateFn;
 
-  ObjectGenerator(Vector3 centerInt);
-
   ObjectGenerator(Vector3 centerInt, std::function<materialStatic(Vector3 point, float frame)> materialFnInit);
 
-  ObjectGenerator(std::function<Object*(float frame)> evaluateFnInit);
+  explicit ObjectGenerator(Vector3 centerInt);
+
+  // https://rules.sonarsource.com/cpp/RSPEC-1709
+  explicit ObjectGenerator(std::function<Object*(float frame)> evaluateFnInit);
 
   virtual Object * eval(float frame);
 };
