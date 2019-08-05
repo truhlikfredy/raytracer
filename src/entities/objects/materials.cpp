@@ -107,7 +107,7 @@ materialStatic Materials::black= {
 
 materialStatic Materials::mediumGray= {
   .castsShadows    = true,
-  .ambient         = Color(),
+  .ambient         = Color(0.1f),
   .diffuse         = Color(0.454902f),
   .specular        = Color(0.0225f),
   .emission        = Color(),
