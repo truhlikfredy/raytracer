@@ -115,7 +115,8 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
     }
 
     for (std::vector<Light*> lightSet : *scene->lights) {
-      Vector3 hitLight = Vector3(lightSet[0]->center - closestHitPoint);
+      static int lightSeed = lightSeed + scene->frame;
+      Vector3 hitLight = Vector3(lightSet[lightSeed % scene->lightVariations]->center - closestHitPoint);
 
       // calculate length from the collision point to light source and then normalize the vector pointing to it
       float hitLightLen    = hitLight.lenght();
