@@ -29,12 +29,12 @@ Sampler::Sampler(unsigned int minSamples, unsigned int maxSamples, float shutter
 }
 
 Sampler::Sampler(Scene *scene, unsigned int minSampleAmp, unsigned int maxSamplesAmp)
-:Sampler(minSampleAmp * scene->lights->size(), maxSamplesAmp * scene->lights->size(),
+:Sampler(minSampleAmp, maxSamplesAmp,
   scene->camera.shutterBlur, scene->camera.aperture, scene->lights->size(), scene->frame) {
 }
 
 Sampler::Sampler(SceneGenerator *sceneGen, unsigned int minSampleAmp, unsigned int maxSamplesAmp)
-:Sampler(minSampleAmp * sceneGen->lightGenerators->size(), maxSamplesAmp * sceneGen->lightGenerators->size(),
+:Sampler(minSampleAmp, maxSamplesAmp,
   sceneGen->camera.shutterBlur, sceneGen->camera.aperture, sceneGen->lightGenerators->size(), sceneGen->frame) {
 }
 
