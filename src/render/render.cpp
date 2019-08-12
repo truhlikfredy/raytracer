@@ -189,6 +189,7 @@ void Render::renderPartialWindow(windowType &window) {
   for (int y = window.yStart; y < window.yEnd; y++) {
     for (int x = window.xStart; x < window.xEnd; x++) {
       unsigned int sampleCount = 0;
+      Color currentColor;
       Color totalColor;
 
       sampler.nextPixel();
@@ -198,13 +199,20 @@ void Render::renderPartialWindow(windowType &window) {
         sampler.getNextSample(&sample);
 
         camera.getRay(x, y, sample, scene, rayForThisPixel);
-        totalColor += ~rayStart(rayForThisPixel, scene);
+        currentColor = ~rayStart(rayForThisPixel, scene);
+        totalColor += currentColor;
 
         if (sampler.index == sampler.indexMinimum) {
           // detect black parts of the scene after few sample rays
           // TODO: When background is used different algorithm has to be used
           if (totalColor.isBlack()) {
             sampler.finish();
+          }
+        } else if (sampler.index > sampler.indexMinimum) {
+          Color diff = Color(totalColor / sampleCount) - currentColor;
+          if ( fabsf(diff.sum()) < SAMPLING_DELTA ) {
+            sampler.finish();
+//            TODO: save stats so I know which settings are worth doing
           }
         }
 

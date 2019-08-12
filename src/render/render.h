@@ -8,7 +8,8 @@
 
 #define SEGMENTS 1  // how many partitions the screen should be split
 #define SAMPLING_MIN 2  // Samples per light, the final sampling will change depending on the lights present in the scene
-#define SAMPLING_MAX 4
+#define SAMPLING_MAX 5
+#define SAMPLING_DELTA 0.03f
 #define MAX_BOUNCES 4
 
 #include "../types/color.h"
