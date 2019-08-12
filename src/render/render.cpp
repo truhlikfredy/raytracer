@@ -118,16 +118,17 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
 
     for (std::vector<Light*> lightSet : *scene->lights) {
       static int lightSeed = lightSeed + scene->frame;
-      Vector3 hitLight = Vector3(lightSet[lightSeed % scene->lightVariations]->center - closestHitPoint);
+      Light *hitLight = lightSet[lightSeed % scene->lightVariations];
+      Vector3 hitLightRel = Vector3(hitLight->center - closestHitPoint);
 
       // calculate length from the collision point to light source and then normalize the vector pointing to it
-      float hitLightLen    = hitLight.lenght();
-      hitLight = ~hitLight; // After we got the distance, then normalize it for angle calculation
+      float hitLightLen    = hitLightRel.lenght();
+      hitLightRel = ~hitLightRel; // After we got the distance, then normalize it for angle calculation
 
-      float diffuse    = fmaxf(0, hitLight % hitNormal); // how similar are they?
-      float specular   = fmaxf(0, hitLight % hitReflected);
+      float diffuse    = fmaxf(0, hitLightRel % hitNormal); // how similar are they?
+      float specular   = fmaxf(0, hitLightRel % hitReflected);
 
-      // diffuse = similarity (dot product) of hitLight and hitNormal
+      // diffuse = similarity (dot product) of hitLightRel and hitNormal
       // https://youtu.be/KDHuWxy53uM
       // And use the diffuse / specular only when they are positive
       // shadeOfTheRay = specular + diffuse + ambientStatic
@@ -141,9 +142,9 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
       for (Object *oCS: *scene->objects) {
         // test all objects if they are casting shadow from this light
         if (oCS != closestObject &&
-            oCS->detectHit(Ray(closestHitPoint, hitLight)) != -1 &&
+            oCS->detectHit(Ray(closestHitPoint, hitLightRel)) != -1 &&
             hitLightLen > (oCS->center - closestHitPoint).lenght() &&
-            ((oCS->materialFn && oCS->materialFn(hitLight, scene->frame).castsShadows ) || (!oCS->materialFn && oCS->material.castsShadows)) ) {
+            ((oCS->materialFn && oCS->materialFn(hitLightRel, scene->frame).castsShadows ) || (!oCS->materialFn && oCS->material.castsShadows)) ) {
           // If the following are meet:
           // 1) can't cast shadow on yourself through bounded rays, at least not yet with simple shapes (so test only all other objects)
           // 2) ray needs to hit the object which is causing shadows (if it's not hit then it couldn't cause shadow)
@@ -159,8 +160,7 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
       if (!inShadow) {
         // Do not calculate these unless they are going to be used (i.e. not in the shadow)
 
-        auto lightStrength = fmax(0.8f, powf((hitLightLen + closestHitDistance) / 350.0f, 2));
-        // TODO: lights property should be able to dictate the strength and these properties
+        auto lightStrength = fmax(hitLight->burn, powf((hitLightLen + closestHitDistance) / hitLight->distance, 2));
         colorLight = ((hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * lightSet[0]->color) / lightStrength;
       }
 
@@ -168,7 +168,7 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
     }
 
     // Combine the current result with the reflective and refractive results
-    ret += colorReflect * hitMaterial.reflectivity + colorRefract * hitMaterial.transparency;
+    ret += (~colorReflect * hitMaterial.reflectivity) + (~colorRefract * hitMaterial.transparency);
   }
 
   return ret;
