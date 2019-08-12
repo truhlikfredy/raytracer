@@ -148,7 +148,7 @@ materialStatic Materials::brass= {
   .specular        = Color(0.992157f, 0.941176f, 0.807843f),
   .emission        = Color(),
   .shininess       = 27.8974f,
-  .reflectivity    = 0.8f,
+  .reflectivity    = 0.3f,
   .transparency    = 0.0f,
   .refractiveIndex = 1.0f
 };
