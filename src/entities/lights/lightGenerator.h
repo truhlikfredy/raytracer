@@ -14,7 +14,9 @@ class LightGenerator: public Light {
 public:
   std::function<Light*(float frame)> evaluateFn;
 
-  LightGenerator(Vector3 centerInit, Color colorInit);
+  LightGenerator(const Vector3 &centerInit, const Color &colorInit, const float distanceInit, const float burnInit);
+
+  LightGenerator(Vector3 centerInit, Color colorInit); //TODO: const arguments
 
   LightGenerator(std::function<Light*(float frame)> evaluateFnInit);
 

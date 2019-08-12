@@ -11,6 +11,9 @@
 class LightOmniGenerator: public LightGenerator {
 public:
   LightOmniGenerator(std::function<Light*(float frame)> evaluateFnInit);
+
+  LightOmniGenerator(const Vector3 &centerInit, const Color &colorInit, const float distanceInit, const float burnInit);
+
   LightOmniGenerator(Vector3 centerInit, Color colorInit);
 
   Light * eval(float frame) override;
