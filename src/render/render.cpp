@@ -77,7 +77,7 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
       hitDistance = object->detectHit(ray, hitPoint);
     }
 
-    if (hitDistance != -1.0f) {
+    if (hitDistance > 0.0f) {
       if (closestHitDistance > hitDistance) {
         // It's the shortest hit yet, let's save it, if it will win then calculate it's color by shading it depending on the bounce angle
         closestObject      = object;

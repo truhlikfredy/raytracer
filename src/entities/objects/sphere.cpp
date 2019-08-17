@@ -77,10 +77,36 @@ float Sphere::detectHit(Ray ray, Vector3 &hitPoint) {
   if (tempAll < 0) return -1.0f; // The ray didn't hit the sphere at all
 
   // 2 points are intersecting the sphere, chose the closest point to the camera
-  float hitDistance = fminf( (-temp1 + sqrt(tempAll)) / dotDir,
-                             (-temp1 - sqrt(tempAll)) / dotDir );
+  float distanceA = (-temp1 + sqrt(tempAll)) / dotDir;
+  float distanceB = (-temp1 - sqrt(tempAll)) / dotDir;
+  float hitDistance;
 
-  if (hitDistance <= 0 ) return -1.0f;
+  // Skip if both points are behind the ray
+  if (distanceA <0.0f && distanceB <0.0f )
+    return -1.0f;
+
+  if (distanceA >0.0f && distanceB >0.0f )
+    // Choose the closest when both points are in front of ray
+    hitDistance= fminf( distanceA, distanceB);
+  else {
+    // If one point is behind the ray, we must be inside the object, pick the point in front of the ray
+    hitDistance= fmaxf( distanceA, distanceB);
+
+    // Just in case the point on front you is just tiny miscalculation (rounding error) and actually it's the
+    // very same point you just bounced from, then do not consider it as a hit, as it could be then counted
+    // as new reflection or as point which is throwing shadow on itself
+    if (hitDistance < 0.05f) return -1;
+  }
+  //
+//  if (distanceA <0 && distanceB >0 )
+//    hitDistance=distanceB;
+//  else if (distanceB <0 && distanceA >0)
+//    hitDistance=distanceA;
+//  else
+//  if (hitDistance < 0.0f) {
+//    hitDistance = fmaxf(distanceA, distanceB);
+//  }
+//  if (hitDistance <= 0.0f ) return -1.0f;
 
   hitPoint = ray.source + ray.direction * hitDistance;
 
