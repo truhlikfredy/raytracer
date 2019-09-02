@@ -11,6 +11,9 @@
 struct Ray {
   Vector3 source;
   Vector3 direction;
+  Vector3 directionFraction;
+  float   directionDot;
+  float   directionDotInverse;
 
   Ray();
 
