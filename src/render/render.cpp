@@ -33,7 +33,7 @@ void Render::getThreadWindow(int thread, windowType &ret) {
 }
 
 
-Color Render::rayStart(Ray ray, Scene *scene) {
+Color Render::rayStart(Ray *ray, Scene *scene) {
   return rayFollow(ray, scene, 1, nullptr);
 }
 
@@ -49,7 +49,7 @@ void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionInde
 }
 
 
-Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
+Color Render::rayFollow(Ray *ray, Scene *scene, int iteration, Object *inside) {
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
   float closestHitDistance = FLT_MAX;  // set it to maximum at first
   Object *closestObject = nullptr;
@@ -71,10 +71,10 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
         hitDistance = object->detectHitMax(ray, hitPoint);
       } else {
         // but for all other objects even including intersecting object do detect closest collision
-        hitDistance = object->detectHit(ray, hitPoint);
+        hitDistance = object->detectHitMin(ray, hitPoint);
       }
     } else {
-      hitDistance = object->detectHit(ray, hitPoint);
+      hitDistance = object->detectHitMin(ray, hitPoint);
     }
 
     if (hitDistance > 0.0f) {
@@ -91,7 +91,7 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
   if (closestObject) {
     // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
     Vector3 hitNormal    = *closestObject ^closestHitPoint;
-    Vector3 hitReflected = ray.direction - (hitNormal * 2 * (ray.direction % hitNormal));
+    Vector3 hitReflected = ray->direction - (hitNormal * 2 * (ray->direction % hitNormal));
 
     materialStatic hitMaterial;
     if (closestObject->materialFn) {
@@ -106,14 +106,16 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
     if (hitMaterial.transparency != 0.0f) {
       // If transparency is enabled then handle refraction
       Vector3 hitRefracted;
-      refract(ray.direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
+      refract(ray->direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
+      Ray refractRay(closestHitPoint, hitRefracted);
 
-      colorRefract = rayFollow(Ray(closestHitPoint, hitRefracted), scene, iteration + 1, (inside) ? nullptr : closestObject);
+      colorRefract = rayFollow(&refractRay, scene, iteration + 1, (inside) ? nullptr : closestObject);
     }
 
     if (hitMaterial.reflectivity != 0.0f) {
       // If the material is reflective then handle reflection
-      colorReflect = rayFollow(Ray(closestHitPoint, hitReflected), scene, iteration + 1, inside);
+      Ray reflectRay(closestHitPoint, hitReflected);
+      colorReflect = rayFollow(&reflectRay, scene, iteration + 1, inside);
     }
 
     for (std::vector<Light*> lightSet : *scene->lights) {
@@ -140,9 +142,10 @@ Color Render::rayFollow(Ray ray, Scene *scene, int iteration, Object *inside) {
 
       bool inShadow = false;
       for (Object *oCS: *scene->objects) {
+        Ray shadowRay(closestHitPoint, hitLightRel);
         // test all objects if they are casting shadow from this light
         if (oCS != closestObject &&
-            oCS->detectHit(Ray(closestHitPoint, hitLightRel)) != -1 &&
+            oCS->detectHit(&shadowRay) != -1 &&
             hitLightLen > (oCS->center - closestHitPoint).lenght() &&
             ((oCS->materialFn && oCS->materialFn(hitLightRel, scene->frame).castsShadows ) || (!oCS->materialFn && oCS->material.castsShadows)) ) {
           // If the following are meet:
@@ -199,7 +202,7 @@ void Render::renderPartialWindow(windowType &window) {
         sampler.getNextSample(&sample);
 
         camera.getRay(x, y, sample, scene, rayForThisPixel);
-        currentColor = ~rayStart(rayForThisPixel, scene);
+        currentColor = ~rayStart(&rayForThisPixel, scene);
         totalColor += currentColor;
 
         if (sampler.index == sampler.indexMinimum) {

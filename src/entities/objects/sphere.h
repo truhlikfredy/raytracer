@@ -21,16 +21,18 @@ public:
 
   Sphere();
 
-  float detectHit(Ray ray) override;
+  float detectHit(Ray *ray) override;
 
-  float detectHit(Ray ray, Vector3 &hitPoint) override;
+  float detectHitMin(Ray *ray, Vector3 &hitPoint) override;
 
-  float detectHitMax(Ray ray, Vector3 &hitPoint) override;
+  float detectHitMax(Ray *ray, Vector3 &hitPoint) override;
 
   uv toUv(Vector3 point) override;
 
   Vector3 operator ^ (Vector3 pointOnSurface) override;
 
+private:
+  void setAabb();
 
 };
 

@@ -37,9 +37,9 @@ private:
 
   void refract(Vector3 &incidentVec, Vector3 &normal, float refractionIndex, Vector3 &refractionRay);
 
-  Color rayStart(Ray ray, Scene *scene);
+  Color rayStart(Ray *ray, Scene *scene);
 
-  Color rayFollow(Ray ray, Scene *scene, int iteration, Object *inside);
+  Color rayFollow(Ray *ray, Scene *scene, int iteration, Object *inside);
 
   void renderPartialWindow(windowType &window);
 
