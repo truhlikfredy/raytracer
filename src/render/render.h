@@ -11,6 +11,8 @@
 #define SAMPLING_MAX 5
 #define SAMPLING_DELTA 0.03f
 #define MAX_BOUNCES 4
+//#define CHROMATIC_ABERRATION_REFRACTION // Comment out to disable
+#define CHROMATIC_ABERRATION_STRENGTH 0.02f
 
 #include "../types/color.h"
 #include "../entities/lights/lightOmni.h"

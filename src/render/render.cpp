@@ -106,17 +106,18 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration, Object *inside) {
     Color colorReflect;
 
     if (hitMaterial.transparency != 0.0f) {
+      // If transparency is enabled then handle refraction
+#ifdef CHROMATIC_ABERRATION_REFRACTION
       Color colorRefractR;
       Color colorRefractG;
       Color colorRefractB;
 
-      // If transparency is enabled then handle refraction
       Vector3 hitRefractedR;
       Vector3 hitRefractedG;
       Vector3 hitRefractedB;
-      refract(ray->direction, hitNormal, hitMaterial.refractiveIndex * 0.98f, hitRefractedR);
+      refract(ray->direction, hitNormal, hitMaterial.refractiveIndex * (1.0f - CHROMATIC_ABERRATION_STRENGTH), hitRefractedR);
       refract(ray->direction, hitNormal, hitMaterial.refractiveIndex, hitRefractedG);
-      refract(ray->direction, hitNormal, hitMaterial.refractiveIndex * 1.02f, hitRefractedB);
+      refract(ray->direction, hitNormal, hitMaterial.refractiveIndex * (1.0f + CHROMATIC_ABERRATION_STRENGTH), hitRefractedB);
       Ray refractRayR(closestHitPoint, hitRefractedR);
       Ray refractRayG(closestHitPoint, hitRefractedG);
       Ray refractRayB(closestHitPoint, hitRefractedB);
@@ -125,6 +126,13 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration, Object *inside) {
       colorRefractG = rayFollow(&refractRayG, scene, iteration + 1, (inside) ? nullptr : closestObject);
       colorRefractB = rayFollow(&refractRayB, scene, iteration + 1, (inside) ? nullptr : closestObject);
       colorRefract = Color(colorRefractR.x, colorRefractG.y, colorRefractB.z);
+#else
+      Vector3 hitRefracted;
+      refract(ray->direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
+      Ray refractRay(closestHitPoint, hitRefracted);
+
+      colorRefract = rayFollow(&refractRay, scene, iteration + 1, (inside) ? nullptr : closestObject);
+#endif
     }
 
     if (hitMaterial.reflectivity != 0.0f) {
