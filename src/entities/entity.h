@@ -16,10 +16,15 @@ public:
 
   // https://rules.sonarsource.com/cpp/RSPEC-1709
   explicit Entity(Vector3 centerInit);
+  Entity(Vector3 centerInit, Vector3 aabbMinInit, Vector3 aabbMaxInit);
 
   Entity();
 
   virtual ~Entity() = default;
+
+protected:
+  Vector3 aabbMin;
+  Vector3 aabbMax;
 
 };
 
