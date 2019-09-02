@@ -40,7 +40,9 @@ Color Render::rayStart(Ray *ray, Scene *scene) {
 
 void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionIndex, Vector3 &refractionRay) {
   float cosi = fmax(-1, fmin(1, (incidentVec % normal)));
-  float etai = 1, etat = refractionIndex;
+  float etai = 1;
+//  float x = ((float)rand()/(float)(RAND_MAX)) * 0.1f;
+  float etat = refractionIndex;
   Vector3 n = normal;
   if (cosi < 0) { cosi = -cosi; } else { std::swap(etai, etat); n= normal * -1.0; }
   float eta = etai / etat;
@@ -104,12 +106,25 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration, Object *inside) {
     Color colorReflect;
 
     if (hitMaterial.transparency != 0.0f) {
-      // If transparency is enabled then handle refraction
-      Vector3 hitRefracted;
-      refract(ray->direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
-      Ray refractRay(closestHitPoint, hitRefracted);
+      Color colorRefractR;
+      Color colorRefractG;
+      Color colorRefractB;
 
-      colorRefract = rayFollow(&refractRay, scene, iteration + 1, (inside) ? nullptr : closestObject);
+      // If transparency is enabled then handle refraction
+      Vector3 hitRefractedR;
+      Vector3 hitRefractedG;
+      Vector3 hitRefractedB;
+      refract(ray->direction, hitNormal, hitMaterial.refractiveIndex * 0.98f, hitRefractedR);
+      refract(ray->direction, hitNormal, hitMaterial.refractiveIndex, hitRefractedG);
+      refract(ray->direction, hitNormal, hitMaterial.refractiveIndex * 1.02f, hitRefractedB);
+      Ray refractRayR(closestHitPoint, hitRefractedR);
+      Ray refractRayG(closestHitPoint, hitRefractedG);
+      Ray refractRayB(closestHitPoint, hitRefractedB);
+
+      colorRefractR = rayFollow(&refractRayR, scene, iteration + 1, (inside) ? nullptr : closestObject);
+      colorRefractG = rayFollow(&refractRayG, scene, iteration + 1, (inside) ? nullptr : closestObject);
+      colorRefractB = rayFollow(&refractRayB, scene, iteration + 1, (inside) ? nullptr : closestObject);
+      colorRefract = Color(colorRefractR.x, colorRefractG.y, colorRefractB.z);
     }
 
     if (hitMaterial.reflectivity != 0.0f) {
