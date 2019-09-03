@@ -18,8 +18,6 @@
 class Scene {
 public:
   std::vector<std::vector<Light*>> *lights;
-//  LightOmniGen* lights[];
-//  Object*    objects;
   std::vector<Object*> *objects;
   float         frame;
   int           lightVariations;
@@ -40,9 +38,6 @@ public:
   explicit Scene(Color ambientStaticInit);
 
   ~Scene();
-
-//  void evaluateLights(LightOmni* result, float frame);
-//  void evaluateObjects(std::vector<std::shared_ptr<Object>> result, float frame);
 
 };
 
