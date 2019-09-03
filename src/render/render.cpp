@@ -70,13 +70,13 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration, Object *inside) {
     if (inside) {
       if (inside == object) {
         // if we are testing the collision with itslef (inside the object) then find the furtherst point
-        hitDistance = object->detectHitMax(ray, hitPoint);
+        hitDistance = object->detectHitPoint(ray, hitPoint, false);
       } else {
         // but for all other objects even including intersecting object do detect closest collision
-        hitDistance = object->detectHitMin(ray, hitPoint);
+        hitDistance = object->detectHitPoint(ray, hitPoint, true);
       }
     } else {
-      hitDistance = object->detectHitMin(ray, hitPoint);
+      hitDistance = object->detectHitPoint(ray, hitPoint, true);
     }
 
     if (hitDistance > 0.0f) {

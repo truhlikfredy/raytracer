@@ -31,11 +31,7 @@ float Object::detectHit(Ray *ray) {
   return -1;
 }
 
-float Object::detectHitMin(Ray *ray, Vector3 &hitPoint) {
-  return -1;
-}
-
-float Object::detectHitMax(Ray *ray, Vector3 &hitPoint) {
+float Object::detectHitPoint(Ray *ray, Vector3 &hitPoint, bool isMin) {
   return -1;
 }
 

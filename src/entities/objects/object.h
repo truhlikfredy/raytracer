@@ -33,9 +33,7 @@ public:
 
   virtual float detectHit(Ray *ray);
 
-  virtual float detectHitMin(Ray *ray, Vector3 &hitPoint);
-
-  virtual float detectHitMax(Ray *ray, Vector3 &hitPoint);
+  virtual float detectHitPoint(Ray *ray, Vector3 &hitPoint, bool isMin);
 
   virtual Vector3 operator ^ (Vector3 pointOnSurface);
 

@@ -23,9 +23,7 @@ public:
 
   float detectHit(Ray *ray) override;
 
-  float detectHitMin(Ray *ray, Vector3 &hitPoint) override;
-
-  float detectHitMax(Ray *ray, Vector3 &hitPoint) override;
+  float detectHitPoint(Ray *ray, Vector3 &hitPoint, bool isMin) override;
 
   uv toUv(Vector3 point) override;
 
