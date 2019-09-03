@@ -32,7 +32,9 @@ public:
   Vector3 operator ^ (Vector3 pointOnSurface) override;
 
 private:
+#ifdef AABB
   void setAabb();
+#endif
 
 };
 

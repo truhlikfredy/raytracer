@@ -43,7 +43,12 @@ uv Object::toUv(Vector3 point) {
   return uv();
 }
 
+#ifdef AABB
 bool Object::detectHitBB(Ray *ray) {
+  // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
+  // http://www.jcgt.org/published/0007/03/04/paper-lowres.pdf
+  // https://medium.com/@bromanz/another-view-on-the-classic-ray-aabb-intersection-algorithm-for-bvh-traversal-41125138b525
+
   Vector3 tMin = (aabbMin - ray->source) * ray->directionFraction;
   Vector3 tMax = (aabbMax - ray->source) * ray->directionFraction;
 
@@ -61,3 +66,4 @@ bool Object::detectHitBB(Ray *ray) {
 
   return true;
 }
+#endif

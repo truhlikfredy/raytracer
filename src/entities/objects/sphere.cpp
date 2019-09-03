@@ -12,30 +12,37 @@
 
 Sphere::Sphere(Vector3 centerInt, float radiusInit):  Object(centerInt) {
   radius = radiusInit;
+#ifdef AABB
   setAabb();
+#endif
 }
 
 Sphere::Sphere(Vector3 centerInt, float radiusInit, std::function<materialStatic(Vector3 point, float frame)> materialFnInit):
   Object(centerInt, materialFnInit) {
   radius = radiusInit;
+#ifdef AABB
   setAabb();
+#endif
 }
 
 Sphere::Sphere(Vector3 centerInt, float radiusInit, materialStatic material):
   Object(centerInt, material) {
   radius = radiusInit;
+#ifdef AABB
   setAabb();
+#endif
 }
 
 Sphere::Sphere():Object() {
 
 }
 
+#ifdef AABB
 void Sphere::setAabb() {
   aabbMin = center - radius;
   aabbMax = center + radius;
 }
-
+#endif
 
 // Get normalized normal vector from sphere's surface point
 Vector3 Sphere::operator ^ (Vector3 pointOnSurface) {
@@ -43,8 +50,11 @@ Vector3 Sphere::operator ^ (Vector3 pointOnSurface) {
 }
 
 float Sphere::detectHit(Ray *ray) {
-//  if (!detectHitBB(ray))
-//    return -1.0f;
+#ifdef AABB
+  if (!detectHitBB(ray))
+    return -1.0f;
+#endif
+
   // http://mathforum.org/mathimages/index.php/Ray_Tracing
   // All points at sphere's surface meet this equation:
   // (point - center).(point - center) - radius^2 = 0
@@ -68,9 +78,10 @@ float Sphere::detectHit(Ray *ray) {
 }
 
 float Sphere::detectHitMin(Ray *ray, Vector3 &hitPoint) {
-
-//  if (!detectHitBB(ray))
-//    return -1.0f;
+#ifdef AABB
+  if (!detectHitBB(ray))
+    return -1.0f;
+#endif
 
   // http://mathforum.org/mathimages/index.php/Ray_Tracing
   // All points at sphere's surface meet this equation:
@@ -102,8 +113,10 @@ float Sphere::detectHitMin(Ray *ray, Vector3 &hitPoint) {
 
 
 float Sphere::detectHitMax(Ray *ray, Vector3 &hitPoint) {
-//  if (!detectHitBB(ray))
-//    return -1.0f;
+#ifdef AABB
+  if (!detectHitBB(ray))
+    return -1.0f;
+#endif
 
   // http://mathforum.org/mathimages/index.php/Ray_Tracing
   // All points at sphere's surface meet this equation:

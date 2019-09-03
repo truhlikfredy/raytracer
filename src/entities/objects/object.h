@@ -40,7 +40,9 @@ public:
   virtual Vector3 operator ^ (Vector3 pointOnSurface);
 
 protected:
+#ifdef AABB
   bool detectHitBB(Ray *ray);
+#endif
 
 };
 
