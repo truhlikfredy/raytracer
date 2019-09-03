@@ -6,7 +6,7 @@
 #ifndef RAYTRACER_DISPLAY_H
 #define RAYTRACER_DISPLAY_H
 
-#define RENDER_COMPLEXITY 2
+#include "../render/settings.h"
 
 #if RENDER_COMPLEXITY == 0
   #define WIDTH  80

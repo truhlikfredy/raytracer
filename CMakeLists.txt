@@ -65,7 +65,8 @@ set(SOURCE_FILES
         src/entities/lights/light.cpp
         src/entities/lights/light.h
         src/entities/lights/lightGenerator.cpp
-        src/entities/lights/lightGenerator.h)
+        src/entities/lights/lightGenerator.h
+        src/render/settings.h)
 
 add_executable(raytracer ${SOURCE_FILES} src/types/triple.cpp src/types/triple.h)
 
