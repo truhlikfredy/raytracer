@@ -7,10 +7,16 @@
 #define RAYTRACER_RAY_H
 
 #include "../types/vector3.h"
+#include "../render/settings.h"
 
 struct Ray {
   Vector3 source;
   Vector3 direction;
+#ifdef AABB
+  Vector3 directionFraction;
+#endif
+  float   directionDot;
+  float   directionDotInverse;
 
   Ray();
 

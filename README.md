@@ -60,7 +60,7 @@
   * Significant performance boost 1.75x for very primitive scene, 5.75x boost for medium complexity scene, **550x boost** for very complex scenes (despite scene having multiple lights and now rendering all of them)
   * Added necessary framework to support soft-shadows, each sceneGenerated for many sub-frame timeSamples and each timeSample has multiple Lights instances for softShadowSamples
 * Added necessary framework to support different lights and objects (Generators are polymorphic (at last))
-
+* Chromatic aberration (refraction only)
 
 
 # TODO (More precisely a wish list)
@@ -77,6 +77,7 @@
   *  Random 3D noise bump mapping
 * More proper Inverse square law to fade off the light with hitDistance
 * Film grain: smooth, animated, weighted (shadows are more grainy)
+* Try to implement ray-marching and fractal objects https://www.youtube.com/watch?v=svLzmFuSBhk
 
 # Dependancies
 

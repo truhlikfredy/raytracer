@@ -8,7 +8,11 @@
 LightOmniGenerator::LightOmniGenerator(std::function<Light *(float frame)> evaluateFnInit): LightGenerator(evaluateFnInit) {
 }
 
-LightOmniGenerator::LightOmniGenerator(Vector3 centerInit, Color colorInit) : LightGenerator(centerInit, colorInit) {
+LightOmniGenerator::LightOmniGenerator(const Vector3 &centerInit, const Color &colorInit, const float distanceInit,
+                                       const float burnInit) : LightGenerator(centerInit, colorInit, distanceInit, burnInit) {
+}
+
+LightOmniGenerator::LightOmniGenerator(Vector3 centerInit, Color colorInit)  {
 }
 
 Light *LightOmniGenerator::eval(float frame) {
@@ -18,5 +22,6 @@ Light *LightOmniGenerator::eval(float frame) {
     return new LightOmni(center, color);
   }
 }
+
 
 

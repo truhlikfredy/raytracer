@@ -31,14 +31,18 @@ public:
 
   virtual uv toUv(Vector3 point);
 
-  virtual float detectHit(Ray ray);
+  virtual float detectHit(Ray *ray);
 
-  virtual float detectHit(Ray ray, Vector3 &hitPoint);
+  virtual float detectHitMin(Ray *ray, Vector3 &hitPoint);
 
-  virtual float detectHitMax(Ray ray, Vector3 &hitPoint);
+  virtual float detectHitMax(Ray *ray, Vector3 &hitPoint);
 
   virtual Vector3 operator ^ (Vector3 pointOnSurface);
 
+protected:
+#ifdef AABB
+  bool detectHitBB(Ray *ray);
+#endif
 
 };
 

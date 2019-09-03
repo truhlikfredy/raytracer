@@ -13,6 +13,8 @@
 
 class LightOmni: public Light {
 public:
+  LightOmni(const Vector3 &centerInit, const Color &colorInit, const float distanceInit, const float burnInit);
+
   LightOmni(Vector3 centerInit, Color colorInit);
 };
 

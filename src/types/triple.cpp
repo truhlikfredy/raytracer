@@ -58,6 +58,18 @@ void Triple::operator-=(Triple secondTriple) {
 }
 
 
+Triple Triple::operator-(float scalar) {
+  return Triple(this->x - scalar, this->y - scalar, this->z - scalar);
+}
+
+
+void Triple::operator-=(float scalar) {
+  this->x -= scalar;
+  this->y -= scalar;
+  this->z -= scalar;
+}
+
+
 Triple Triple::operator*(float scalar) {
   return Triple(this->x * scalar, this->y * scalar, this->z * scalar);
 }
@@ -110,6 +122,26 @@ float Triple::lenght() {
   return sqrt(this->x * this->x +
               this->y * this->y +
               this->z * this->z);
+}
+
+
+Triple Triple::min(Triple secondTriple) {
+  return Triple(fminf(this->x, secondTriple.x), fminf(this->y, secondTriple.y), fminf(this->z, secondTriple.z));
+}
+
+
+Triple Triple::max(Triple secondTriple) {
+  return Triple(fmax(this->x, secondTriple.x), fmax(this->y, secondTriple.y), fmax(this->z, secondTriple.z));
+}
+
+
+float Triple::min() {
+  return fminf(fminf(x, y),z);
+}
+
+
+float Triple::max() {
+  return fmaxf(fmaxf(x, y),z);
 }
 
 

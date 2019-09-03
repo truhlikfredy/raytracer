@@ -27,6 +27,10 @@ public:
 
   void operator-=(Triple secondTriple);
 
+  Triple operator-(float scalar);
+
+  void operator-=(float scalar);
+
   Triple operator*(float scalar);
 
   void operator*=(float scalar);
@@ -44,6 +48,14 @@ public:
   float sum();
 
   float lenght();
+
+  Triple min(Triple secondTriple);
+
+  Triple max(Triple secondTriple);
+
+  float min();
+
+  float max();
 
   //Triple operator=(Triple& secondTriple);
 };
