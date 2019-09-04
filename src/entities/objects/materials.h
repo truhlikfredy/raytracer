@@ -56,6 +56,8 @@ public:
   static materialStatic brass;
   static materialStatic pollishedCopper;
   static materialStatic glass;
+  static materialStatic opticalGlass;
+  static materialStatic air;
 
   // textures
   static Color mandelbrot(mandelbrotSet &set, uv &pixel);
