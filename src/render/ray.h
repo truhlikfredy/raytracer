@@ -15,7 +15,8 @@ class Object; // https://stackoverflow.com/questions/2133250/x-does-not-name-a-t
 struct Ray {
   Vector3 source;
   Vector3 direction;
-  Object *inside[MAX_BOUNCES];
+  Ray *parentRay;
+  Object *inside;
 #ifdef AABB
   Vector3 directionFraction;
 #endif
@@ -26,9 +27,8 @@ struct Ray {
 
   Ray(Vector3 sourceInit, Vector3 directionInit);
 
-  Ray(Vector3 sourceInit, Vector3 directionInit, Ray *originalRay, Object *enteringObject);
+  Ray(Vector3 sourceInit, Vector3 directionInit, Ray *parentRayInit, Object *enteringObject);
 
-  void getOutsideObject();
 };
 
 

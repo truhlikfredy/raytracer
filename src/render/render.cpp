@@ -85,8 +85,8 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
     Vector3 hitPoint;
     float hitDistance;
 
-    if (ray->inside[0]) {
-      if (ray->inside[0] == object) {
+    if (ray->inside) {
+      if (ray->inside == object) {
         // if we are testing the collision with itslef (inside the object) then find the furtherst point
         hitDistance = object->detectHitPoint(ray, hitPoint, false);
       } else {
@@ -157,7 +157,10 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
 
       refract(ray->direction, hitNormal,  currentIndex, newIndex, hitRefracted);
       if (!hitRefracted.isZero()) {
-        Ray refractRay(closestHitPoint, hitRefracted, ray, (ray->inside[0] == closestObject) ? nullptr : closestObject);
+        Ray refractRay(closestHitPoint, hitRefracted,
+          (ray->inside == closestObject) ? ray->parentRay : ray,
+          (ray->inside == closestObject) ? ray->parentRay->inside : closestObject);
+
         colorRefract = rayFollow(&refractRay, scene, iteration + 1);
       }
 #endif
