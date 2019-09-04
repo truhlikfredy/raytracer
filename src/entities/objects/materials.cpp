@@ -174,7 +174,7 @@ materialStatic Materials::glass= {
   .shininess       = 96.0f,
   .reflectivity    = 0.12f,
   .transparency    = 0.9f,
-  .refractiveIndex = 1.9f
+  .refractiveIndex = 1.52f // http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/indrf.html
 };
 
 Color Materials::mandelbrot(mandelbrotSet &set, uv &pixel) {

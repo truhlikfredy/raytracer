@@ -9,14 +9,22 @@ Ray::Ray(): source(Vector3()), direction(Vector3())
 #ifdef AABB
 , directionFraction(Vector3(1))
 #endif
-,directionDot(0.0f), directionDotInverse(1.0f) {
+,directionDot(0.0f), directionDotInverse(1.0f), inside(nullptr) {
 }
 
 Ray::Ray(Vector3 sourceInit, Vector3 directionInit): source(sourceInit), direction(directionInit)
 #ifdef AABB
 , directionFraction(1.0f / directionInit.x, 1.0f / directionInit.y, 1.0f / directionInit.z)
 #endif
-, directionDot(directionInit % directionInit) {
+, directionDot(directionInit % directionInit), inside(nullptr) {
+  directionDotInverse = 1.0f / directionDot;
+}
+
+Ray::Ray(Vector3 sourceInit, Vector3 directionInit, Object *insideInit): source(sourceInit), direction(directionInit)
+#ifdef AABB
+  , directionFraction(1.0f / directionInit.x, 1.0f / directionInit.y, 1.0f / directionInit.z)
+#endif
+  , directionDot(directionInit % directionInit), inside(insideInit)  {
   directionDotInverse = 1.0f / directionDot;
 }
 

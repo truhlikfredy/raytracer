@@ -144,6 +144,14 @@ float Triple::max() {
   return fmaxf(fmaxf(x, y),z);
 }
 
+Triple Triple::invert() {
+  return Triple(-x, -y, -z);
+}
+
+bool Triple::isZero() {
+  return x == 0.0f && y == 0.0f && z == 0.0f;
+}
+
 
 //Triple Triple::operator=(Triple& secondTriple) {
 //  return Triple(secondTriple->x, secondTriple->y, secondTriple->z);

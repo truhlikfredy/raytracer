@@ -30,11 +30,11 @@ private:
 
   void getThreadWindow(int thread, windowType &ret);
 
-  void refract(Vector3 &incidentVec, Vector3 &normal, float refractionIndex, Vector3 &refractionRay);
+  void refract(Vector3 &incidentVec, Vector3 &normal, float currentRefractionIndex, float newRefractionIndex, Vector3 &refractionRay);
 
   Color rayStart(Ray *ray, Scene *scene);
 
-  Color rayFollow(Ray *ray, Scene *scene, int iteration, Object *inside);
+  Color rayFollow(Ray *ray, Scene *scene, int iteration);
 
   void renderPartialWindow(windowType &window);
 

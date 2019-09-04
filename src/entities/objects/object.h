@@ -12,6 +12,8 @@
 #include "../entity.h"
 #include "materials.h"
 
+class Ray; // https://stackoverflow.com/questions/2133250/x-does-not-name-a-type-error-in-c/2133260
+
 class Object: public Entity {
 
 public:
