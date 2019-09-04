@@ -189,6 +189,18 @@ materialStatic Materials::opticalGlass = {
   .refractiveIndex = 1.65f // http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/indrf.html
 };
 
+materialStatic Materials::water = {
+  .castsShadows    = true,
+  .ambient         = Color(),
+  .diffuse         = Color(0.0588235f, 0.0670588f, 0.0729412f),
+  .specular        = Color(0.9f),
+  .emission        = Color(),
+  .shininess       = 96.0f,
+  .reflectivity    = 0.12f,
+  .transparency    = 0.9f,
+  .refractiveIndex = 1.33f // http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/indrf.html
+};
+
 materialStatic Materials::air = {
   .castsShadows    = false,
   .ambient         = Color(),
