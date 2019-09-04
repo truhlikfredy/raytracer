@@ -85,8 +85,8 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
     Vector3 hitPoint;
     float hitDistance;
 
-    if (ray->inside) {
-      if (ray->inside == object) {
+    if (ray->inside[0]) {
+      if (ray->inside[0] == object) {
         // if we are testing the collision with itslef (inside the object) then find the furtherst point
         hitDistance = object->detectHitPoint(ray, hitPoint, false);
       } else {
@@ -157,7 +157,7 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
 
       refract(ray->direction, hitNormal,  currentIndex, newIndex, hitRefracted);
       if (!hitRefracted.isZero()) {
-        Ray refractRay(closestHitPoint, hitRefracted, (ray->inside) ? nullptr : closestObject);
+        Ray refractRay(closestHitPoint, hitRefracted, ray, (ray->inside[0] == closestObject) ? nullptr : closestObject);
         colorRefract = rayFollow(&refractRay, scene, iteration + 1);
       }
 #endif
@@ -165,7 +165,7 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
 
     if (hitMaterial.reflectivity != 0.0f) {
       // If the material is reflective then handle reflection
-      Ray reflectRay(closestHitPoint, hitReflected, ray->inside);
+      Ray reflectRay(closestHitPoint, hitReflected, ray, nullptr);
       colorReflect = rayFollow(&reflectRay, scene, iteration + 1);
     }
 
@@ -193,7 +193,7 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
 
       bool inShadow = false;
       for (Object *oCS: *scene->objects) {
-        Ray shadowRay(closestHitPoint, hitLightRel, ray->inside);
+        Ray shadowRay(closestHitPoint, hitLightRel);
         // test all objects if they are casting shadow from this light
         if (oCS != closestObject &&
             oCS->detectHit(&shadowRay) != -1 &&
