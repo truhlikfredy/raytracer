@@ -117,13 +117,10 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
     if (hitMaterial.transparency != 0.0f) {
       // If transparency is enabled then handle refraction
 
-      float currentIndex;
-      float newIndex;
-
-      if (ray->inside) {
-        currentIndex = (ray->inside) ? ray->inside->material.refractiveIndex : 1.0f;
-        newIndex     = (ray->inside) ? 1.0f : hitMaterial.refractiveIndex;
-      }
+//      float currentIndex = (ray->inside) ? ray->inside->material.refractiveIndex : 1.0f;
+//      float newIndex     = (ray->inside) ? 1.0f : hitMaterial.refractiveIndex;
+      float currentIndex = 1.0f;
+      float newIndex     = hitMaterial.refractiveIndex;
 
 #ifdef CHROMATIC_ABERRATION_REFRACTION
       Color colorRefractR;
