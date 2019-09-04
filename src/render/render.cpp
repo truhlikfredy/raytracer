@@ -39,17 +39,26 @@ Color Render::rayStart(Ray *ray, Scene *scene) {
 
 
 void Render::refract(Vector3 &incidentVec, Vector3 &normal, float currentRefractionIndex, float newRefractionIndex, Vector3 &refractionRay) {
+  // https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel
+  // https://stackoverflow.com/questions/42218704/how-to-properly-handle-refraction-in-raytracing
+  // https://stackoverflow.com/questions/26087106/refraction-in-raytracing
+  // https://en.wikipedia.org/wiki/Fresnel_equations
+  // http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/indrf.html
+  // TODO: Take full ray and add/subtract from stack of volumes the ray is inside of
+
   float normalDotIncidenceNormalized = fmax(-1, fmin(1, (incidentVec % normal)));
   float indexA;
   float indexB;
   Vector3 normalVector;
 
   if (normalDotIncidenceNormalized < 0) {
+    // We are outside the volume
     indexA                       = currentRefractionIndex;
     indexB                       = newRefractionIndex;
     normalVector                 = normal;
     normalDotIncidenceNormalized = -normalDotIncidenceNormalized;
   } else {
+    // We are inside the volume
     indexA       = newRefractionIndex;
     indexB       = currentRefractionIndex;
     normalVector = normal.invert();
