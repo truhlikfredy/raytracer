@@ -17,12 +17,13 @@
 
 class Scene {
 public:
-  std::vector<std::vector<Light*>> *lights;
-  std::vector<Object*> *objects;
-  float         frame;
-  int           lightVariations;
-  Color         ambientStatic;
+  std::vector<std::vector<Light*>>  *lights;
+  std::vector<Object*>              *objects;
+  float                             frame;
+  int                               lightVariations;
+  Color                             ambientStatic;
   std::function<Color(float frame)> ambientFn;
+  Object                            *etherObject;
 
 
   struct {

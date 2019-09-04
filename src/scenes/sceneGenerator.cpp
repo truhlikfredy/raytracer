@@ -36,6 +36,10 @@ Scene* SceneGenerator::generateScene(float frame) {
   scene->ambientFn       = ambientFn;
   scene->ambientStatic   = ambientStatic;
   scene->frame           = frame;
+  if (etherObject) {
+    scene->etherObject   = etherObject;
+  }
+
 
   memcpy(&scene->camera, &camera, sizeof(camera));
 

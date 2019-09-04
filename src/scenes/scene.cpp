@@ -12,6 +12,8 @@ Scene::Scene(Color ambientStaticInit) {
 
   frame = 0.0f;
   ambientStatic = ambientStaticInit;
+
+  etherObject = new Sphere(Vector3(), -1.0f, Materials::air);
 };
 
 Scene::Scene(): Scene(Color(0.1f)) {
