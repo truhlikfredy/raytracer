@@ -13,7 +13,7 @@
 #define SAMPLING_DELTA 0.03f
 #define MAX_BOUNCES 4
 //#define CHROMATIC_ABERRATION_REFRACTION // Comment out to disable
-#define CHROMATIC_ABERRATION_STRENGTH 0.01f
+#define CHROMATIC_ABERRATION_STRENGTH 0.015f
 
 //#define AABB // Comment out to disable axis aligned bounding box detection
 // Only improvements seen is in the empty and simple scene like the plain.cpp
