@@ -165,7 +165,7 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
 #else
       /* At this moment we do not know the direction of the refraction, the pre-calculated cached values will be
        * populated with wrong values, after the refract is done, call the updatePreCalculatedValues(); method */
-      Ray refractRay(closestHitPoint, Vector3());
+      Ray refractRay(closestHitPoint);
 
       if (refract(closestHitObject, ray, &hitNormal, &refractRay)) {
         colorRefract = rayFollow(&refractRay, scene, iteration + 1);
