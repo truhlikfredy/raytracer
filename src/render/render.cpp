@@ -38,36 +38,42 @@ Color Render::rayStart(Ray *ray, Scene *scene) {
 }
 
 
-bool Render::refract(Object  *closestHitObject, Ray *incidentRay, Vector3 *normal, Ray *refractionRayOut) {
+bool Render::refract(
+  Object      *closestHitObject,
+  Ray         *incidentRay,
+  Vector3     *normal,
+  const float chromaticTweak,
+  Ray         *refractionRayOut) {
+
   // https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel
   // https://stackoverflow.com/questions/42218704/how-to-properly-handle-refraction-in-raytracing
   // https://stackoverflow.com/questions/26087106/refraction-in-raytracing
   // https://en.wikipedia.org/wiki/Fresnel_equations
   // http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/indrf.html
 
-  Vector3       incidentVec                  = incidentRay->direction;
-  float         normalDotIncidenceNormalized = fmax(-1, fmin(1, (incidentVec % *normal)));
-  float         indexCurrent;
-  float         indexNew;
-  Vector3       normalVector;
+  Vector3 incidentVec   = incidentRay->direction;
+  float   dotNormalized = fmax(-1, fmin(1, (incidentVec % *normal)));
+  float   indexCurrent;
+  float   indexNew;
+  Vector3 normalVector;
 
-  if (normalDotIncidenceNormalized < 0) {
+  if (dotNormalized < 0) {
     // We are outside the object's volume going inside
-    indexCurrent                 = incidentRay->inside->material.refractiveIndex;
-    indexNew                     = incidentRay->hitMaterial->refractiveIndex;
+    indexCurrent                  = incidentRay->inside->material.refractiveIndex;
+    indexNew                      = incidentRay->hitMaterial->refractiveIndex * chromaticTweak;
 
-    normalVector                 = *normal;
-    normalDotIncidenceNormalized = -normalDotIncidenceNormalized;
+    normalVector                  = *normal;
+    dotNormalized                 = -dotNormalized;
 
     refractionRayOut->parentRay   = incidentRay;
     refractionRayOut->inside      = closestHitObject;
     refractionRayOut->hitMaterial = incidentRay->hitMaterial;
   } else {
     // We are leaving this object, set our new parent to ours parent's parent, and restore the inside object
-    indexCurrent                 = incidentRay->hitMaterial->refractiveIndex; // We hit the inside part of the object
-    indexNew                     = incidentRay->parentRay->inside->material.refractiveIndex;
+    indexCurrent                  = incidentRay->hitMaterial->refractiveIndex; // We hit the inside part of the object
+    indexNew                      = incidentRay->parentRay->inside->material.refractiveIndex * chromaticTweak;
 
-    normalVector                 = normal->invert();
+    normalVector                  = normal->invert();
 
     refractionRayOut->parentRay   = incidentRay->parentRay->parentRay;
     refractionRayOut->inside      = incidentRay->parentRay->inside;
@@ -75,7 +81,7 @@ bool Render::refract(Object  *closestHitObject, Ray *incidentRay, Vector3 *norma
   }
 
   float indexRatio  = indexCurrent / indexNew;
-  float coefficient2 = 1 - indexRatio * indexRatio * (1 - normalDotIncidenceNormalized * normalDotIncidenceNormalized);
+  float coefficient2 = 1 - indexRatio * indexRatio * (1 - dotNormalized * dotNormalized);
 
   if (coefficient2 < 0) {
     return false;
@@ -83,7 +89,7 @@ bool Render::refract(Object  *closestHitObject, Ray *incidentRay, Vector3 *norma
 
   refractionRayOut->direction =
     incidentVec * indexRatio +
-    normalVector * (indexRatio * normalDotIncidenceNormalized - sqrtf(coefficient2));
+    normalVector * (indexRatio * dotNormalized - sqrtf(coefficient2));
 
   refractionRayOut->updatePreCalculatedValues(); /* Changed the direction now, recalculated pre-cached values */
 
@@ -142,32 +148,24 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
       /* If material is transparent then handle refraction */
 
 #ifdef CHROMATIC_ABERRATION_REFRACTION
-      Color colorRefractR;
-      Color colorRefractG;
-      Color colorRefractB;
+      Ray refractRayR(closestHitPoint);
+      Ray refractRayG(closestHitPoint);
+      Ray refractRayB(closestHitPoint);
+      if (refract(closestHitObject, ray, &hitNormal, 1.0f, &refractRayG)) {
+        refract(closestHitObject, ray, &hitNormal, (1.0f - CHROMATIC_ABERRATION_STRENGTH), &refractRayR);
+        refract(closestHitObject, ray, &hitNormal, (1.0f + CHROMATIC_ABERRATION_STRENGTH), &refractRayB);
 
-      Vector3 hitRefractedR;
-      Vector3 hitRefractedG;
-      Vector3 hitRefractedB;
-      refract(ray->direction, hitNormal, currentIndex, newIndex * (1.0f - CHROMATIC_ABERRATION_STRENGTH), hitRefractedR);
-      refract(ray->direction, hitNormal, currentIndex, newIndex, hitRefractedG);
-      refract(ray->direction, hitNormal, currentIndex, newIndex * (1.0f + CHROMATIC_ABERRATION_STRENGTH), hitRefractedB);
-      if (!hitRefractedG.isZero()) {
-        Ray refractRayR(closestHitPoint, hitRefractedR, (ray->inside) ? nullptr : closestHitObject);
-        Ray refractRayG(closestHitPoint, hitRefractedG, (ray->inside) ? nullptr : closestHitObject);
-        Ray refractRayB(closestHitPoint, hitRefractedB, (ray->inside) ? nullptr : closestHitObject);
-
-        colorRefractR = rayFollow(&refractRayR, scene, iteration + 1);
-        colorRefractG = rayFollow(&refractRayG, scene, iteration + 1);
-        colorRefractB = rayFollow(&refractRayB, scene, iteration + 1);
-        colorRefract = Color(colorRefractR.x, colorRefractG.y, colorRefractB.z);
+        colorRefract = Color(
+          rayFollow(&refractRayR, scene, iteration + 1).x,
+          rayFollow(&refractRayG, scene, iteration + 1).y,
+          rayFollow(&refractRayB, scene, iteration + 1).z);
       }
 #else
       /* At this moment we do not know the direction of the refraction, the pre-calculated cached values will be
        * populated with wrong values, after the refract is done, call the updatePreCalculatedValues(); method */
       Ray refractRay(closestHitPoint);
 
-      if (refract(closestHitObject, ray, &hitNormal, &refractRay)) {
+      if (refract(closestHitObject, ray, &hitNormal, 1.0f, &refractRay)) {
         colorRefract = rayFollow(&refractRay, scene, iteration + 1);
       }
 #endif

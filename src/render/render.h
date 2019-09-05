@@ -30,7 +30,7 @@ private:
 
   void getThreadWindow(int thread, windowType &ret);
 
-  bool refract(Object  *closestHitObject, Ray *incidentRay, Vector3 *normal, Ray *refractionRayOut);
+  bool refract(Object  *closestHitObject, Ray *incidentRay, Vector3 *normal, const float chromaticTweak, Ray *refractionRayOut);
 
   Color rayStart(Ray *ray, Scene *scene);
 
