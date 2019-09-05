@@ -31,6 +31,8 @@ public:
 
   std::function<Object(float frame)> evaluateObjFn;
 
+  materialStatic evalMaterial(Vector3 point, float frame);
+
   virtual uv toUv(Vector3 point);
 
   virtual float detectHit(Ray *ray);

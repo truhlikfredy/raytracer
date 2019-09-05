@@ -41,6 +41,17 @@ uv Object::toUv(Vector3 point) {
   return uv();
 }
 
+materialStatic Object::evalMaterial(Vector3 point, float frame) {
+  // Evaluate material function when present, or use the static value
+
+  if (materialFn) {
+    return materialFn(point, frame);
+  }
+  else {
+    return material;
+  }
+}
+
 #ifdef AABB
 bool Object::detectHitBB(Ray *ray) {
   // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
