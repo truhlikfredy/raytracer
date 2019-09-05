@@ -32,10 +32,11 @@ Ray::Ray(Vector3 sourceInit, Vector3 directionInit, Ray *parentRayInit, Object *
 
 
 void Ray::updatePreCalculatedValues() {
+  // TODO: Verify if direction has to be normalized
   directionDot = direction % direction;
   directionDotInverse = 1.0f / directionDot;
 #ifdef AABB
-  directionFraction = Vector3(1.0f / directionInit.x, 1.0f / directionInit.y, 1.0f / directionInit.z);
+  directionFraction = Vector3(1.0f / direction.x, 1.0f / direction.y, 1.0f / direction.z);
 #endif
 }
 
