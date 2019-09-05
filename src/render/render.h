@@ -28,11 +28,9 @@ private:
   unsigned int height;
   std::vector<Scene*> *scenes;
 
-  enum RefractStatus{ goingInside, goingOutside, totalInternalRefraction};
-
   void getThreadWindow(int thread, windowType &ret);
 
-  RefractStatus refract(Object  *closestHitObject, Ray *incidentRay, Vector3 *normal, Ray *refractionRayOut);
+  bool refract(Object  *closestHitObject, Ray *incidentRay, Vector3 *normal, Ray *refractionRayOut);
 
   Color rayStart(Ray *ray, Scene *scene);
 

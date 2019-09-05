@@ -38,7 +38,7 @@ Color Render::rayStart(Ray *ray, Scene *scene) {
 }
 
 
-Render::RefractStatus Render::refract(Object  *closestHitObject, Ray *incidentRay, Vector3 *normal, Ray *refractionRayOut) {
+bool Render::refract(Object  *closestHitObject, Ray *incidentRay, Vector3 *normal, Ray *refractionRayOut) {
   // https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel
   // https://stackoverflow.com/questions/42218704/how-to-properly-handle-refraction-in-raytracing
   // https://stackoverflow.com/questions/26087106/refraction-in-raytracing
@@ -50,7 +50,6 @@ Render::RefractStatus Render::refract(Object  *closestHitObject, Ray *incidentRa
   float         indexCurrent;
   float         indexNew;
   Vector3       normalVector;
-  RefractStatus status;
 
   if (normalDotIncidenceNormalized < 0) {
     // We are outside the object's volume going inside
@@ -63,8 +62,6 @@ Render::RefractStatus Render::refract(Object  *closestHitObject, Ray *incidentRa
     refractionRayOut->parentRay   = incidentRay;
     refractionRayOut->inside      = closestHitObject;
     refractionRayOut->hitMaterial = incidentRay->hitMaterial;
-
-    status = goingInside;
   } else {
     // We are leaving this object, set our new parent to ours parent's parent, and restore the inside object
     indexCurrent                 = incidentRay->hitMaterial->refractiveIndex; // We hit the inside part of the object
@@ -75,15 +72,13 @@ Render::RefractStatus Render::refract(Object  *closestHitObject, Ray *incidentRa
     refractionRayOut->parentRay   = incidentRay->parentRay->parentRay;
     refractionRayOut->inside      = incidentRay->parentRay->inside;
     refractionRayOut->hitMaterial = incidentRay->parentRay->hitMaterial;
-
-    status = goingOutside;
   }
 
   float indexRatio  = indexCurrent / indexNew;
   float coefficient2 = 1 - indexRatio * indexRatio * (1 - normalDotIncidenceNormalized * normalDotIncidenceNormalized);
 
   if (coefficient2 < 0) {
-    return totalInternalRefraction;
+    return false;
   }
 
   refractionRayOut->direction =
@@ -92,7 +87,7 @@ Render::RefractStatus Render::refract(Object  *closestHitObject, Ray *incidentRa
 
   refractionRayOut->updatePreCalculatedValues(); /* Changed the direction now, recalculated pre-cached values */
 
-  return status;
+  return true;
 }
 
 
@@ -172,7 +167,7 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
        * populated with wrong values, after the refract is done, call the updatePreCalculatedValues(); method */
       Ray refractRay(closestHitPoint, Vector3());
 
-      if (refract(closestHitObject, ray, &hitNormal, &refractRay) != totalInternalRefraction) {
+      if (refract(closestHitObject, ray, &hitNormal, &refractRay)) {
         colorRefract = rayFollow(&refractRay, scene, iteration + 1);
       }
 #endif
