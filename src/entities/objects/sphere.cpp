@@ -63,7 +63,7 @@ float Sphere::detectHit(Ray *ray) {
   // Source and direction are known, reversing the equations to find if there
   // is a hitDistance on the path which meets sphere's equation.
   Vector3 inRef   = ray->source - this->center;
-  float   temp1   = (ray->direction % inRef);
+  float   temp1   = (ray->getDirection() % inRef);
   float   temp2   = (inRef % inRef) - this->radius * this->radius;
   float   tempAll = temp1 * temp1 - ray->directionDot * temp2;
 
@@ -94,7 +94,7 @@ float Sphere::detectHitPoint(Ray *ray, Vector3 &hitPoint, bool isMin) {
 
   //if (dotDir < 0 ) return -1.0f;
 
-  float   temp1   = (ray->direction % inRef);
+  float   temp1   = (ray->getDirection() % inRef);
   float   temp2   = (inRef % inRef) - this->radius * this->radius;
   float   tempAll = temp1 * temp1 - ray->directionDot * temp2;
 
@@ -115,7 +115,7 @@ float Sphere::detectHitPoint(Ray *ray, Vector3 &hitPoint, bool isMin) {
   // Skip if both points are behind the ray
   if ( hitDistance <0.0f ) return -1.0f;
 
-  hitPoint = ray->source + ray->direction * hitDistance;
+  hitPoint = ray->source + ray->getDirection() * hitDistance;
 
   return hitDistance;
 }

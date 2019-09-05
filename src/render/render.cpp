@@ -50,8 +50,9 @@ bool Render::refract(
   // https://stackoverflow.com/questions/26087106/refraction-in-raytracing
   // https://en.wikipedia.org/wiki/Fresnel_equations
   // http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/indrf.html
+  // https://en.wikipedia.org/wiki/Total_internal_reflection
 
-  Vector3 incidentVec   = incidentRay->direction;
+  Vector3 incidentVec   = incidentRay->getDirection();
   float   dotNormalized = fmax(-1, fmin(1, (incidentVec % *normal)));
   float   indexCurrent;
   float   indexNew;
@@ -87,11 +88,9 @@ bool Render::refract(
     return false;
   }
 
-  refractionRayOut->direction =
+  refractionRayOut->setDirection(
     incidentVec * indexRatio +
-    normalVector * (indexRatio * dotNormalized - sqrtf(coefficient2));
-
-  refractionRayOut->updatePreCalculatedValues(); /* Changed the direction now, recalculated pre-cached values */
+    normalVector * (indexRatio * dotNormalized - sqrtf(coefficient2)));
 
   return true;
 }
@@ -136,7 +135,7 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
   if (closestHitObject) {
     /* https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector */
     Vector3 hitNormal    = *closestHitObject ^closestHitPoint;
-    Vector3 hitReflected = ray->direction - (hitNormal * 2 * (ray->direction % hitNormal));
+    Vector3 hitReflected = ray->getDirection() - (hitNormal * 2 * (ray->getDirection() % hitNormal));
 
     materialStatic hitMaterial = closestHitObject->evalMaterial(closestHitPoint, scene->frame);
     ray->hitMaterial = &hitMaterial;  /* Populate the ray with the evaluated material as well */

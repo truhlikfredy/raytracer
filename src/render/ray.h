@@ -13,17 +13,17 @@
 
 class Object; // https://stackoverflow.com/questions/2133250/x-does-not-name-a-type-error-in-c/2133260
 
-struct Ray {
-  Vector3 source;
-  Vector3 direction;
-  Ray *parentRay;
-  Object *inside;
+class Ray {
+public:
+  Vector3        source;
+  Ray            *parentRay;
+  Object         *inside;
   materialStatic *hitMaterial;
+  float          directionDot;
+  float          directionDotInverse;
 #ifdef AABB
-  Vector3 directionFraction;
+  Vector3        directionFraction;
 #endif
-  float   directionDot;
-  float   directionDotInverse;
 
   Ray();
 
@@ -33,9 +33,12 @@ struct Ray {
 
   Ray(Vector3 sourceInit, Vector3 directionInit, Ray *parentRayInit, Object *enteringObject);
 
-  void updatePreCalculatedValues();
+  void setDirection(Vector3 directionInit);
 
-  // TODO: make direction a private field and use method to update it and recalculate the cached data as well
+  Vector3 getDirection();
+
+private:
+  Vector3 direction_;
 };
 
 

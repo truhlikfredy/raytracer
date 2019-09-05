@@ -5,19 +5,11 @@
 
 #include "ray.h"
 
-Ray::Ray(): source(Vector3()), direction(Vector3())
-#ifdef AABB
-, directionFraction(Vector3(1))
-#endif
-,directionDot(0.0f), directionDotInverse(1.0f) {
+Ray::Ray(): source(Vector3()) {
 }
 
 
-Ray::Ray(Vector3 sourceInit): source(sourceInit)
-#ifdef AABB
-, directionFraction(Vector3(1))
-#endif
-{
+Ray::Ray(Vector3 sourceInit): source(sourceInit) {
 }
 
 
@@ -25,19 +17,25 @@ Ray::Ray(Vector3 sourceInit, Vector3 directionInit): Ray(sourceInit, directionIn
 }
 
 
-Ray::Ray(Vector3 sourceInit, Vector3 directionInit, Ray *parentRayInit, Object *enteringObject): source(sourceInit), direction(directionInit)
-  , parentRay(parentRayInit), inside(enteringObject) {
-  updatePreCalculatedValues();
+Ray::Ray(Vector3 sourceInit, Vector3 directionInit, Ray *parentRayInit, Object *enteringObject):
+source(sourceInit), parentRay(parentRayInit), inside(enteringObject) {
+  setDirection(directionInit);
 }
 
 
-void Ray::updatePreCalculatedValues() {
+void Ray::setDirection(Vector3 directionInit) {
+  /* Changed the direction, recalculated the pre-cached values */
   // TODO: Verify if direction has to be normalized
-  directionDot = direction % direction;
+  direction_ = directionInit;
+  directionDot = direction_ % direction_;
   directionDotInverse = 1.0f / directionDot;
 #ifdef AABB
   directionFraction = Vector3(1.0f / direction.x, 1.0f / direction.y, 1.0f / direction.z);
 #endif
+}
+
+Vector3 Ray::getDirection() {
+  return direction_;
 }
 
 
