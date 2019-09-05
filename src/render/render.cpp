@@ -38,20 +38,19 @@ Color Render::rayStart(Ray *ray, Scene *scene) {
 }
 
 
-bool Render::refract(Ray *incidentRay, Vector3 *normal, Vector3 &refractionOut) {
+Render::RefractStatus Render::refract(Object  *closestHitObject, Ray *incidentRay, Vector3 *normal, Ray *refractionRayOut) {
   // https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel
   // https://stackoverflow.com/questions/42218704/how-to-properly-handle-refraction-in-raytracing
   // https://stackoverflow.com/questions/26087106/refraction-in-raytracing
   // https://en.wikipedia.org/wiki/Fresnel_equations
   // http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/indrf.html
-  // TODO: Take full ray and add/subtract from stack of volumes the ray is inside of
 
-  Vector3 incidentVec = incidentRay->direction;
-  float normalDotIncidenceNormalized = fmax(-1, fmin(1, (incidentVec % *normal)));
-  float indexCurrent;
-  float indexNew;
-  Vector3 normalVector;
-  bool goingInside = true;
+  Vector3       incidentVec                  = incidentRay->direction;
+  float         normalDotIncidenceNormalized = fmax(-1, fmin(1, (incidentVec % *normal)));
+  float         indexCurrent;
+  float         indexNew;
+  Vector3       normalVector;
+  RefractStatus status;
 
   if (normalDotIncidenceNormalized < 0) {
     // We are outside the object's volume going inside
@@ -61,23 +60,41 @@ bool Render::refract(Ray *incidentRay, Vector3 *normal, Vector3 &refractionOut) 
     normalVector                 = *normal;
     normalDotIncidenceNormalized = -normalDotIncidenceNormalized;
 
-    bool goingInside             = true;
+    refractionRayOut->parentRay   = incidentRay;
+    refractionRayOut->inside      = closestHitObject;
+    refractionRayOut->hitMaterial = incidentRay->hitMaterial;
+
+    status = goingInside;
   } else {
-    // We are inside the object's volume going outside
-    indexCurrent = incidentRay->hitMaterial->refractiveIndex; // We hit the inside part of the object
-    indexNew     = incidentRay->parentRay->inside->material.refractiveIndex;
+    // We are leaving this object, set our new parent to ours parent's parent, and restore the inside object
+    indexCurrent                 = incidentRay->hitMaterial->refractiveIndex; // We hit the inside part of the object
+    indexNew                     = incidentRay->parentRay->inside->material.refractiveIndex;
 
-    normalVector = normal->invert();
+    normalVector                 = normal->invert();
 
-    goingInside  = false;
+    refractionRayOut->parentRay   = incidentRay->parentRay->parentRay;
+    refractionRayOut->inside      = incidentRay->parentRay->inside;
+    refractionRayOut->hitMaterial = incidentRay->parentRay->hitMaterial;
+
+    status = goingOutside;
   }
-  float indexRatio = indexCurrent / indexNew;
-  float c2 = 1 - indexRatio * indexRatio * (1 - normalDotIncidenceNormalized * normalDotIncidenceNormalized);
 
-  refractionOut = c2 < 0 ? 0 : incidentVec * indexRatio + normalVector * (indexRatio * normalDotIncidenceNormalized - sqrtf(c2));
+  float indexRatio  = indexCurrent / indexNew;
+  float coefficient2 = 1 - indexRatio * indexRatio * (1 - normalDotIncidenceNormalized * normalDotIncidenceNormalized);
 
-  return goingInside;
+  if (coefficient2 < 0) {
+    return totalInternalRefraction;
+  }
+
+  refractionRayOut->direction =
+    incidentVec * indexRatio +
+    normalVector * (indexRatio * normalDotIncidenceNormalized - sqrtf(coefficient2));
+
+  refractionRayOut->updatePreCalculatedValues(); /* Changed the direction now, recalculated pre-cached values */
+
+  return status;
 }
+
 
 Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
@@ -151,24 +168,11 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
         colorRefract = Color(colorRefractR.x, colorRefractG.y, colorRefractB.z);
       }
 #else
-      Vector3 hitRefractedOut;
+      /* At this moment we do not know the direction of the refraction, the pre-calculated cached values will be
+       * populated with wrong values, after the refract is done, call the updatePreCalculatedValues(); method */
+      Ray refractRay(closestHitPoint, Vector3());
 
-      bool goingInside = refract(ray, &hitNormal, hitRefractedOut);
-      if (!hitRefractedOut.isZero()) {
-        Ray refractRay(closestHitPoint, hitRefractedOut);
-
-        if (goingInside) {
-          // We are outside the object's volume
-          refractRay.parentRay   = ray;
-          refractRay.inside      = closestHitObject;
-          refractRay.hitMaterial = &hitMaterial;
-        } else {
-          // We are leaving this object, set our new parent to ours parent's parent, and restore the inside object
-          refractRay.parentRay   = ray->parentRay->parentRay;
-          refractRay.inside      = ray->parentRay->inside;
-          refractRay.hitMaterial = ray->parentRay->hitMaterial;
-        }
-
+      if (refract(closestHitObject, ray, &hitNormal, &refractRay) != totalInternalRefraction) {
         colorRefract = rayFollow(&refractRay, scene, iteration + 1);
       }
 #endif
