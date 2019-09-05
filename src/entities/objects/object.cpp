@@ -12,14 +12,13 @@ Object::Object(Vector3 centerInit,
 }
 
 Object::Object(Vector3 centerInit, materialStatic materialInit): Entity(centerInit),
-  material(materialInit) {
-  materialFn.operator=(nullptr);
+  material(materialInit), materialFn(nullptr) {
 }
 
 Object::Object(Vector3 centerInit): Object(centerInit, Materials::lightGray) {
 }
 
-Object::Object(): Entity(Vector3()), material(Materials::lightGray), materialFn(nullptr) {
+Object::Object(): Object(Vector3()) {
 
 }
 
