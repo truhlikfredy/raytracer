@@ -33,7 +33,7 @@ materialStatic Materials::yellow = {
   .refractiveIndex = 1.0f
 };
 
-materialStatic Materials::white= {
+materialStatic Materials::white = {
   .castsShadows    = true,
   .ambient         = Color(),
   .diffuse         = Color(0.992157f, 0.992157f, 0.992157f),
@@ -45,7 +45,7 @@ materialStatic Materials::white= {
   .refractiveIndex = 1.0f
 };
 
-materialStatic Materials::green= {
+materialStatic Materials::green = {
   .castsShadows    = true,
   .ambient         = Color(),
   .diffuse         = Color(0.0f,    1.0f,    0.0f),
@@ -57,7 +57,7 @@ materialStatic Materials::green= {
   .refractiveIndex = 1.0f
 };
 
-materialStatic Materials::indigo= {
+materialStatic Materials::indigo = {
   .castsShadows    = true,
   .ambient         = Color(),
   .diffuse         = Color(0.0980392f, 0.0f,    0.458824f),
@@ -69,7 +69,7 @@ materialStatic Materials::indigo= {
   .refractiveIndex = 1.0f
 };
 
-materialStatic Materials::blue= {
+materialStatic Materials::blue = {
   .castsShadows    = true,
   .ambient         = Color(),
   .diffuse         = Color(0.0f,    0.0f,    1.0f),
@@ -81,7 +81,7 @@ materialStatic Materials::blue= {
   .refractiveIndex = 1.0f
 };
 
-materialStatic Materials::violet= {
+materialStatic Materials::violet = {
   .castsShadows    = true,
   .ambient         = Color(),
   .diffuse         = Color(0.635294f, 0.0f,    1.0f),
@@ -93,7 +93,7 @@ materialStatic Materials::violet= {
   .refractiveIndex = 1.0f
 };
 
-materialStatic Materials::black= {
+materialStatic Materials::black = {
   .castsShadows    = true,
   .ambient         = Color(),
   .diffuse         = Color(),
@@ -105,7 +105,7 @@ materialStatic Materials::black= {
   .refractiveIndex = 1.0f
 };
 
-materialStatic Materials::mediumGray= {
+materialStatic Materials::mediumGray = {
   .castsShadows    = true,
   .ambient         = Color(0.1f),
   .diffuse         = Color(0.454902f),
@@ -117,7 +117,7 @@ materialStatic Materials::mediumGray= {
   .refractiveIndex = 1.0f
 };
 
-materialStatic Materials::lightGray= {
+materialStatic Materials::lightGray = {
   .castsShadows    = true,
   .ambient         = Color(),
   .diffuse         = Color(0.682353f),
@@ -141,7 +141,7 @@ materialStatic Materials::mirror = {
   .refractiveIndex = 1.0f
 };
 
-materialStatic Materials::brass= {
+materialStatic Materials::brass = {
   .castsShadows    = true,
   .ambient         = Color(0.329412f, 0.223529f, 0.027451f),
   .diffuse         = Color(0.780392f, 0.568627f, 0.113725f),
@@ -153,7 +153,7 @@ materialStatic Materials::brass= {
   .refractiveIndex = 1.0f
 };
 
-materialStatic Materials::pollishedCopper= {
+materialStatic Materials::pollishedCopper = {
   .castsShadows    = true,
   .ambient         = Color(0.2295f,   0.08825f,  0.0275f),
   .diffuse         = Color(0.5508f,   0.2118f,   0.066f),
@@ -165,7 +165,7 @@ materialStatic Materials::pollishedCopper= {
   .refractiveIndex = 1.0f
 };
 
-materialStatic Materials::glass= {
+materialStatic Materials::glass = {
   .castsShadows    = true,
   .ambient         = Color(),
   .diffuse         = Color(0.0588235f, 0.0670588f, 0.0729412f),
@@ -174,7 +174,43 @@ materialStatic Materials::glass= {
   .shininess       = 96.0f,
   .reflectivity    = 0.12f,
   .transparency    = 0.9f,
-  .refractiveIndex = 1.9f
+  .refractiveIndex = 1.52f // http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/indrf.html
+};
+
+materialStatic Materials::opticalGlass = {
+  .castsShadows    = true,
+  .ambient         = Color(),
+  .diffuse         = Color(0.0588235f, 0.0670588f, 0.0729412f),
+  .specular        = Color(0.9f),
+  .emission        = Color(),
+  .shininess       = 96.0f,
+  .reflectivity    = 0.12f,
+  .transparency    = 0.9f,
+  .refractiveIndex = 1.65f // http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/indrf.html
+};
+
+materialStatic Materials::water = {
+  .castsShadows    = true,
+  .ambient         = Color(),
+  .diffuse         = Color(0.0588235f, 0.0670588f, 0.0729412f),
+  .specular        = Color(0.9f),
+  .emission        = Color(),
+  .shininess       = 96.0f,
+  .reflectivity    = 0.12f,
+  .transparency    = 0.9f,
+  .refractiveIndex = 1.33f // http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/indrf.html
+};
+
+materialStatic Materials::air = {
+  .castsShadows    = false,
+  .ambient         = Color(),
+  .diffuse         = Color(),
+  .specular        = Color(),
+  .emission        = Color(),
+  .shininess       = 0.0f,
+  .reflectivity    = 0.0f,
+  .transparency    = 1.0f,
+  .refractiveIndex = 1.0f // http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/indrf.html
 };
 
 Color Materials::mandelbrot(mandelbrotSet &set, uv &pixel) {
@@ -214,7 +250,7 @@ Color Materials::mandelbrot(mandelbrotSet &set, uv &pixel) {
   return ret;
 }
 
-
+//TODO: add fancy materials as marble, noise and julia set
 //blue_marble(float   Ks    = .4, float Kd    = .6, float Ka    = .1, float roughness = .1, float txtscale = 1)  {
 //  Color specularcolor(1.0f);
 //  Vector3 PP;            /* scaled point in shader space */

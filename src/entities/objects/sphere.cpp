@@ -63,7 +63,7 @@ float Sphere::detectHit(Ray *ray) {
   // Source and direction are known, reversing the equations to find if there
   // is a hitDistance on the path which meets sphere's equation.
   Vector3 inRef   = ray->source - this->center;
-  float   temp1   = (ray->direction % inRef);
+  float   temp1   = (ray->getDirection() % inRef);
   float   temp2   = (inRef % inRef) - this->radius * this->radius;
   float   tempAll = temp1 * temp1 - ray->directionDot * temp2;
 
@@ -77,7 +77,7 @@ float Sphere::detectHit(Ray *ray) {
   return hitDistance;
 }
 
-float Sphere::detectHitMin(Ray *ray, Vector3 &hitPoint) {
+float Sphere::detectHitPoint(Ray *ray, Vector3 &hitPoint, bool isMin) {
 #ifdef AABB
   if (!detectHitBB(ray))
     return -1.0f;
@@ -94,54 +94,28 @@ float Sphere::detectHitMin(Ray *ray, Vector3 &hitPoint) {
 
   //if (dotDir < 0 ) return -1.0f;
 
-  float   temp1   = (ray->direction % inRef);
+  float   temp1   = (ray->getDirection() % inRef);
   float   temp2   = (inRef % inRef) - this->radius * this->radius;
   float   tempAll = temp1 * temp1 - ray->directionDot * temp2;
 
   if (tempAll < 0) return -1.0f; // The ray didn't hit the sphere at all
 
-  float hitDistance = fminf( (-temp1 + sqrt(tempAll)) * ray->directionDotInverse,
-                             (-temp1 - sqrt(tempAll)) * ray->directionDotInverse);
+  float hitDistance;
+
+  if (isMin) {
+    // 2 points are intersecting the sphere, chose the closest point to the ray's source point
+    hitDistance = fminf( (-temp1 + sqrt(tempAll)) * ray->directionDotInverse,
+                         (-temp1 - sqrt(tempAll)) * ray->directionDotInverse);
+  } else {
+    // 2 points are intersecting the sphere, chose the furtherst point to the ray's source point
+    hitDistance = fmaxf( (-temp1 + sqrtf(tempAll)) * ray->directionDotInverse,
+                         (-temp1 - sqrtf(tempAll)) * ray->directionDotInverse);
+  }
 
   // Skip if both points are behind the ray
   if ( hitDistance <0.0f ) return -1.0f;
 
-  hitPoint = ray->source + ray->direction * hitDistance;
-
-  return hitDistance;
-}
-
-
-float Sphere::detectHitMax(Ray *ray, Vector3 &hitPoint) {
-#ifdef AABB
-  if (!detectHitBB(ray))
-    return -1.0f;
-#endif
-
-  // http://mathforum.org/mathimages/index.php/Ray_Tracing
-  // All points at sphere's surface meet this equation:
-  // (point - center).(point - center) - radius^2 = 0
-  // While any point on the ray's path can be calculated:
-  // point = source + direction * hitDistance
-  // Source and direction are known, reversing the equations to find if there
-  // is a hitDistance on the path which meets sphere's equation.
-  Vector3 inRef   = ray->source - this->center;
-
-  if (ray->directionDot < 0 ) return -1.0f;
-
-  float   temp1   = (ray->direction % inRef);
-  float   temp2   = (inRef % inRef) - this->radius * this->radius;
-  float   tempAll = temp1 * temp1 - ray->directionDot * temp2;
-
-  if (tempAll < 0) return -1.0f; // The ray didn't hit the sphere at all
-
-  // 2 points are intersecting the sphere, chose the closest point to the camera
-  float hitDistance = fmaxf( (-temp1 + sqrtf(tempAll)) * ray->directionDotInverse,
-                             (-temp1 - sqrtf(tempAll)) * ray->directionDotInverse );
-
-  if (hitDistance <= 0 ) return -1.0f;
-
-  hitPoint = ray->source + ray->direction * hitDistance;
+  hitPoint = ray->source + ray->getDirection() * hitDistance;
 
   return hitDistance;
 }

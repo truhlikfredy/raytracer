@@ -11,10 +11,10 @@
 class Light: public Entity {
 public:
   Color color;
-  float burn;
-  float distance;
+  float burnInv;
+  float distanceInv;
 
-  Light(const Vector3 &centerInit, const Color &colorInit, const float distanceInit, const float burnInit);
+  Light(const Vector3 &centerInit, const Color &colorInit, const float distanceInvInit, const float burnInit);
 
   Light(const Vector3 &centerInit, const Color &colorInit);
 

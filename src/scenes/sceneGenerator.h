@@ -20,6 +20,7 @@ public:
   float                             frameLast;
   float                             lightStep;
   float                             lightEnd;
+  Object                            *etherObject;
 
   /* TODO: Make cameras generic */
   struct {

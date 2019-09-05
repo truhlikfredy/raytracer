@@ -17,12 +17,14 @@
 
 class Scene {
 public:
-  std::vector<std::vector<Light*>> *lights;
-  std::vector<Object*> *objects;
-  float         frame;
-  int           lightVariations;
-  Color         ambientStatic;
+  std::vector<std::vector<Light*>>  *lights;
+  std::vector<Object*>              *objects;
+  float                             frame;
+  int                               lightVariations;
+  Color                             ambientStatic;
   std::function<Color(float frame)> ambientFn;
+  Object                            *etherObject; // TODO: object might not have to be visible, when we have ray
+  Ray                               *etherRay;
 
 
   struct {
@@ -39,6 +41,7 @@ public:
 
   ~Scene();
 
+  void updateEtherRay(Object *etherObjectInit);
 };
 
 #endif //RAYTRACER_SCENE_H

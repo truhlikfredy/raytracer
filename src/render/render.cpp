@@ -34,29 +34,74 @@ void Render::getThreadWindow(int thread, windowType &ret) {
 
 
 Color Render::rayStart(Ray *ray, Scene *scene) {
-  return rayFollow(ray, scene, 1, nullptr);
+  return rayFollow(ray, scene, 1);
 }
 
 
-void Render::refract(Vector3 &incidentVec, Vector3 &normal, float refractionIndex, Vector3 &refractionRay) {
-  float cosi = fmax(-1, fmin(1, (incidentVec % normal)));
-  float etai = 1;
-//  float x = ((float)rand()/(float)(RAND_MAX)) * 0.1f;
-  float etat = refractionIndex;
-  Vector3 n = normal;
-  if (cosi < 0) { cosi = -cosi; } else { std::swap(etai, etat); n= normal * -1.0; }
-  float eta = etai / etat;
-  float k = 1 - eta * eta * (1 - cosi * cosi);
-  refractionRay = k < 0 ? 0 : incidentVec * eta  + n * (eta * cosi - sqrtf(k));
+bool Render::refract(
+  Object      *closestHitObject,
+  Ray         *incidentRay,
+  Vector3     *normal,
+  const float chromaticTweak,
+  Ray         *refractionRayOut) {
+
+  // https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel
+  // https://stackoverflow.com/questions/42218704/how-to-properly-handle-refraction-in-raytracing
+  // https://stackoverflow.com/questions/26087106/refraction-in-raytracing
+  // https://en.wikipedia.org/wiki/Fresnel_equations
+  // http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/indrf.html
+  // https://en.wikipedia.org/wiki/Total_internal_reflection
+
+  Vector3 incidentVec   = incidentRay->getDirection();
+  float   dotNormalized = fmax(-1, fmin(1, (incidentVec % *normal)));
+  float   indexCurrent;
+  float   indexNew;
+  Vector3 normalVector;
+
+  if (dotNormalized < 0) {
+    // We are outside the object's volume going inside
+    indexCurrent                  = incidentRay->inside->material.refractiveIndex;
+    indexNew                      = incidentRay->hitMaterial->refractiveIndex * chromaticTweak;
+
+    normalVector                  = *normal;
+    dotNormalized                 = -dotNormalized;
+
+    refractionRayOut->parentRay   = incidentRay;
+    refractionRayOut->inside      = closestHitObject;
+    refractionRayOut->hitMaterial = incidentRay->hitMaterial;
+  } else {
+    // We are leaving this object, set our new parent to ours parent's parent, and restore the inside object
+    indexCurrent                  = incidentRay->hitMaterial->refractiveIndex; // We hit the inside part of the object
+    indexNew                      = incidentRay->parentRay->inside->material.refractiveIndex * chromaticTweak;
+
+    normalVector                  = normal->invert();
+
+    refractionRayOut->parentRay   = incidentRay->parentRay->parentRay;
+    refractionRayOut->inside      = incidentRay->parentRay->inside;
+    refractionRayOut->hitMaterial = incidentRay->parentRay->hitMaterial;
+  }
+
+  float indexRatio  = indexCurrent / indexNew;
+  float coefficient2 = 1 - indexRatio * indexRatio * (1 - dotNormalized * dotNormalized);
+
+  if (coefficient2 < 0) {
+    return false;
+  }
+
+  refractionRayOut->setDirection(
+    incidentVec * indexRatio +
+    normalVector * (indexRatio * dotNormalized - sqrtf(coefficient2)));
+
+  return true;
 }
 
 
-Color Render::rayFollow(Ray *ray, Scene *scene, int iteration, Object *inside) {
+Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
   // https://stackoverflow.com/questions/9893316/how-do-i-combine-phong-lighting-with-fresnel-dielectric-reflection-transmission
-  float closestHitDistance = FLT_MAX;  // set it to maximum at first
-  Object *closestObject = nullptr;
+  float   closestHitDistance = FLT_MAX;  // set it to maximum at first
+  Object  *closestHitObject  = nullptr;
   Vector3 closestHitPoint;
-  Color ret;
+  Color   ret;
 
   if (iteration > MAX_BOUNCES) {
     return ret;
@@ -67,91 +112,82 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration, Object *inside) {
     Vector3 hitPoint;
     float hitDistance;
 
-    if (inside) {
-      if (inside == object) {
-        // if we are testing the collision with itslef (inside the object) then find the furtherst point
-        hitDistance = object->detectHitMax(ray, hitPoint);
-      } else {
-        // but for all other objects even including intersecting object do detect closest collision
-        hitDistance = object->detectHitMin(ray, hitPoint);
-      }
+    if (ray->inside == object) {
+      // If we are not in the ether object, then we must be in other objects and
+      // if we are testing the collision with itself (inside the object) then find the furthest point
+      hitDistance = object->detectHitPoint(ray, hitPoint, false);
     } else {
-      hitDistance = object->detectHitMin(ray, hitPoint);
+      // But for all other objects, being in ether or even including intersecting object do detect closest collision
+      hitDistance = object->detectHitPoint(ray, hitPoint, true);
     }
 
     if (hitDistance > 0.0f) {
       if (closestHitDistance > hitDistance) {
         // It's the shortest hit yet, let's save it, if it will win then calculate it's color by shading it depending on the bounce angle
-        closestObject      = object;
+        closestHitObject   = object;
         closestHitDistance = hitDistance;
         closestHitPoint    = hitPoint;
       }
     }
   }
 
-  // Only shade the closes collision
-  if (closestObject) {
-    // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
-    Vector3 hitNormal    = *closestObject ^closestHitPoint;
-    Vector3 hitReflected = ray->direction - (hitNormal * 2 * (ray->direction % hitNormal));
+  /* Only shade the closes collision */
+  if (closestHitObject) {
+    /* https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector */
+    Vector3 hitNormal    = *closestHitObject ^closestHitPoint;
+    Vector3 hitReflected = ray->getDirection() - (hitNormal * 2 * (ray->getDirection() % hitNormal));
 
-    materialStatic hitMaterial;
-    if (closestObject->materialFn) {
-      hitMaterial = closestObject->materialFn(closestHitPoint, scene->frame);
-    } else {
-      hitMaterial = closestObject->material;
-    }
+    materialStatic hitMaterial = closestHitObject->evalMaterial(closestHitPoint, scene->frame);
+    ray->hitMaterial = &hitMaterial;  /* Populate the ray with the evaluated material as well */
 
     Color colorRefract;
     Color colorReflect;
 
     if (hitMaterial.transparency != 0.0f) {
-      // If transparency is enabled then handle refraction
+      /* If material is transparent then handle refraction */
+
 #ifdef CHROMATIC_ABERRATION_REFRACTION
-      Color colorRefractR;
-      Color colorRefractG;
-      Color colorRefractB;
+      Ray refractRayR(closestHitPoint);
+      Ray refractRayG(closestHitPoint);
+      Ray refractRayB(closestHitPoint);
+      if (refract(closestHitObject, ray, &hitNormal, 1.0f, &refractRayG)) {
+        refract(closestHitObject, ray, &hitNormal, (1.0f - CHROMATIC_ABERRATION_STRENGTH), &refractRayR);
+        refract(closestHitObject, ray, &hitNormal, (1.0f + CHROMATIC_ABERRATION_STRENGTH), &refractRayB);
 
-      Vector3 hitRefractedR;
-      Vector3 hitRefractedG;
-      Vector3 hitRefractedB;
-      refract(ray->direction, hitNormal, hitMaterial.refractiveIndex * (1.0f - CHROMATIC_ABERRATION_STRENGTH), hitRefractedR);
-      refract(ray->direction, hitNormal, hitMaterial.refractiveIndex, hitRefractedG);
-      refract(ray->direction, hitNormal, hitMaterial.refractiveIndex * (1.0f + CHROMATIC_ABERRATION_STRENGTH), hitRefractedB);
-      Ray refractRayR(closestHitPoint, hitRefractedR);
-      Ray refractRayG(closestHitPoint, hitRefractedG);
-      Ray refractRayB(closestHitPoint, hitRefractedB);
-
-      colorRefractR = rayFollow(&refractRayR, scene, iteration + 1, (inside) ? nullptr : closestObject);
-      colorRefractG = rayFollow(&refractRayG, scene, iteration + 1, (inside) ? nullptr : closestObject);
-      colorRefractB = rayFollow(&refractRayB, scene, iteration + 1, (inside) ? nullptr : closestObject);
-      colorRefract = Color(colorRefractR.x, colorRefractG.y, colorRefractB.z);
+        colorRefract = Color(
+          rayFollow(&refractRayR, scene, iteration + 1).x,
+          rayFollow(&refractRayG, scene, iteration + 1).y,
+          rayFollow(&refractRayB, scene, iteration + 1).z);
+      }
 #else
-      Vector3 hitRefracted;
-      refract(ray->direction, hitNormal, hitMaterial.refractiveIndex, hitRefracted);
-      Ray refractRay(closestHitPoint, hitRefracted);
+      /* At this moment we do not know the direction of the refraction, the pre-calculated cached values will be
+       * populated with wrong values, after the refract is done, call the updatePreCalculatedValues(); method */
+      Ray refractRay(closestHitPoint);
 
-      colorRefract = rayFollow(&refractRay, scene, iteration + 1, (inside) ? nullptr : closestObject);
+      if (refract(closestHitObject, ray, &hitNormal, 1.0f, &refractRay)) {
+        colorRefract = rayFollow(&refractRay, scene, iteration + 1);
+      }
 #endif
     }
 
-    if (hitMaterial.reflectivity != 0.0f) {
-      // If the material is reflective then handle reflection
-      Ray reflectRay(closestHitPoint, hitReflected);
-      colorReflect = rayFollow(&reflectRay, scene, iteration + 1, inside);
+    if (hitMaterial.reflectivity != 0.0f && ray->inside != closestHitObject  ) {
+      // If the material is reflective then handle reflection, but do not calculate reflection from the inside objects
+      Ray reflectRay(closestHitPoint, hitReflected, ray, ray->inside);
+      colorReflect = rayFollow(&reflectRay, scene, iteration + 1);
     }
 
     for (std::vector<Light*> lightSet : *scene->lights) {
-      static int lightSeed = lightSeed + scene->frame;
-      Light *hitLight = lightSet[lightSeed % scene->lightVariations];
-      Vector3 hitLightRel = Vector3(hitLight->center - closestHitPoint);
+      // Calculate color for each light source
+      static int lightSeed   = lightSeed + scene->frame;
+      Light      *hitLight   = lightSet[lightSeed % scene->lightVariations];
+      Vector3    hitLightRel = Vector3(hitLight->center - closestHitPoint);
 
-      // calculate length from the collision point to light source and then normalize the vector pointing to it
-      float hitLightLen    = hitLightRel.lenght();
-      hitLightRel = ~hitLightRel; // After we got the distance, then normalize it for angle calculation
+      /* Calculate length from the collision point to light source and then normalize the vector pointing to it */
+      float hitLightLen = hitLightRel.lenght();
+            hitLightRel = ~hitLightRel; /* After we got the distance, then normalize it for angle calculation */
 
-      float diffuse    = fmaxf(0, hitLightRel % hitNormal); // how similar are they?
-      float specular   = fmaxf(0, hitLightRel % hitReflected);
+      float diffuse     = fmaxf(0, hitLightRel % hitNormal);    // how similar are they?
+      float specular    = fmaxf(0, hitLightRel % hitReflected);
 
       // diffuse = similarity (dot product) of hitLightRel and hitNormal
       // https://youtu.be/KDHuWxy53uM
@@ -167,10 +203,10 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration, Object *inside) {
       for (Object *oCS: *scene->objects) {
         Ray shadowRay(closestHitPoint, hitLightRel);
         // test all objects if they are casting shadow from this light
-        if (oCS != closestObject &&
+        if (oCS != closestHitObject &&
             oCS->detectHit(&shadowRay) != -1 &&
             hitLightLen > (oCS->center - closestHitPoint).lenght() &&
-            ((oCS->materialFn && oCS->materialFn(hitLightRel, scene->frame).castsShadows ) || (!oCS->materialFn && oCS->material.castsShadows)) ) {
+            oCS->evalMaterial(hitLightRel, scene->frame).castsShadows) {
           // If the following are meet:
           // 1) can't cast shadow on yourself through bounded rays, at least not yet with simple shapes (so test only all other objects)
           // 2) ray needs to hit the object which is causing shadows (if it's not hit then it couldn't cause shadow)
@@ -184,16 +220,20 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration, Object *inside) {
       }
 
       if (!inShadow) {
-        // Do not calculate these unless they are going to be used (i.e. not in the shadow)
+        /* Do not calculate color unless they are going to be used (i.e. not in the shadow) */
 
-        auto lightStrength = fmax(hitLight->burn, powf((hitLightLen + closestHitDistance) / hitLight->distance, 2));
-        colorLight = ((hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * lightSet[0]->color) / lightStrength;
+        auto lightStrength = fmax(
+          hitLight->burnInv,
+          powf((hitLightLen + closestHitDistance) * hitLight->distanceInv, 2));
+
+        colorLight = ((hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) *
+          lightSet[0]->color / lightStrength);
       }
 
       ret += colorAmbient + colorLight;
     }
 
-    // Combine the current result with the reflective and refractive results
+    /* Combine the current result with the reflective and refractive results */
     ret += (~colorReflect * hitMaterial.reflectivity) + (~colorRefract * hitMaterial.transparency);
   }
 
@@ -202,8 +242,8 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration, Object *inside) {
 
 
 void Render::renderPartialWindow(windowType &window) {
-  // this will be executed by multiple different threads,
-  // things needs to be in local stack or globally synchronize to be safe
+  /* This will be executed by multiple different threads,
+   * things needs to be in local stack or globally synchronize to be safe */
 
   Sampler sampler((*scenes)[0], SAMPLING_MIN, SAMPLING_MAX);
 
@@ -225,20 +265,23 @@ void Render::renderPartialWindow(windowType &window) {
         sampler.getNextSample(&sample);
 
         camera.getRay(x, y, sample, scene, rayForThisPixel);
+        rayForThisPixel.parentRay = scene->etherRay;
+        rayForThisPixel.inside = scene->etherObject;
+        rayForThisPixel.hitMaterial = &scene->etherObject->material;
         currentColor = ~rayStart(&rayForThisPixel, scene);
         totalColor += currentColor;
 
         if (sampler.index == sampler.indexMinimum) {
-          // detect black parts of the scene after few sample rays
-          // TODO: When background is used different algorithm has to be used
-          if (totalColor.isBlack()) {
+          /* Detect black parts of the scene after few sample rays */
+          /* TODO: When background is used different algorithm has to be used */
+          if (totalColor.isZero()) {
             sampler.finish();
           }
         } else if (sampler.index > sampler.indexMinimum) {
           Color diff = Color(totalColor / sampleCount) - currentColor;
           if ( fabsf(diff.sum()) < SAMPLING_DELTA ) {
             sampler.finish();
-//            TODO: save stats so I know which settings are worth doing
+            /* TODO: save stats so I know which settings are worth doing */
           }
         }
 

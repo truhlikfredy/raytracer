@@ -19,7 +19,7 @@ struct materialStatic {
   float shininess;
   float reflectivity;
   float transparency;
-  float refractiveIndex;
+  float refractiveIndex; // http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/indrf.html
 };
 
 struct uv {
@@ -56,6 +56,9 @@ public:
   static materialStatic brass;
   static materialStatic pollishedCopper;
   static materialStatic glass;
+  static materialStatic opticalGlass;
+  static materialStatic water;
+  static materialStatic air;
 
   // textures
   static Color mandelbrot(mandelbrotSet &set, uv &pixel);

@@ -19,6 +19,7 @@ Object::Object(Vector3 centerInit): Object(centerInit, Materials::lightGray) {
 }
 
 Object::Object(): Object(Vector3()) {
+
 }
 
 /* TODO: do virtual need implementations? */
@@ -31,16 +32,23 @@ float Object::detectHit(Ray *ray) {
   return -1;
 }
 
-float Object::detectHitMin(Ray *ray, Vector3 &hitPoint) {
-  return -1;
-}
-
-float Object::detectHitMax(Ray *ray, Vector3 &hitPoint) {
+float Object::detectHitPoint(Ray *ray, Vector3 &hitPoint, bool isMin) {
   return -1;
 }
 
 uv Object::toUv(Vector3 point) {
   return uv();
+}
+
+materialStatic Object::evalMaterial(Vector3 point, float frame) {
+  // Evaluate material function when present, or use the static value
+
+  if (materialFn) {
+    return materialFn(point, frame);
+  }
+  else {
+    return material;
+  }
 }
 
 #ifdef AABB

@@ -32,14 +32,14 @@ Lights::Lights(): SceneGenerator(120.0f) {
     Vector3 center(320 * cosf(lightRotate), 10 * (sinf(lightRotate) - 20 ), -20);
     Color color(1.5f, 0.1f, 1.5f);
 
-    return new LightOmni(center, color, 300.0f, 0.8f);
+    return new LightOmni(center, color, 1.0f/300.0f, 0.8f);
   }));
 
   lightGenerators->push_back(new LightOmniGenerator([](float frame) {
     Vector3 center(80, -50, 100);
     Color color(0.2f, 1.2f, 0.0f);
 
-    return new LightOmni(center, color, 350.0f, 0.9f);
+    return new LightOmni(center, color, 1.0f/350.0f, 0.9f);
   }));
 
   objectGenerators->push_back( new SphereGenerator([squares](float frame) {

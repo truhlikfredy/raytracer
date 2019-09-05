@@ -29,7 +29,7 @@ Dof::Dof(): SceneGenerator(60.0f) {
     Vector3 center(320 * cosf(lightRotate), 0.6 * 200 * (sinf(lightRotate) - 0.5), 20);
     Color color(0.9f, 0.9f, 1.0f);
 
-    return new LightOmni(center, color);
+    return new LightOmni(center, color, 1.0f/2700.0f, 0.8f);
   }));
 
   for (int i = 0; i < 5; i++) {

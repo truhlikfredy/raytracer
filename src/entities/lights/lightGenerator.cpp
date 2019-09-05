@@ -7,9 +7,8 @@
 LightGenerator::LightGenerator(std::function<Light *(float frame)> evaluateFnInit): evaluateFn(evaluateFnInit) {
 }
 
-LightGenerator::LightGenerator(const Vector3 &centerInit, const Color &colorInit, const float distanceInit,
-                               const float burnInit) : Light(centerInit, colorInit, distanceInit, burnInit) {
-
+LightGenerator::LightGenerator(const Vector3 &centerInit, const Color &colorInit, const float distanceInvInit,
+                               const float burnInit) : Light(centerInit, colorInit, distanceInvInit, burnInit) {
 }
 
 LightGenerator::LightGenerator(Vector3 centerInit, Color colorInit): Light(centerInit, colorInit) {

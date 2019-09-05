@@ -57,7 +57,10 @@ public:
 
   float max();
 
-  //Triple operator=(Triple& secondTriple);
+  Triple invert();
+
+  bool isZero();
+
 };
 
 
