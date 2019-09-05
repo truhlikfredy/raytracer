@@ -19,7 +19,12 @@ Ray::Ray(Vector3 sourceInit, Vector3 directionInit, Ray *parentRayInit, Object *
 #ifdef AABB
   , directionFraction(1.0f / directionInit.x, 1.0f / directionInit.y, 1.0f / directionInit.z)
 #endif
-  , directionDot(directionInit % directionInit), parentRay(parentRayInit), inside(enteringObject) {
+  , parentRay(parentRayInit), inside(enteringObject) {
+  updatePreCalculatedValues();
+}
+
+void Ray::updatePreCalculatedValues() {
+  directionDot = direction % direction;
   directionDotInverse = 1.0f / directionDot;
 }
 

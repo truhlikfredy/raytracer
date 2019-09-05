@@ -31,6 +31,9 @@ struct Ray {
 
   Ray(Vector3 sourceInit, Vector3 directionInit, Ray *parentRayInit, Object *enteringObject);
 
+  void updatePreCalculatedValues();
+
+  // TODO: make direction a private field and use method to update it and recalculate the cached data as well
 };
 
 
