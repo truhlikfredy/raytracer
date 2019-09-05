@@ -30,7 +30,8 @@ private:
 
   void getThreadWindow(int thread, windowType &ret);
 
-  void refract(Vector3 &incidentVec, Vector3 &normal, float currentRefractionIndex, float newRefractionIndex, Vector3 &refractionRay);
+  //TODO return status enum
+  bool refract(Ray *incidentRay, Vector3 *normal, Vector3 &refractionOut);
 
   Color rayStart(Ray *ray, Scene *scene);
 

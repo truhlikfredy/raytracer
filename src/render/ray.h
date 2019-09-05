@@ -7,6 +7,7 @@
 #define RAYTRACER_RAY_H
 
 #include "../entities/objects/object.h"
+#include "../entities/objects/materials.h"
 #include "../types/vector3.h"
 #include "../render/settings.h"
 
@@ -17,6 +18,7 @@ struct Ray {
   Vector3 direction;
   Ray *parentRay;
   Object *inside;
+  materialStatic *hitMaterial;
 #ifdef AABB
   Vector3 directionFraction;
 #endif

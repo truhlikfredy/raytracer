@@ -11,12 +11,13 @@
 SceneGenerator::SceneGenerator(): SceneGenerator(1.0f) { }
 
 SceneGenerator::SceneGenerator(float frameEndInit) {
-  lightStep = 1.0f;
-  lightEnd  = 1.0f;
-  frame = 0.0f;
-  frameFirst = 0.0f;
-  frameLast = frameEndInit;
+  lightStep     = 1.0f;
+  lightEnd      = 1.0f;
+  frame         = 0.0f;
+  frameFirst    = 0.0f;
+  frameLast     = frameEndInit;
   ambientStatic = Color(0.1f);
+  etherObject   = nullptr;
 
   //TODO: background static/fn or no backgrounds and let the object act as background
 
@@ -37,7 +38,7 @@ Scene* SceneGenerator::generateScene(float frame) {
   scene->ambientStatic   = ambientStatic;
   scene->frame           = frame;
   if (etherObject) {
-    scene->etherObject   = etherObject;
+    scene->updateEtherRay(etherObject);
   }
 
 

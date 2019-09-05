@@ -12,13 +12,15 @@ Object::Object(Vector3 centerInit,
 }
 
 Object::Object(Vector3 centerInit, materialStatic materialInit): Entity(centerInit),
-  material(materialInit), materialFn(nullptr) {
+  material(materialInit) {
+  materialFn.operator=(nullptr);
 }
 
 Object::Object(Vector3 centerInit): Object(centerInit, Materials::lightGray) {
 }
 
-Object::Object(): Object(Vector3()) {
+Object::Object(): Entity(Vector3()), material(Materials::lightGray), materialFn(nullptr) {
+
 }
 
 /* TODO: do virtual need implementations? */

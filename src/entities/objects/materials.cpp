@@ -250,7 +250,7 @@ Color Materials::mandelbrot(mandelbrotSet &set, uv &pixel) {
   return ret;
 }
 
-
+//TODO: add fancy materials as marble, noise and julia set
 //blue_marble(float   Ks    = .4, float Kd    = .6, float Ka    = .1, float roughness = .1, float txtscale = 1)  {
 //  Color specularcolor(1.0f);
 //  Vector3 PP;            /* scaled point in shader space */

@@ -23,7 +23,8 @@ public:
   int                               lightVariations;
   Color                             ambientStatic;
   std::function<Color(float frame)> ambientFn;
-  Object                            *etherObject;
+  Object                            *etherObject; // TODO: object might not have to be visible, when we have ray
+  Ray                               *etherRay;
 
 
   struct {
@@ -40,6 +41,7 @@ public:
 
   ~Scene();
 
+  void updateEtherRay(Object *etherObjectInit);
 };
 
 #endif //RAYTRACER_SCENE_H

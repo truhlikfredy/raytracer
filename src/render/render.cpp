@@ -38,7 +38,7 @@ Color Render::rayStart(Ray *ray, Scene *scene) {
 }
 
 
-void Render::refract(Vector3 &incidentVec, Vector3 &normal, float currentRefractionIndex, float newRefractionIndex, Vector3 &refractionRay) {
+bool Render::refract(Ray *incidentRay, Vector3 *normal, Vector3 &refractionOut) {
   // https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel
   // https://stackoverflow.com/questions/42218704/how-to-properly-handle-refraction-in-raytracing
   // https://stackoverflow.com/questions/26087106/refraction-in-raytracing
@@ -46,27 +46,37 @@ void Render::refract(Vector3 &incidentVec, Vector3 &normal, float currentRefract
   // http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/indrf.html
   // TODO: Take full ray and add/subtract from stack of volumes the ray is inside of
 
-  float normalDotIncidenceNormalized = fmax(-1, fmin(1, (incidentVec % normal)));
-  float indexA;
-  float indexB;
+  Vector3 incidentVec = incidentRay->direction;
+  float normalDotIncidenceNormalized = fmax(-1, fmin(1, (incidentVec % *normal)));
+  float indexCurrent;
+  float indexNew;
   Vector3 normalVector;
+  bool goingInside = true;
 
   if (normalDotIncidenceNormalized < 0) {
-    // We are outside the volume
-    indexA                       = currentRefractionIndex;
-    indexB                       = newRefractionIndex;
-    normalVector                 = normal;
+    // We are outside the object's volume going inside
+    indexCurrent                 = incidentRay->inside->material.refractiveIndex;
+    indexNew                     = incidentRay->hitMaterial->refractiveIndex;
+
+    normalVector                 = *normal;
     normalDotIncidenceNormalized = -normalDotIncidenceNormalized;
+
+    bool goingInside             = true;
   } else {
-    // We are inside the volume
-    indexA       = newRefractionIndex;
-    indexB       = currentRefractionIndex;
-    normalVector = normal.invert();
+    // We are inside the object's volume going outside
+    indexCurrent = incidentRay->hitMaterial->refractiveIndex;
+    indexNew     = incidentRay->parentRay->inside->material.refractiveIndex;
+
+    normalVector = normal->invert();
+
+    goingInside  = false;
   }
-  float indexRatio = indexA / indexB;
+  float indexRatio = indexCurrent / indexNew;
   float c2 = 1 - indexRatio * indexRatio * (1 - normalDotIncidenceNormalized * normalDotIncidenceNormalized);
 
-  refractionRay = c2 < 0 ? 0 : incidentVec * indexRatio + normalVector * (indexRatio * normalDotIncidenceNormalized - sqrtf(c2));
+  refractionOut = c2 < 0 ? 0 : incidentVec * indexRatio + normalVector * (indexRatio * normalDotIncidenceNormalized - sqrtf(c2));
+
+  return goingInside;
 }
 
 Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
@@ -85,9 +95,10 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
     Vector3 hitPoint;
     float hitDistance;
 
-    if (ray->inside) {
+    // TODO: shrink conditions
+    if (ray->inside != scene->etherObject) {
       if (ray->inside == object) {
-        // if we are testing the collision with itslef (inside the object) then find the furtherst point
+        // if we are testing the collision with itself (inside the object) then find the furthest point
         hitDistance = object->detectHitPoint(ray, hitPoint, false);
       } else {
         // but for all other objects even including intersecting object do detect closest collision
@@ -119,6 +130,7 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
     } else {
       hitMaterial = closestObject->material;
     }
+    ray->hitMaterial = &hitMaterial;
 
     Color colorRefract;
     Color colorReflect;
@@ -126,10 +138,10 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
     if (hitMaterial.transparency != 0.0f) {
       // If transparency is enabled then handle refraction
 
-//      float currentIndex = (ray->inside) ? ray->inside->material.refractiveIndex : 1.0f;
-//      float newIndex     = (ray->inside) ? 1.0f : hitMaterial.refractiveIndex;
-      float currentIndex = 1.0f;
-      float newIndex     = hitMaterial.refractiveIndex;
+//      float currentIndex = ray->inside->material.refractiveIndex;
+//      float newIndex     = (ray->inside) ? ray->parentRay->inside->material.refractiveIndex : hitMaterial.refractiveIndex;
+//      float currentIndex = ray->inside->material.refractiveIndex;
+//      float newIndex     = hitMaterial.refractiveIndex;
 
 #ifdef CHROMATIC_ABERRATION_REFRACTION
       Color colorRefractR;
@@ -153,13 +165,23 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
         colorRefract = Color(colorRefractR.x, colorRefractG.y, colorRefractB.z);
       }
 #else
-      Vector3 hitRefracted;
+      Vector3 hitRefractedOut;
 
-      refract(ray->direction, hitNormal,  currentIndex, newIndex, hitRefracted);
-      if (!hitRefracted.isZero()) {
-        Ray refractRay(closestHitPoint, hitRefracted,
-          (ray->inside == closestObject) ? ray->parentRay : ray,
-          (ray->inside == closestObject) ? ray->parentRay->inside : closestObject);
+      bool goingInside = refract(ray, &hitNormal, hitRefractedOut);
+      if (!hitRefractedOut.isZero()) {
+        Ray refractRay(closestHitPoint, hitRefractedOut);
+
+        if (goingInside) {
+          // We are outside the object's volume
+          refractRay.parentRay   = ray;
+          refractRay.inside      = closestObject;
+          refractRay.hitMaterial = &hitMaterial;
+        } else {
+          // We are leaving this object, set our new parent to ours parent's parent, and restore the inside object
+          refractRay.parentRay   = ray->parentRay->parentRay;
+          refractRay.inside      = ray->parentRay->inside;
+          refractRay.hitMaterial = ray->parentRay->hitMaterial;
+        }
 
         colorRefract = rayFollow(&refractRay, scene, iteration + 1);
       }
@@ -168,7 +190,7 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
 
     if (hitMaterial.reflectivity != 0.0f) {
       // If the material is reflective then handle reflection
-      Ray reflectRay(closestHitPoint, hitReflected, ray, nullptr);
+      Ray reflectRay(closestHitPoint, hitReflected, ray, ray->inside);
       colorReflect = rayFollow(&reflectRay, scene, iteration + 1);
     }
 
@@ -218,7 +240,7 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
         // Do not calculate these unless they are going to be used (i.e. not in the shadow)
 
         auto lightStrength = fmax(hitLight->burn, powf((hitLightLen + closestHitDistance) / hitLight->distance, 2));
-        colorLight = ((hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * lightSet[0]->color) / lightStrength;
+        colorLight = ((hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) * lightSet[0]->color / lightStrength);
       }
 
       ret += colorAmbient + colorLight;
@@ -256,13 +278,16 @@ void Render::renderPartialWindow(windowType &window) {
         sampler.getNextSample(&sample);
 
         camera.getRay(x, y, sample, scene, rayForThisPixel);
+        rayForThisPixel.parentRay = scene->etherRay;
+        rayForThisPixel.inside = scene->etherObject;
+        rayForThisPixel.hitMaterial = &scene->etherObject->material;
         currentColor = ~rayStart(&rayForThisPixel, scene);
         totalColor += currentColor;
 
         if (sampler.index == sampler.indexMinimum) {
           // detect black parts of the scene after few sample rays
           // TODO: When background is used different algorithm has to be used
-          if (totalColor.isBlack()) {
+          if (totalColor.isZero()) {
             sampler.finish();
           }
         } else if (sampler.index > sampler.indexMinimum) {
