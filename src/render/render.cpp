@@ -113,7 +113,7 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
     Vector3 hitPoint;
     float hitDistance;
 
-    if (ray->inside != scene->etherObject && ray->inside == object) {
+    if (ray->inside == object) {
       // If we are not in the ether object, then we must be in other objects and
       // if we are testing the collision with itself (inside the object) then find the furthest point
       hitDistance = object->detectHitPoint(ray, hitPoint, false);
@@ -171,8 +171,8 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
 #endif
     }
 
-    if (hitMaterial.reflectivity != 0.0f) {
-      // If the material is reflective then handle reflection
+    if (hitMaterial.reflectivity != 0.0f && ray->inside != closestHitObject  ) {
+      // If the material is reflective then handle reflection, but do not calculate reflection from the inside objects
       Ray reflectRay(closestHitPoint, hitReflected, ray, ray->inside);
       colorReflect = rayFollow(&reflectRay, scene, iteration + 1);
     }
