@@ -27,6 +27,8 @@ struct Ray {
 
   Ray();
 
+  Ray(Vector3 sourceInit);
+
   Ray(Vector3 sourceInit, Vector3 directionInit);
 
   Ray(Vector3 sourceInit, Vector3 directionInit, Ray *parentRayInit, Object *enteringObject);
