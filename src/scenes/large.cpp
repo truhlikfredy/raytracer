@@ -33,7 +33,7 @@ Large::Large():SceneGenerator(20.0f) {
     Vector3 center(3 * cosf(lightRotate)+7, 2 * (sinf(lightRotate) - 10 ), -40);
     Color color(0.0f, 0.1f, 1.1f);
 
-    return new LightOmni(center, color, 400.0f, 0.8f);
+    return new LightOmni(center, color, 1.0f/400.0f, 0.8f);
   }));
 
   lightGenerators->push_back(new LightOmniGenerator([](float frame) {
@@ -41,7 +41,7 @@ Large::Large():SceneGenerator(20.0f) {
     Vector3 center(3 * cosf(lightRotate*1.7)+6, 2 * (sinf(lightRotate*1.7) - 12 ), -40);
     Color color(1.1f, 0.0f, 0.1f);
 
-    return new LightOmni(center, color, 400.0f, 0.8f);
+    return new LightOmni(center, color, 1.0f/400.0f, 0.8f);
   }));
 
   lightGenerators->push_back(new LightOmniGenerator([](float frame) {
@@ -49,7 +49,7 @@ Large::Large():SceneGenerator(20.0f) {
     Vector3 center(3 * cosf(lightRotate*2.5)-7, 2 * (sinf(lightRotate*2.5) - 10 ), -40);
     Color color(0.1f, 1.1f, 0.0f);
 
-    return new LightOmni(center, color, 400.0f, 0.8f);
+    return new LightOmni(center, color, 1.0f/400.0f, 0.8f);
   }));
 
   objectGenerators->push_back(new SphereGenerator([squares](float frame) {

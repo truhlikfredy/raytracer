@@ -227,8 +227,8 @@ Color Render::rayFollow(Ray *ray, Scene *scene, int iteration) {
         /* Do not calculate color unless they are going to be used (i.e. not in the shadow) */
 
         auto lightStrength = fmax(
-          hitLight->burn,
-          powf((hitLightLen + closestHitDistance) / hitLight->distance, 2));
+          hitLight->burnInv,
+          powf((hitLightLen + closestHitDistance) * hitLight->distanceInv, 2));
 
         colorLight = ((hitMaterial.diffuse * diffuse + powf(specular, hitMaterial.shininess)) *
           lightSet[0]->color / lightStrength);

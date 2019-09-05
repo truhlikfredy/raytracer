@@ -8,8 +8,8 @@
 LightOmni::LightOmni(Vector3 centerInit, Color colorInit): Light(centerInit, colorInit) {
 }
 
-LightOmni::LightOmni(const Vector3 &centerInit, const Color &colorInit, const float distanceInit, const float burnInit)
-  : Light(centerInit, colorInit, distanceInit, burnInit) {
+LightOmni::LightOmni(const Vector3 &centerInit, const Color &colorInit, const float distanceInvInit, const float burnInit)
+  : Light(centerInit, colorInit, distanceInvInit, burnInit) {
 }
 
 
