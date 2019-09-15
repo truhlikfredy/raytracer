@@ -87,21 +87,11 @@
 
 # Screenshots
 
-![Two balls with dynamic materials](/images/screenshot02.png)
-
-![First working motion blur](/images/screenshot03.png)
-
 ![Shadows](/images/screenshot04.png)
 
 ![Depth of field example](/images/screenshot05.png)
 
-![fractal with different shiny properties](/images/screenshot06.png)
-
 ![fractal with different shiny properties](/images/screenshot07.png)
-
-![multiple lights = multiple shadows](/images/screenshot08.png)
-
-![chekerboard with DOF effect and multiple lights](/images/screenshot09.png)
 
 ![reflections](/images/screenshot10.png)
 
